@@ -808,21 +808,22 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->custContacts->phoneMobile = "0678787878";
         $request->custContacts->email = "igor.sutugin@gmail.com";
 
-        $request->deliveryDetails->deliveryDetailsDifferent; //boolean
-        $request->deliveryDetails->deliveryMethod; //String
+        $request->deliveryDetails->deliveryDetailsDifferent = false;
+        $request->deliveryDetails->deliveryMethod = "PICK-UP";
 
-        $request->order->basketItemsGoogleTaxonomies;  //array( String )
-        $request->order->basketItemsPrices;  //array( number )
+        $request->order->basketItemsGoogleTaxonomies = null;
+        $request->order->basketItemsPrices = null;
 
-        $request->sessionInfo->fingerPrint; //String
+        $request->sessionInfo->fingerPrint = "XXX";
 
 
-        $request->byjunoDetails->byjunoProductType; //String
-        $request->byjunoDetails->invoiceDeliveryType; //String
+        $request->byjunoDetails->byjunoProductType = "SINGLE-INVOICE";
+        $request->byjunoDetails->invoiceDeliveryType = "EMAIL";
 
-        $request->merchantDetails->transactionChannel; //String
-        $request->merchantDetails->integrationModule; //String
+        $request->merchantDetails->transactionChannel = "WEB";
+        $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
 
+        return json_encode($request);
 
     }
 
