@@ -1,6 +1,8 @@
 <?php
 namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
 
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
+
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
@@ -779,7 +781,52 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $str;
     }
 
-    function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote)
+    function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote) {
+
+        $request = new ByjunoCheckoutRequest();
+        $request->merchantId = "XXX";
+        $request->requestMsgType = "SCR";
+        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->merchantOrderRef = "XXX";
+        $request->amount = 1000;
+        $request->currency = "CHF";
+
+        $request->custDetails->merchantCustRef = "XXX";
+        $request->custDetails->loggedIn = true;
+        $request->custDetails->custType = "P";
+        $request->custDetails->firstName = "Wilko";
+        $request->custDetails->lastName = "byjuno";
+        $request->custDetails->language = "de";
+        $request->custDetails->salutation = "N";
+
+        $request->billingAddr->addrFirstLine = "Im juch 6";
+        $request->billingAddr->postalCode = "8061";
+        $request->billingAddr->town = "Zurich";
+        $request->billingAddr->country = "CH";
+
+        $request->custContacts->phoneMobile = "0678787878";
+        $request->custContacts->email = "igor.sutugin@gmail.com";
+
+        $request->deliveryDetails->deliveryDetailsDifferent; //boolean
+        $request->deliveryDetails->deliveryMethod; //String
+
+        $request->order->basketItemsGoogleTaxonomies;  //array( String )
+        $request->order->basketItemsPrices;  //array( number )
+
+        $request->sessionInfo->fingerPrint; //String
+
+
+        $request->byjunoDetails->byjunoProductType; //String
+        $request->byjunoDetails->invoiceDeliveryType; //String
+
+        $request->merchantDetails->transactionChannel; //String
+        $request->merchantDetails->integrationModule; //String
+
+
+    }
+
+    /*function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote)
     {
         $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest();
         $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
@@ -939,6 +986,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->setExtraInfo($extraInfo);
         return $request;
     }
+    */
 
     function CreateMagentoShopRequestS5Paid(\Magento\Sales\Model\Order $order, $amount, $transactionType, $invoiceId = '', $webshopProfile)
     {
