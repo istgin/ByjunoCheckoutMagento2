@@ -1,0 +1,145 @@
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label class="label" data-bind="attr: {'for': getCode()}">
+            <img data-bind="attr: {src: getLogo()}" style="width: 66px; height: 39px; vertical-align: middle"/>&nbsp;<span data-bind="text: getTitle()"></span>
+        </label>
+    </div>
+
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <!-- ko if: (isFieldsEnabled())-->
+        <label data-bind="attr: {for: getCode() + '_payment_delivery'}" class="label">
+            <b style="font-size: 16px"><!-- ko i18n: 'Provide information'--><!-- /ko --></b>
+        </label>
+        <br />
+        <br />
+        <fieldset class="fieldset">
+            <div class="billing-address-form" style="display: block;">
+                <fieldset class="fieldset address">
+                    <!-- ko if: (isGenderEnabled())-->
+                    <div class="field required">
+                        <label for="customer_gender_installment" class="label">
+                            <span><!-- ko i18n: 'Gender'--><!-- /ko --></span>
+                        </label>
+                        <div class="control">
+                            <select name="payment[installment_customer_gender]" id="customer_gender_installment"
+                                    class="select"
+                                    style="width: 150px"
+                                    data-bind="
+                                  options: getGenders(),
+                                  optionsValue: 'value',
+                                  optionsText: 'label',
+                                  value: customGender">
+                            </select>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if: (isBirthdayEnabled())-->
+                    <div class="field required">
+                        <label for="customer_dob_installment" class="label">
+                            <span><!-- ko i18n: 'Date of birth'--><!-- /ko --></span>
+                        </label>
+                        <div class="control">
+                            <input name="payment[installment_customer_dob]" id="customer_dob_installment"
+                                   style="width: 150px"
+                                   type="text" class="input-text"
+                                   data-bind="attr:{placeholder: $t('DD.MM.YYYY')}, datepicker: { storage: getDob(), options: {
+                                                                changeMonth: true,
+                                                                changeYear: true,
+																yearRange: getYearRange(),
+                                                                showButtonPanel: true,
+                                                                dateFormat: 'dd.MM.yy'} }">
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if: (isB2bUid())-->
+                    <div class="field required">
+                        <label for="customer_b2b_uid_installment" class="label">
+                            <span><!-- ko i18n: 'Company registration number'--><!-- /ko --></span>
+                        </label>
+                        <div class="control">
+                            <input name="payment[installment_customer_b2b_uid]" id="customer_b2b_uid_installment" style="width: 150px" type="text" class="input-text">
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </fieldset>
+            </div>
+        </fieldset>
+        <!-- /ko -->
+        <!-- ko if: (isPaymentPlanVisible())-->
+        <div class="field required">
+            <label data-bind="attr: {for: getCode() + '_payment_plan'}" class="label">
+                <b style="font-size: 16px"><!-- ko i18n: 'Select payment plan'--><!-- /ko --></b>
+            </label>
+            <div class="control" style="margin: 8px 0 0 0">
+                <div data-bind="foreach: getPaymentPlans()" >
+                    <label>
+                        <input type="radio"
+                               name="payment[installment_payment_plan]"
+                               data-bind="
+                                  attr: {value: value},
+                                  checked: $parent.paymentPlan" />
+                        <span data-bind="text: label"></span>
+                        <a data-bind="attr: {href: link, target: '_blank'}, text: $t('(T&C)')"></a>
+                    </label><br />
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: (isDeliveryVisibility())-->
+        <br />
+        <div class="field required">
+            <label data-bind="attr: {for: getCode() + '_payment_delivery'}" class="label">
+                <b style="font-size: 16px"><!-- ko i18n: 'Select invoice delivery method'--><!-- /ko --></b>
+            </label>
+            <div class="control" style="margin: 8px 0 0 0">
+                <div data-bind="foreach: getDeliveryPlans()" >
+                    <label>
+                        <input type="radio"
+                               name="payment[installment_send]"
+                               data-bind="
+                                  attr: {value: value},
+                                  checked: $parent.deliveryPlan" />
+                        <span data-bind="text: label"></span>
+                    </label><br />
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <br />
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Order')}
+                        ">
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

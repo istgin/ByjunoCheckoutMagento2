@@ -1,0 +1,365 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ByjunoCheckout_main_tab" translate="label" sortOrder="1">
+            <label>Byjuno Checkout payments (1.7.4)</label>
+        </tab>
+        <section id="byjunocheckoutsettings" translate="label" sortOrder="1" showInDefault="1"
+                 showInWebsite="1" showInStore="1">
+            <label>Byjuno Checkout payment method general settings</label>
+            <tab>ByjunoCheckout_main_tab</tab>
+            <resource>ByjunoCheckout_ByjunoCheckoutCore::system_config</resource>
+            <group id="ByjunoCheckout_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Byjuno Checkout general settings</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="businesstobusiness" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable B2B check</label>
+                    <comment>B2B integration allow to to do credit check if customer provide company
+                        credentials
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="currentmode" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mode</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\TestLive</source_model>
+                </field>
+                <field id="clientid" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client ID</label>
+                </field>
+                <field id="userid" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>User ID</label>
+                </field>
+                <field id="password" translate="label" type="password" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Password</label>
+                </field>
+                <field id="mail" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Technical Contact (E-mail)</label>
+                </field>
+                <field id="minamount" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mininmal amount for checkout</label>
+                </field>
+                <field id="maxamount" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximal amount for checkout</label>
+                </field>
+                <field id="timeout" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Connection timeout to Byjuno Checkout CDP server in seconds</label>
+                    <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="tmxenabled" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable ThreatMetrix security check</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="tmxkey" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>ThreatMetrix Org Id</label>
+                </field>
+                <field id="singlerequest" translate="label" type="select" sortOrder="115" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Single query requests to Byjuno</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="cdpbeforeshow" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Credit check before submit</label>
+                    <comment>Enable credit check before show Byjuno Checkout payment methods</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="byjunos4transacton" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable S4 Transaction</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="byjunos4transactonexplain" translate="label" type="label" sortOrder="135" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\ExplainS4</frontend_model>
+                </field>
+                <field id="byjunos5transacton" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable S5 Transaction</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="byjunos5transactonexplain" translate="label" type="label" sortOrder="145" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\ExplainS5</frontend_model>
+                </field>
+                <field id="ByjunoCheckout_invoice_paper" translate="label" type="select" sortOrder="148" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Allow postal delivery</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="gender_enable" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable gender selection</label>
+                    <comment>Enable gender selection in checkout</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="birthday_enable" translate="label" type="select" sortOrder="151" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable birthday selection</label>
+                    <comment>Enable birthday selection in checkout</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="gender_prefix" translate="label" type="text" sortOrder="152" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Gender prefix dropdown options</label>
+                    <comment>Semicolon (;) separated values. Put semicolon in the beginning for empty first option.</comment>
+                </field>
+                <field id="gender_male_possible_prefix" translate="label" type="text" sortOrder="154" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Specify male possible prefix</label>
+                    <comment>Semicolon (;) separated values.</comment>
+                </field>
+                <field id="gender_female_possible_prefix" translate="label" type="text" sortOrder="156" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Specify female possible prefix</label>
+                    <comment>Semicolon (;) separated values.</comment>
+                </field>
+                <field id="b2b_uid" translate="label" type="select" sortOrder="157" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Capture UID for B2B Requests</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="txid_extrainfo" translate="label" type="select" sortOrder="157" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Submit Transactionnumber for Payout file.</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="ByjunoCheckout_prod_email" translate="label" type="text" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Production email of Byjuno</label>
+                    <comment>Email used to send orders, invoices and credit memos</comment>
+                </field>
+                <field id="ByjunoCheckout_test_email" translate="label" type="text" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test email of byjuno</label>
+                    <comment>Email used to send test orders, invoices and credit memos</comment>
+                </field>
+                <field id="country_phone_validation" translate="label" type="select" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable country &amp; phone validation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="ByjunoCheckout_risk" translate="label" type="text" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Accepted Byjuno Checkout Risk for S2 </label>
+                    <comment>comma separated</comment>
+                </field>
+                <field id="merchant_risk" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Accepted Merchant Risk for S2</label>
+                    <comment>comma separated</comment>
+                </field>
+                <field id="accepted_s3" translate="label" type="text" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Accepted statuses for S3 response</label>
+                    <comment>comma separated</comment>
+                </field>
+                <field id="success_state" translate="label" type="select" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order state after success S3</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\SuccessState</source_model>
+                </field>
+                <field id="force_send_email" translate="label" type="select" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Force send order confirmation email</label>
+                    <comment>In case "Yes" - plugin will send order confirmation email.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="localization" translate="label" type="text" sortOrder="20" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Byjuno Checkout localizations</label>
+                <field id="ByjunoCheckout_fail_message" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Fail message of Byjuno Checkout order</label>
+                </field>
+            </group>
+            <group id="advanced" translate="label" type="text" sortOrder="30" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Byjuno Checkout advanced settings (for developers only)</label>
+                <field id="ip_detect_string" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Real IP detection method</label>
+                    <comment>In some cases this is required to detect valid IP. example: REMOTE_ADDR, HTTP_CLIENT_IP, HTTP_CF_CONNECTING_IP for CloudFlare etc. Keep empty for default</comment>
+                </field>
+            </group>
+        </section>
+        <section id="byjunoinvoicesettings" translate="label" sortOrder="2" showInDefault="1"
+                 showInWebsite="1" showInStore="1">
+            <label>Byjuno Checkout invoice settings</label>
+            <tab>ByjunoCheckout_main_tab</tab>
+            <resource>ByjunoCheckout_ByjunoCheckoutCore::system_config</resource>
+            <group id="ByjunoCheckout_invoice_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Byjuno Checkout invoice settings</label>
+                <field id="title_invoice" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="sort_order_invoice" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Sort Order</label>
+                    <frontend_class>validate-number</frontend_class>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_invoice_partial" translate="label" type="text" sortOrder="10" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Byjuno Checkout Invoice (with partial payment option)</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="ByjunoCheckout_invoice_partial_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_single_invoice" translate="label" type="text" sortOrder="20" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Byjuno Checkout Single Invoice</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="ByjunoCheckout_single_invoice_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_invoice_localization" translate="label" type="text" sortOrder="30" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Localization</label>
+                <field id="ByjunoCheckout_invoice_postal_text" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>*Localization* Invoice delivery method: by post</label>
+                </field>
+                <field id="ByjunoCheckout_invoice_email_text" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>*Localization* Invoice delivery method: by email</label>
+                </field>
+                <field id="ByjunoCheckout_invoice_toc_string" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>*Localization* Terms &amp; conditions message</label>
+                </field>
+                <field id="ByjunoCheckout_invoice_payment_message" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>*Localization* Please select payment plan message</label>
+                </field>
+            </group>
+        </section>
+
+        <section id="byjunoinstallmentsettings" translate="label" sortOrder="3" showInDefault="1"
+                 showInWebsite="1" showInStore="1">
+            <label>Byjuno Checkout installment settings</label>
+            <tab>ByjunoCheckout_main_tab</tab>
+            <resource>ByjunoCheckout_ByjunoCheckoutCore::system_config</resource>
+            <group id="ByjunoCheckout_installment_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Byjuno Checkout installment settings</label>
+                <field id="title_installment" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="sort_order_installment" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Sort Order</label>
+                    <frontend_class>validate-number</frontend_class>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_installment_3installment" translate="label" type="text" sortOrder="10" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>3 Installments</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="ByjunoCheckout_installment_3installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_installment_10installment" translate="label" type="text" sortOrder="20" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>10 installments</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="ByjunoCheckout_installment_10installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_installment_12installment" translate="label" type="text" sortOrder="30" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>12 installments</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="ByjunoCheckout_installment_12installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_installment_24installment" translate="label" type="text" sortOrder="40" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>24 installments</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="ByjunoCheckout_installment_24installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_installment_4x12installment" translate="label" type="text" sortOrder="50" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>4 installments in 12 month</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="ByjunoCheckout_installment_4x12installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="ByjunoCheckout_installment_localization" translate="label" type="text" sortOrder="60" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Localization</label>
+                <field id="ByjunoCheckout_installment_postal_text" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>*Localization* Installment delivery method: by post</label>
+                </field>
+                <field id="ByjunoCheckout_installment_email_text" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>*Localization* Installment delivery method: by email</label>
+                </field>
+                <field id="ByjunoCheckout_installment_toc_string" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>*Localization* Terms &amp; conditions message</label>
+                </field>
+                <field id="ByjunoCheckout_installment_payment_message" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>*Localization* Please select payment plan message</label>
+                </field>
+            </group>
+        </section>
+
+    </system>
+</config>
+

@@ -1,0 +1,539 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <stores>
+        <german>
+            <byjunocheckoutsettings>
+                <localization>
+                    <ByjunoCheckout_invoice_payments>invoice_ByjunoCheckout_enable,Byjuno Checkout Rechnung mit Teilzahlungsoption,Byjuno
+                        Einmalrechnung,https://byjuno.ch/de/1b/terms/,https://byjuno.ch/de/2b/terms/
+                    </ByjunoCheckout_invoice_payments>
+                    <ByjunoCheckout_installment_payments>3 Raten,10 Raten,12 Raten,24 Raten,4 Raten innerhalb von 12
+                        Monaten,N/A,https://byjuno.ch/de/3a/terms/,https://byjuno.ch/de/1d/terms/,https://byjuno.ch/de/1d/terms/,https://byjuno.ch/de/1d/terms/,https://byjuno.ch/de/1d/terms/,N/A
+                    </ByjunoCheckout_installment_payments>
+                    <ByjunoCheckout_installment_toc_string>AGB</ByjunoCheckout_installment_toc_string>
+                    <ByjunoCheckout_installment_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen
+                        Geschäftsbedingungen
+                    </ByjunoCheckout_installment_payment_message>
+                    <ByjunoCheckout_fail_message>Der Anbieter dieser Zahlungsart hat die gewählte Bezahlmethode abgelehnt. Bitte
+                        wählen Sie eine andere Zahlungsart.
+                    </ByjunoCheckout_fail_message>
+                    <ByjunoCheckout_invoice_toc_string>AGB</ByjunoCheckout_invoice_toc_string>
+                    <ByjunoCheckout_invoice_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen
+                        Geschäftsbedingungen
+                    </ByjunoCheckout_invoice_payment_message>
+                    <ByjunoCheckout_invoice_postal_text>Rechnungsversand in Papierform via Post (gegen Gebühr von CHF 3.95) an
+                    </ByjunoCheckout_invoice_postal_text>
+                    <ByjunoCheckout_invoice_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an</ByjunoCheckout_invoice_email_text>
+                    <ByjunoCheckout_installment_postal_text>Rechnungsversand in Papierform via Post (gegen Gebühr von CHF 3.95 pro
+                        Rate) an
+                    </ByjunoCheckout_installment_postal_text>
+                    <ByjunoCheckout_installment_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an
+                    </ByjunoCheckout_installment_email_text>
+                    <ByjunoCheckout_s4_fail>Das Senden der Rechnung an Byjuno Checkout ist fehlgeschlagen. Die Rechnung wurde nicht
+                        generiert. Bitte versuchen Sie es erneut.
+                    </ByjunoCheckout_s4_fail>
+                    <ByjunoCheckout_s5_fail>Das Senden der Bestelländerung an Byjuno Checkout ist fehlgeschlagen. Storno/Rückerstattung
+                        konnte nicht durchgeführt werden. Bitte versuchen Sie es erneut.
+                    </ByjunoCheckout_s5_fail>
+                    <postal_code_wrong>Die PLZ der Rechnungsadresse ist fehlerhaft</postal_code_wrong>
+                    <telephone_code_wrong>Die Telefonnummer der Rechnungsadresse ist fehlerhaft</telephone_code_wrong>
+                </localization>
+            </byjunocheckoutsettings>
+            <byjunoinvoicesettings>
+                <ByjunoCheckout_invoice_setup>
+                    <title_invoice>Byjuno Checkout Rechnung</title_invoice>
+                </ByjunoCheckout_invoice_setup>
+                <ByjunoCheckout_invoice_partial>
+                    <name>Byjuno Checkout Rechnung mit Teilzahlungsoption</name>
+                    <link>https://byjuno.ch/de/1b/terms/</link>
+                </ByjunoCheckout_invoice_partial>
+                <ByjunoCheckout_single_invoice>
+                    <name>Byjuno Checkout Einmalrechnung</name>
+                    <link>https://byjuno.ch/de/2b/terms/</link>
+                </ByjunoCheckout_single_invoice>
+                <ByjunoCheckout_invoice_localization>
+                    <ByjunoCheckout_invoice_toc_string>AGB</ByjunoCheckout_invoice_toc_string>
+                    <ByjunoCheckout_invoice_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen Geschäftsbedingungen</ByjunoCheckout_invoice_payment_message>
+                    <ByjunoCheckout_invoice_postal_text>Rechnungsversand in Papierform via Post  (gegen Gebühr von CHF 95) an</ByjunoCheckout_invoice_postal_text>
+                    <ByjunoCheckout_invoice_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an</ByjunoCheckout_invoice_email_text>
+                </ByjunoCheckout_invoice_localization>
+            </byjunoinvoicesettings>
+            <byjunoinstallmentsettings>
+                <ByjunoCheckout_installment_setup>
+                    <title_installment>Byjuno Checkout Ratenzahlung</title_installment>
+                    <sort_order_installment>2</sort_order_installment>
+                </ByjunoCheckout_installment_setup>
+                <ByjunoCheckout_installment_3installment>
+                    <name>3 Raten</name>
+                    <link>https://byjuno.ch/de/3a/terms/</link>
+                </ByjunoCheckout_installment_3installment>
+                <ByjunoCheckout_installment_10installment>
+                    <name>10 Raten</name>
+                    <link>https://byjuno.ch/de/1d/terms/</link>
+                </ByjunoCheckout_installment_10installment>
+                <ByjunoCheckout_installment_12installment>
+                    <name>12 Raten</name>
+                    <link>https://byjuno.ch/de/1d/terms/</link>
+                </ByjunoCheckout_installment_12installment>
+                <ByjunoCheckout_installment_24installment>
+                    <name>24 Raten</name>
+                    <link>https://byjuno.ch/de/1d/terms/</link>
+                </ByjunoCheckout_installment_24installment>
+                <ByjunoCheckout_installment_4x12installment>
+                    <name>4 Raten innerhalb von 12 Monaten</name>
+                    <link>https://byjuno.ch/de/1d/terms/</link>
+                </ByjunoCheckout_installment_4x12installment>
+                <ByjunoCheckout_installment_localization>
+                    <ByjunoCheckout_installment_toc_string>AGB</ByjunoCheckout_installment_toc_string>
+                    <ByjunoCheckout_installment_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen Geschäftsbedingungen</ByjunoCheckout_installment_payment_message>
+                    <ByjunoCheckout_installment_postal_text>Rechnungsversand in Papierform via Post (gegen Gebühr von CHF 3.95) an</ByjunoCheckout_installment_postal_text>
+                    <ByjunoCheckout_installment_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an</ByjunoCheckout_installment_email_text>
+                </ByjunoCheckout_installment_localization>
+            </byjunoinstallmentsettings>
+        </german>
+        <french>
+            <byjunocheckoutsettings>
+                <localization>
+                    <ByjunoCheckout_invoice_payments>invoice_ByjunoCheckout_enable,Byjuno Facture avec option de paiement partiel,Byjuno
+                        facture unique,https://byjuno.ch/fr/1b/terms/,https://byjuno.ch/fr/2b/terms/
+                    </ByjunoCheckout_invoice_payments>
+                    <ByjunoCheckout_installment_payments>3 tranches,10 tranches,12 tranches,24 tranches,4 tranches dans 12
+                        mois,N/A,https://byjuno.ch/fr/3a/terms/,https://byjuno.ch/fr/1d/terms/,https://byjuno.ch/fr/1d/terms/,https://byjuno.ch/fr/1d/terms/,https://byjuno.ch/fr/1d/terms/,N/A
+                    </ByjunoCheckout_installment_payments>
+
+                    <ByjunoCheckout_installment_toc_string>CGV</ByjunoCheckout_installment_toc_string>
+                    <ByjunoCheckout_installment_payment_message>Veuillez choisir le type de paiement et accepter les conditions
+                        générales
+                    </ByjunoCheckout_installment_payment_message>
+                    <ByjunoCheckout_fail_message>Le prestataire de ce type de paiement a rejeté la méthode de paiement choisie.
+                        Veuillez choisir un autre mode de paiement.
+                    </ByjunoCheckout_fail_message>
+                    <ByjunoCheckout_invoice_toc_string>CGV</ByjunoCheckout_invoice_toc_string>
+                    <ByjunoCheckout_invoice_payment_message>Veuillez choisir le type de paiement et accepter les conditions
+                        générales
+                    </ByjunoCheckout_invoice_payment_message>
+                    <ByjunoCheckout_invoice_postal_text>Expédition facture sous forme papier (au prix de CHF 3.95) à
+                    </ByjunoCheckout_invoice_postal_text>
+                    <ByjunoCheckout_invoice_email_text>Expédition facture via e-mail (sans frais) à</ByjunoCheckout_invoice_email_text>
+                    <ByjunoCheckout_installment_postal_text>Expédition facture sous forme papier (au prix de CHF 3.95 par tranche)
+                        à
+                    </ByjunoCheckout_installment_postal_text>
+                    <ByjunoCheckout_installment_email_text>Expédition facture via e-mail (sans frais) à
+                    </ByjunoCheckout_installment_email_text>
+                    <ByjunoCheckout_s4_fail>La transmission de la facture à Byjuno Checkout a échoué. La facture n’a pas été produite,
+                        veuillez essayer à nouveau.
+                    </ByjunoCheckout_s4_fail>
+                    <ByjunoCheckout_s5_fail>La transmission de la commande modifiée a échoué. L’annulation/le remboursement n’a pas
+                        pu être exécuté. Veuillez essayer à nouveau.
+                    </ByjunoCheckout_s5_fail>
+                    <postal_code_wrong>Le code postal de l’adresse de facturation est défectueux</postal_code_wrong>
+                    <telephone_code_wrong>Le numéro du téléphone de l’adresse de facturation est défectueux
+                    </telephone_code_wrong>
+                </localization>
+            </byjunocheckoutsettings>
+            <byjunoinvoicesettings>
+                <ByjunoCheckout_invoice_setup>
+                    <title_invoice>Facture Byjuno</title_invoice>
+                </ByjunoCheckout_invoice_setup>
+                <ByjunoCheckout_invoice_partial>
+                    <name>Byjuno Facture avec option de paiement partiel</name>
+                    <link>https://byjuno.ch/fr/1b/terms/</link>
+                </ByjunoCheckout_invoice_partial>
+                <ByjunoCheckout_single_invoice>
+                    <name>Byjuno Checkout facture unique</name>
+                    <link>https://byjuno.ch/fr/2b/terms/</link>
+                </ByjunoCheckout_single_invoice>
+                <ByjunoCheckout_invoice_localization>
+                    <ByjunoCheckout_invoice_toc_string>CGV</ByjunoCheckout_invoice_toc_string>
+                    <ByjunoCheckout_invoice_payment_message>Veuillez choisir le type de paiement et accepter les conditions générales</ByjunoCheckout_invoice_payment_message>
+                    <ByjunoCheckout_invoice_postal_text>Expédition facture sous forme papier (au prix de CHF 3.95) à</ByjunoCheckout_invoice_postal_text>
+                    <ByjunoCheckout_invoice_email_text>Expédition facture via e-mail (sans frais) à</ByjunoCheckout_invoice_email_text>
+                </ByjunoCheckout_invoice_localization>
+            </byjunoinvoicesettings>
+            <byjunoinstallmentsettings>
+                <ByjunoCheckout_installment_setup>
+                    <title_installment>Byjuno Checkout Paiement échelonné</title_installment>
+                    <sort_order_installment>2</sort_order_installment>
+                </ByjunoCheckout_installment_setup>
+                <ByjunoCheckout_installment_3installment>
+                    <name>3 tranches</name>
+                    <link>https://byjuno.ch/fr/3a/terms/</link>
+                </ByjunoCheckout_installment_3installment>
+                <ByjunoCheckout_installment_10installment>
+                    <name>10 tranches</name>
+                    <link>https://byjuno.ch/fr/1d/terms/</link>
+                </ByjunoCheckout_installment_10installment>
+                <ByjunoCheckout_installment_12installment>
+                    <name>12 tranches</name>
+                    <link>https://byjuno.ch/fr/1d/terms/</link>
+                </ByjunoCheckout_installment_12installment>
+                <ByjunoCheckout_installment_24installment>
+                    <name>24 tranches</name>
+                    <link>https://byjuno.ch/fr/1d/terms/</link>
+                </ByjunoCheckout_installment_24installment>
+                <ByjunoCheckout_installment_4x12installment>
+                    <name>4 tranches dans 12 mois</name>
+                    <link>https://byjuno.ch/fr/1d/terms/</link>
+                </ByjunoCheckout_installment_4x12installment>
+                <ByjunoCheckout_installment_localization>
+                    <ByjunoCheckout_installment_toc_string>CGV</ByjunoCheckout_installment_toc_string>
+                    <ByjunoCheckout_installment_payment_message>Veuillez choisir le type de paiement et accepter les conditions générales</ByjunoCheckout_installment_payment_message>
+                    <ByjunoCheckout_installment_postal_text>Expédition facture sous forme papier (au prix de CHF 3.95 par tranche) à</ByjunoCheckout_installment_postal_text>
+                    <ByjunoCheckout_installment_email_text>ByjunoCheckout_installment_email_text</ByjunoCheckout_installment_email_text>
+                </ByjunoCheckout_installment_localization>
+            </byjunoinstallmentsettings>
+        </french>
+        <italian>
+            <byjunocheckoutsettings>
+                <localization>
+                    <ByjunoCheckout_invoice_payments>invoice_ByjunoCheckout_enable,Byjuno Checkout fattura con opzione di pagamento parziale,Byjuno
+                        fattura singola,https://byjuno.ch/it/1b/terms/,https://byjuno.ch/it/2b/terms/
+                    </ByjunoCheckout_invoice_payments>
+                    <ByjunoCheckout_installment_payments>3 rate,10 rate,12 rate,24 rate,4 rate in 12
+                        mesi,N/A,https://byjuno.ch/it/3a/terms/,https://byjuno.ch/it/1d/terms/,https://byjuno.ch/it/1d/terms/,https://byjuno.ch/it/1d/terms/,https://byjuno.ch/it/1d/terms/,N/A
+                    </ByjunoCheckout_installment_payments>
+
+                    <title_installment>Byjuno Checkout Pagamento rateale</title_installment>
+                    <ByjunoCheckout_installment_toc_string>CGC</ByjunoCheckout_installment_toc_string>
+                    <ByjunoCheckout_installment_payment_message>La preghiamo di scegliere la modalità di pagamento e di accettare le
+                        condizioni generali di contratto
+                    </ByjunoCheckout_installment_payment_message>
+                    <ByjunoCheckout_fail_message>L’operatore del servizio di pagamento ha rifiutato la modalità di pagamento da Lei
+                        scelta. La preghiamo di scegliere un’altra modalità di pagamento.
+                    </ByjunoCheckout_fail_message>
+                    <ByjunoCheckout_invoice_toc_string>CGC</ByjunoCheckout_invoice_toc_string>
+                    <ByjunoCheckout_invoice_payment_message>La preghiamo di scegliere la modalità di pagamento e di accettare le
+                        condizioni generali di contratto
+                    </ByjunoCheckout_invoice_payment_message>
+                    <ByjunoCheckout_invoice_postal_text>Invio fattura cartacea tramite posta (spese aggiuntive di CHF 3.95)
+                        all’indirizzo
+                    </ByjunoCheckout_invoice_postal_text>
+                    <ByjunoCheckout_invoice_email_text>Invio fattura tramite e-mail (senza spese aggiuntive) all’indirizzo
+                    </ByjunoCheckout_invoice_email_text>
+                    <ByjunoCheckout_installment_postal_text>Invio fattura cartacea tramite posta (spese aggiuntive di CHF 3.95 per
+                        ogni rata) all’indirizzo
+                    </ByjunoCheckout_installment_postal_text>
+                    <ByjunoCheckout_installment_email_text>Invio fattura tramite e-mail (senza spese aggiuntive) all’indirizzo
+                    </ByjunoCheckout_installment_email_text>
+                    <ByjunoCheckout_s4_fail>La trasmissione della fattura a Byjuno Checkout non é riuscita. La fattura non é stata generata.
+                        La preghiamo di riprovare.
+                    </ByjunoCheckout_s4_fail>
+                    <ByjunoCheckout_s5_fail>La trasmissione della modifica dell’ordine non é riuscita. Storno/Rimborso non é stato
+                        eseguito. La preghiamo di riprovare.
+                    </ByjunoCheckout_s5_fail>
+                    <postal_code_wrong>Il CAP dell’indirizzo di fatturazione è difettoso</postal_code_wrong>
+                    <telephone_code_wrong>Il numero di telefono dell’indirizzo di fatturazione è difettoso
+                    </telephone_code_wrong>
+                </localization>
+            </byjunocheckoutsettings>
+            <byjunoinvoicesettings>
+                <ByjunoCheckout_invoice_setup>
+                    <title_invoice>Fattura Byjuno</title_invoice>
+                </ByjunoCheckout_invoice_setup>
+                <ByjunoCheckout_invoice_partial>
+                    <name>Byjuno Checkout fattura con opzione di pagamento parziale</name>
+                    <link>https://byjuno.ch/it/1b/terms/</link>
+                </ByjunoCheckout_invoice_partial>
+                <ByjunoCheckout_single_invoice>
+                    <name>Byjuno Checkout fattura singola</name>
+                    <link>https://byjuno.ch/it/2b/terms/</link>
+                </ByjunoCheckout_single_invoice>
+                <ByjunoCheckout_invoice_localization>
+                    <ByjunoCheckout_invoice_toc_string>CGC</ByjunoCheckout_invoice_toc_string>
+                    <ByjunoCheckout_invoice_payment_message>La preghiamo di scegliere la modalità di pagamento e di accettare le condizioni generali di contratto</ByjunoCheckout_invoice_payment_message>
+                    <ByjunoCheckout_invoice_postal_text>Invio fattura cartacea tramite posta (spese aggiuntive di CHF 3.95) all’indirizzo</ByjunoCheckout_invoice_postal_text>
+                    <ByjunoCheckout_invoice_email_text>Invio fattura tramite e-mail (senza spese aggiuntive) all’indirizzo</ByjunoCheckout_invoice_email_text>
+                </ByjunoCheckout_invoice_localization>
+            </byjunoinvoicesettings>
+            <byjunoinstallmentsettings>
+                <ByjunoCheckout_installment_setup>
+                    <title_installment>Byjuno Checkout Pagamento rateale</title_installment>
+                    <sort_order_installment>2</sort_order_installment>
+                </ByjunoCheckout_installment_setup>
+                <ByjunoCheckout_installment_3installment>
+                    <name>3 Raten</name>
+                    <link>https://byjuno.ch/it/3a/terms/</link>
+                </ByjunoCheckout_installment_3installment>
+                <ByjunoCheckout_installment_10installment>
+                    <name>10 Raten</name>
+                    <link>https://byjuno.ch/it/1d/terms/</link>
+                </ByjunoCheckout_installment_10installment>
+                <ByjunoCheckout_installment_12installment>
+                    <name>12 Raten</name>
+                    <link>https://byjuno.ch/it/1d/terms/</link>
+                </ByjunoCheckout_installment_12installment>
+                <ByjunoCheckout_installment_24installmentoice_partial>
+                    <name>24 Raten</name>
+                    <link>https://byjuno.ch/it/1d/terms/</link>
+                </ByjunoCheckout_installment_24installmentoice_partial>
+                <ByjunoCheckout_installment_4x12installment>
+                    <name>4 Raten innerhalb von 12 Monaten</name>
+                    <link>https://byjuno.ch/it/1d/terms/</link>
+                </ByjunoCheckout_installment_4x12installment>
+                <ByjunoCheckout_installment_localization>
+                    <ByjunoCheckout_installment_toc_string>CGC</ByjunoCheckout_installment_toc_string>
+                    <ByjunoCheckout_installment_payment_message>La preghiamo di scegliere la modalità di pagamento e di accettare le condizioni generali di contratto</ByjunoCheckout_installment_payment_message>
+                    <ByjunoCheckout_installment_postal_text>Invio fattura cartacea tramite posta (spese aggiuntive di CHF 3.95 per ogni rata) all’indirizzo</ByjunoCheckout_installment_postal_text>
+                    <ByjunoCheckout_installment_email_text>Invio fattura tramite e-mail (senza spese aggiuntive) all’indirizzo</ByjunoCheckout_installment_email_text>
+                </ByjunoCheckout_installment_localization>
+            </byjunoinstallmentsettings>
+        </italian>
+        <english>
+            <byjunocheckoutsettings>
+                <localization>
+                    <ByjunoCheckout_invoice_payments>invoice_ByjunoCheckout_enable,Byjuno Checkout Invoice (with partial payment option),Byjuno
+                        Single Invoice,https://byjuno.ch/en/1b/terms/,https://byjuno.ch/en/2b/terms/
+                    </ByjunoCheckout_invoice_payments>
+                    <ByjunoCheckout_installment_payments>3 Installments,10 installments,12 installments,24 installments,4
+                        installments in 12
+                        months,N/A,https://byjuno.ch/en/3a/terms/,https://byjuno.ch/en/1d/terms/,https://byjuno.ch/en/1d/terms/,https://byjuno.ch/en/1d/terms/,https://byjuno.ch/en/1d/terms/,N/A
+                    </ByjunoCheckout_installment_payments>
+                    <title_invoice>Byjuno Checkout INVOICE</title_invoice>
+                    <title_installment>Byjuno Checkout INSTALLMENT</title_installment>
+                    <ByjunoCheckout_installment_toc_string>T&amp;C</ByjunoCheckout_installment_toc_string>
+                    <ByjunoCheckout_installment_payment_message>Please select payment option and agree to Terms and Conditions
+                    </ByjunoCheckout_installment_payment_message>
+                    <ByjunoCheckout_fail_message>Payment Method Provider have refused selected payment method, please select
+                        different payment method.
+                    </ByjunoCheckout_fail_message>
+                    <ByjunoCheckout_invoice_toc_string>T&amp;C</ByjunoCheckout_invoice_toc_string>
+                    <ByjunoCheckout_invoice_payment_message>Please select payment option and agree to Terms and Conditions
+                    </ByjunoCheckout_invoice_payment_message>
+                    <ByjunoCheckout_invoice_postal_text>Invoice Delivery method by Post (postage fee 3.95 CHF) to
+                    </ByjunoCheckout_invoice_postal_text>
+                    <ByjunoCheckout_invoice_email_text>Invoice Delivery method by E-Mail (no fees) to</ByjunoCheckout_invoice_email_text>
+                    <ByjunoCheckout_installment_postal_text>Installments Delivery method by Post (postage fee 3.95 CHF for each
+                        installment) to
+                    </ByjunoCheckout_installment_postal_text>
+                    <ByjunoCheckout_installment_email_text>Installments Delivery method by E-Mail (no fees) to
+                    </ByjunoCheckout_installment_email_text>
+                    <ByjunoCheckout_s4_fail>The invoice transfer to Byjuno Checkout failed; the invoice could not be generated, please
+                        retry.
+                    </ByjunoCheckout_s4_fail>
+                    <ByjunoCheckout_s5_fail>The transfer of the updated order to Byjuno Checkout failed; Cancel/Refund could not be
+                        completed, please retry.
+                    </ByjunoCheckout_s5_fail>
+                    <postal_code_wrong>Postal code of billing address is incorrect</postal_code_wrong>
+                    <telephone_code_wrong>Telephone of billing address is incorrect</telephone_code_wrong>
+                </localization>
+            </byjunocheckoutsettings>
+            <byjunoinvoicesettings>
+                <ByjunoCheckout_invoice_setup>
+                    <title_invoice>Byjuno Checkout invoice</title_invoice>
+                </ByjunoCheckout_invoice_setup>
+                <ByjunoCheckout_invoice_partial>
+                    <name>Byjuno Checkout Invoice (with partial payment option)</name>
+                    <link>https://byjuno.ch/en/1b/terms/</link>
+                </ByjunoCheckout_invoice_partial>
+                <ByjunoCheckout_single_invoice>
+                    <name>Byjuno Checkout Single Invoice</name>
+                    <link>https://byjuno.ch/en/2b/terms/</link>
+                </ByjunoCheckout_single_invoice>
+                <ByjunoCheckout_invoice_localization>
+                    <ByjunoCheckout_invoice_toc_string>T&amp;C</ByjunoCheckout_invoice_toc_string>
+                    <ByjunoCheckout_invoice_payment_message>Please select payment option and agree to Terms and Conditions</ByjunoCheckout_invoice_payment_message>
+                    <ByjunoCheckout_invoice_postal_text>Invoice Delivery method by Post (postage fee 3.95 CHF) to</ByjunoCheckout_invoice_postal_text>
+                    <ByjunoCheckout_invoice_email_text>Invoice Delivery method by E-Mail (no fees) to</ByjunoCheckout_invoice_email_text>
+                </ByjunoCheckout_invoice_localization>
+            </byjunoinvoicesettings>
+            <byjunoinstallmentsettings>
+                <ByjunoCheckout_installment_setup>
+                    <title_installment>Byjuno Checkout installment</title_installment>
+                    <sort_order_installment>2</sort_order_installment>
+                </ByjunoCheckout_installment_setup>
+                <ByjunoCheckout_installment_3installment>
+                    <name>3 installments</name>
+                    <link>https://byjuno.ch/en/3a/terms/</link>
+                </ByjunoCheckout_installment_3installment>
+                <ByjunoCheckout_installment_10installment>
+                    <name>10 installments</name>
+                    <link>https://byjuno.ch/en/1d/terms/</link>
+                </ByjunoCheckout_installment_10installment>
+                <ByjunoCheckout_installment_12installment>
+                    <name>12 installments</name>
+                    <link>https://byjuno.ch/en/1d/terms/</link>
+                </ByjunoCheckout_installment_12installment>
+                <ByjunoCheckout_installment_24installment>
+                    <name>24 installments</name>
+                    <link>https://byjuno.ch/en/1d/terms/</link>
+                </ByjunoCheckout_installment_24installment>
+                <ByjunoCheckout_installment_4x12installment>
+                    <name>4 installments in 12 months</name>
+                    <link>https://byjuno.ch/en/1d/terms/</link>
+                </ByjunoCheckout_installment_4x12installment>
+                <ByjunoCheckout_installment_localization>
+                    <ByjunoCheckout_installment_toc_string>CGC</ByjunoCheckout_installment_toc_string>
+                    <ByjunoCheckout_installment_payment_message>La preghiamo di scegliere la modalità di pagamento e di accettare le condizioni generali di contratto</ByjunoCheckout_installment_payment_message>
+                    <ByjunoCheckout_installment_postal_text>Invio fattura cartacea tramite posta (spese aggiuntive di CHF 3.95 per ogni rata) all’indirizzo</ByjunoCheckout_installment_postal_text>
+                    <ByjunoCheckout_installment_email_text>Invio fattura tramite e-mail (senza spese aggiuntive) all’indirizzo</ByjunoCheckout_installment_email_text>
+                </ByjunoCheckout_installment_localization>
+            </byjunoinstallmentsettings>
+        </english>
+    </stores>
+    <default>
+        <payment>
+            <ByjunoCheckout_invoice>
+                <model>InvoiceByjunoCheckoutCoreFacade</model>
+                <order_status>pending_byjuno</order_status>
+                <title>Byjuno Checkout invoice</title>
+                <can_use_checkout>1</can_use_checkout>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_auhtorize>1</can_auhtorize>
+                <payment_action>authorize</payment_action>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <sort_order>1</sort_order>
+                <can_use_internal>1</can_use_internal>
+                <active>1</active>
+            </ByjunoCheckout_invoice>
+            <ByjunoCheckout_installment>
+                <model>InstallmentByjunoCheckoutCoreFacade</model>
+                <order_status>pending_byjuno</order_status>
+                <title>Byjuno Checkout installment</title>
+                <can_use_checkout>1</can_use_checkout>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_auhtorize>1</can_auhtorize>
+                <payment_action>authorize</payment_action>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <sort_order>2</sort_order>
+                <can_use_internal>1</can_use_internal>
+                <active>1</active>
+            </ByjunoCheckout_installment>
+        </payment>
+        <byjunocheckoutsettings>
+            <ByjunoCheckout_setup>
+                <active>0</active>
+                <currentmode>test</currentmode>
+                <minamount>10</minamount>
+                <maxamount>10000</maxamount>
+                <timeout>30</timeout>
+                <tmxenabled>0</tmxenabled>
+                <tmxkey>lq866c5i</tmxkey>
+                <businesstobusiness>0</businesstobusiness>
+                <ByjunoCheckout_prod_email>invoices@byjuno.ch</ByjunoCheckout_prod_email>
+                <ByjunoCheckout_test_email>test-invoices@byjuno.ch</ByjunoCheckout_test_email>
+                <byjunos4transacton>0</byjunos4transacton>
+                <byjunos5transacton>0</byjunos5transacton>
+                <gender_enable>0</gender_enable>
+                <birthday_enable>0</birthday_enable>
+                <gender_prefix>Herr;Frau</gender_prefix>
+                <gender_male_possible_prefix>Herr;Mr</gender_male_possible_prefix>
+                <gender_female_possible_prefix>Frau;Mrs;Ms</gender_female_possible_prefix>
+                <cdpbeforeshow>0</cdpbeforeshow>
+                <country_phone_validation>1</country_phone_validation>
+                <ip_detect_string />
+                <ByjunoCheckout_invoice_paper>0</ByjunoCheckout_invoice_paper>
+                <ByjunoCheckout_risk>2</ByjunoCheckout_risk>
+                <merchant_risk></merchant_risk>
+                <accepted_s3>2</accepted_s3>
+                <success_state>processing</success_state>
+                <force_send_email>1</force_send_email>
+                <b2b_uid>0</b2b_uid>
+                <txid_extrainfo>0</txid_extrainfo>
+            </ByjunoCheckout_setup>
+            <localization>
+                <ByjunoCheckout_invoice_payments>invoice_ByjunoCheckout_enable,Byjuno Checkout Rechnung mit Teilzahlungsoption,Byjuno
+                    Einmalrechnung,https://byjuno.ch/de/1b/terms/,https://byjuno.ch/de/2b/terms/
+                </ByjunoCheckout_invoice_payments>
+                <ByjunoCheckout_installment_paper>0</ByjunoCheckout_installment_paper>
+                <ByjunoCheckout_installment_payments>3 Raten,10 Raten,12 Raten,24 Raten,4 Raten innerhalb von 12
+                    Monaten,N/A,https://byjuno.ch/de/3a/terms/,https://byjuno.ch/de/1d/terms/,https://byjuno.ch/de/1d/terms/,https://byjuno.ch/de/1d/terms/,https://byjuno.ch/de/1d/terms/,N/A
+                </ByjunoCheckout_installment_payments>
+                <ByjunoCheckout_installment_toc_string>AGB</ByjunoCheckout_installment_toc_string>
+                <ByjunoCheckout_installment_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen
+                    Geschäftsbedingungen
+                </ByjunoCheckout_installment_payment_message>
+                <ByjunoCheckout_fail_message>Der Anbieter dieser Zahlungsart hat die gewählte Bezahlmethode abgelehnt. Bitte wählen
+                    Sie eine andere Zahlungsart.
+                </ByjunoCheckout_fail_message>
+                <ByjunoCheckout_installment_postal_text>Rechnungsversand in Papierform via Post (gegen Gebühr von CHF 3.95 pro Rate)
+                    an
+                </ByjunoCheckout_installment_postal_text>
+                <ByjunoCheckout_installment_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an</ByjunoCheckout_installment_email_text>
+                <ByjunoCheckout_s4_fail>Das Senden der Rechnung an Byjuno Checkout ist fehlgeschlagen. Die Rechnung wurde nicht generiert.
+                    Bitte versuchen Sie es erneut.
+                </ByjunoCheckout_s4_fail>
+                <ByjunoCheckout_s5_fail>Das Senden der Bestelländerung an Byjuno Checkout ist fehlgeschlagen. Storno/Rückerstattung konnte
+                    nicht durchgeführt werden. Bitte versuchen Sie es erneut.
+                </ByjunoCheckout_s5_fail>
+                <postal_code_wrong>Die PLZ der Rechnungsadresse ist fehlerhaft</postal_code_wrong>
+                <telephone_code_wrong>Die Telefonnummer der Rechnungsadresse ist fehlerhaft</telephone_code_wrong>
+            </localization>
+        </byjunocheckoutsettings>
+        <byjunoinvoicesettings>
+            <ByjunoCheckout_invoice_setup>
+                <title_invoice>Byjuno Checkout Rechnung</title_invoice>
+                <sort_order_invoice>2</sort_order_invoice>
+            </ByjunoCheckout_invoice_setup>
+            <ByjunoCheckout_invoice_partial>
+                <active>0</active>
+                <name>Byjuno Checkout Rechnung mit Teilzahlungsoption</name>
+                <link>https://byjuno.ch/de/1b/terms/</link>
+                <ByjunoCheckout_invoice_partial_allow>0</ByjunoCheckout_invoice_partial_allow>
+            </ByjunoCheckout_invoice_partial>
+            <ByjunoCheckout_single_invoice>
+                <active>0</active>
+                <name>Byjuno Checkout Einmalrechnung</name>
+                <link>https://byjuno.ch/de/2b/terms/</link>
+                <ByjunoCheckout_single_invoice_allow>0</ByjunoCheckout_single_invoice_allow>
+            </ByjunoCheckout_single_invoice>
+            <ByjunoCheckout_invoice_localization>
+                <ByjunoCheckout_invoice_toc_string>AGB</ByjunoCheckout_invoice_toc_string>
+                <ByjunoCheckout_invoice_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen Geschäftsbedingungen</ByjunoCheckout_invoice_payment_message>
+                <ByjunoCheckout_invoice_postal_text>Rechnungsversand in Papierform via Post  (gegen Gebühr von CHF 3.95) an</ByjunoCheckout_invoice_postal_text>
+                <ByjunoCheckout_invoice_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an</ByjunoCheckout_invoice_email_text>
+            </ByjunoCheckout_invoice_localization>
+        </byjunoinvoicesettings>
+        <byjunoinstallmentsettings>
+            <ByjunoCheckout_installment_setup>
+                <title_installment>Byjuno Checkout Ratenzahlung</title_installment>
+                <sort_order_installment>2</sort_order_installment>
+            </ByjunoCheckout_installment_setup>
+            <ByjunoCheckout_installment_3installment>
+                <active>0</active>
+                <name>3 Raten</name>
+                <link>https://byjuno.ch/de/3a/terms/</link>
+                <ByjunoCheckout_installment_3installment_allow>0</ByjunoCheckout_installment_3installment_allow>
+            </ByjunoCheckout_installment_3installment>
+            <ByjunoCheckout_installment_10installment>
+                <active>0</active>
+                <name>10 Raten</name>
+                <link>https://byjuno.ch/de/1d/terms/</link>
+                <ByjunoCheckout_installment_10installment_allow>0</ByjunoCheckout_installment_10installment_allow>
+            </ByjunoCheckout_installment_10installment>
+            <ByjunoCheckout_installment_12installment>
+                <active>0</active>
+                <name>12 Raten</name>
+                <link>https://byjuno.ch/de/1d/terms/</link>
+                <ByjunoCheckout_installment_12installment_allow>0</ByjunoCheckout_installment_12installment_allow>
+            </ByjunoCheckout_installment_12installment>
+            <ByjunoCheckout_installment_24installment>
+                <active>0</active>
+                <name>24 Raten</name>
+                <link>https://byjuno.ch/de/1d/terms/</link>
+                <ByjunoCheckout_installment_24installment_allow>0</ByjunoCheckout_installment_24installment_allow>
+            </ByjunoCheckout_installment_24installment>
+            <ByjunoCheckout_installment_4x12installment>
+                <active>0</active>
+                <name>4 Raten innerhalb von 12 Monaten</name>
+                <link>https://byjuno.ch/de/1d/terms/</link>
+                <ByjunoCheckout_installment_4x12installment_allow>0</ByjunoCheckout_installment_4x12installment_allow>
+            </ByjunoCheckout_installment_4x12installment>
+            <ByjunoCheckout_installment_localization>
+                <ByjunoCheckout_installment_toc_string>AGB</ByjunoCheckout_installment_toc_string>
+                <ByjunoCheckout_installment_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen
+                    Geschäftsbedingungen
+                </ByjunoCheckout_installment_payment_message>
+                <ByjunoCheckout_installment_postal_text>Rechnungsversand in Papierform via Post (gegen Gebühr von CHF 3.95) an
+                </ByjunoCheckout_installment_postal_text>
+                <ByjunoCheckout_installment_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an</ByjunoCheckout_installment_email_text>
+            </ByjunoCheckout_installment_localization>
+        </byjunoinstallmentsettings>
+    </default>
+</config>
