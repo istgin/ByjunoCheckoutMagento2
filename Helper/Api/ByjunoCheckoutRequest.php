@@ -11,6 +11,9 @@ class CustDetails
     public $lastName; //String
     public $language; //String
     public $salutation; //String
+    public $dateOfBirth; //String
+    public $companyName; //String
+    public $companyRegNum; //String
 
 }
 
@@ -43,6 +46,14 @@ class DeliveryDetails
 {
     public $deliveryDetailsDifferent; //boolean
     public $deliveryMethod; //String
+    public $deliveryFirstName; //String
+    public $deliverySecondName; //String
+    public $deliveryCompanyName; //String
+    public $deliverySalutation; //String
+    public $deliveryAddrFirstLine; //String
+    public $deliveryAddrPostalCode; //String
+    public $deliveryAddrTown; //String
+    public $deliveryAddrCountry; //String
 
 }
 
@@ -118,6 +129,10 @@ class ByjunoCheckoutRequest
     {
         $date = new \DateTime();
         return $date->format('Y-m-d\TH:i:s\Z');
+    }
+
+    public function createRequest() {
+        return json_encode($this);
     }
 
 }

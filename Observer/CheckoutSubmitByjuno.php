@@ -23,7 +23,7 @@ class CheckoutSubmitByjuno Checkout implements ObserverInterface {
          * @var \Magento\Catalog\Model\Product  $product
          */
         $method = $order->getPayment()->getMethod();
-        if ($method != "ByjunoCheckout_invoice" && $method != "ByjunoCheckout_installment")
+        if ($method != "byjunocheckout_invoice" && $method != "byjunocheckout_installment")
         {
             return;
         }

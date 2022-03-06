@@ -15,7 +15,7 @@ class ByjunoLogger
         $connection = $objectManager->create('\Magento\Framework\App\ResourceConnection');
 
         $conn = $connection->getConnection();
-        $conn->insert('ByjunoCheckout_log',
+        $conn->insert('byjunocheckout_log',
             array(
                 'firstname' => $array['firstname'],
                 'lastname' => $array['lastname'],

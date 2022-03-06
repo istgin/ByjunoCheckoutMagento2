@@ -8,6 +8,8 @@
 
 namespace ByjunoCheckout\ByjunoCheckoutCore\Model;
 
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
@@ -63,7 +65,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
 
     public function isInitializeNeeded()
     {
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
             return false;
         } else {
             return true;
@@ -76,8 +78,8 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         if ($quote != null) {
             $total = $quote->getGrandTotal();
             $active = true;
-            if ($total < $this->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/minamount', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ||
-                $total > $this->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/maxamount', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+            if ($total < $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/minamount', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ||
+                $total > $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/maxamount', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
                 $active = false;
             }
             return parent::isAvailable($quote) && $active;
@@ -91,7 +93,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         /* @var $order \Magento\Sales\Model\Order */
         $order = $payment->getOrder();
         $webshopProfileId = $payment->getAdditionalInformation("webshop_profile_id");
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/byjunos5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunos5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
 
@@ -99,15 +101,15 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         $ByjunoRequestName = 'Byjuno Checkout S5 Cancel';
         $xml = $request->createRequest();
         $byjunoCommunicator = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator();
-        $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+        $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         if ($mode == 'live') {
             $byjunoCommunicator->setServer('live');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/ByjunoCheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else {
             $byjunoCommunicator->setServer('test');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/ByjunoCheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
-        $response = $byjunoCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        $response = $byjunoCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
         if ($response) {
             $this->_dataHelper->_responseS4->setRawResponse($response);
             $this->_dataHelper->_responseS4->processResponse();
@@ -119,7 +121,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         }
         if ($status == 'ERR') {
             throw new LocalizedException(
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/ByjunoCheckout_s5_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s5_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
             );
         }
 
@@ -146,14 +148,11 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         "CompanyName1",
         "DateOfBirth",
         "Email",
-        "Fax",
         "TelephonePrivate",
-        "TelephoneOffice",
         "Gender",
         "DELIVERY_FIRSTNAME",
         "DELIVERY_LASTNAME",
         "DELIVERY_FIRSTLINE",
-        "DELIVERY_HOUSENUMBER",
         "DELIVERY_COUNTRYCODE",
         "DELIVERY_POSTCODE",
         "DELIVERY_TOWN",
@@ -161,30 +160,27 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
     );
 
 
-    public function isTheSame(\ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest $request) {
+    public function isTheSame(ByjunoCheckoutRequest $request) {
 
-        if ($request->getFirstName() != $this->_savedUser["FirstName"]
-            || $request->getLastName() != $this->_savedUser["LastName"]
-            || $request->getFirstLine() != $this->_savedUser["FirstLine"]
-            || $request->getCountryCode() != $this->_savedUser["CountryCode"]
-            || $request->getPostCode() != $this->_savedUser["PostCode"]
-            || $request->getTown() != $this->_savedUser["Town"]
-            || $request->getCompanyName1() != $this->_savedUser["CompanyName1"]
-            || $request->getDateOfBirth() != $this->_savedUser["DateOfBirth"]
-            || $request->getEmail() != $this->_savedUser["Email"]
-            || $request->getFax() != $this->_savedUser["Fax"]
-            || $request->getTelephonePrivate() != $this->_savedUser["TelephonePrivate"]
-            || $request->getTelephoneOffice() != $this->_savedUser["TelephoneOffice"]
-            || $request->getGender() != $this->_savedUser["Gender"]
-            || $request->getExtraInfoByKey("ORDERAMOUNT") != $this->_savedUser["Amount"]
-            || $request->getExtraInfoByKey("DELIVERY_FIRSTNAME") != $this->_savedUser["DELIVERY_FIRSTNAME"]
-            || $request->getExtraInfoByKey("DELIVERY_LASTNAME") != $this->_savedUser["DELIVERY_LASTNAME"]
-            || $request->getExtraInfoByKey("DELIVERY_FIRSTLINE") != $this->_savedUser["DELIVERY_FIRSTLINE"]
-            || $request->getExtraInfoByKey("DELIVERY_HOUSENUMBER") != $this->_savedUser["DELIVERY_HOUSENUMBER"]
-            || $request->getExtraInfoByKey("DELIVERY_COUNTRYCODE") != $this->_savedUser["DELIVERY_COUNTRYCODE"]
-            || $request->getExtraInfoByKey("DELIVERY_POSTCODE") != $this->_savedUser["DELIVERY_POSTCODE"]
-            || $request->getExtraInfoByKey("DELIVERY_TOWN") != $this->_savedUser["DELIVERY_TOWN"]
-            || $request->getExtraInfoByKey("DELIVERY_COMPANYNAME") != $this->_savedUser["DELIVERY_COMPANYNAME"]
+        if ($request->custDetails->firstName != $this->_savedUser["FirstName"]
+            || $request->custDetails->lastName != $this->_savedUser["LastName"]
+            || $request->billingAddr->addrFirstLine != $this->_savedUser["FirstLine"]
+            || $request->billingAddr->country != $this->_savedUser["CountryCode"]
+            || $request->billingAddr->postalCode != $this->_savedUser["PostCode"]
+            || $request->billingAddr->town != $this->_savedUser["Town"]
+            || $request->custDetails->companyName != $this->_savedUser["CompanyName1"]
+            || $request->custDetails->dateOfBirth != $this->_savedUser["DateOfBirth"]
+            || $request->custContacts->email != $this->_savedUser["Email"]
+            || $request->custContacts->phoneMobile != $this->_savedUser["TelephonePrivate"]
+            || $request->custDetails->salutation != $this->_savedUser["Gender"]
+            || $request->amount != $this->_savedUser["Amount"]
+            || $request->deliveryDetails->deliveryFirstName != $this->_savedUser["DELIVERY_FIRSTNAME"]
+            || $request->deliveryDetails->deliverySecondName != $this->_savedUser["DELIVERY_LASTNAME"]
+            || $request->deliveryDetails->deliveryAddrFirstLine != $this->_savedUser["DELIVERY_FIRSTLINE"]
+            || $request->deliveryDetails->deliveryAddrCountry != $this->_savedUser["DELIVERY_COUNTRYCODE"]
+            || $request->deliveryDetails->deliveryAddrPostalCode != $this->_savedUser["DELIVERY_POSTCODE"]
+            || $request->deliveryDetails->deliveryAddrTown != $this->_savedUser["DELIVERY_TOWN"]
+            || $request->deliveryDetails->deliveryCompanyName != $this->_savedUser["DELIVERY_COMPANYNAME"]
         ) {
             return false;
         }
@@ -202,7 +198,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             //skip credit check for backend
             return null;
         }
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/cdpbeforeshow', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/cdpbeforeshow', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
             && $quote != null
             && $quote->getBillingAddress() != null) {
             $theSame = $this->_dataHelper->_checkoutSession->getIsTheSame();
@@ -212,14 +208,14 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             $CDPStatus = $this->_dataHelper->_checkoutSession->getCDPStatus();
             try {
                 $request = $this->_dataHelper->CreateMagentoShopRequestCreditCheck($quote);
-                if ($request->getExtraInfoByKey("ORDERAMOUNT") == 0) {
+                if ($request->amount == 0) {
                     return false;
                 }
                 $arrCheck = Array(
-                    "FirstName" => $request->getFirstName(),
-                    "LastName" => $request->getLastName(),
-                    "CountryCode" => $request->getCountryCode(),
-                    "Town" => $request->getTown()
+                    "FirstName" => $request->custDetails->firstName,
+                    "LastName" => $request->custDetails->lastName,
+                    "CountryCode" => $request->billingAddr->country,
+                    "Town" => $request->billingAddr->town
                 );
                 foreach($arrCheck as $arrK => $arrV) {
                    if (empty($arrV)) {
@@ -228,10 +224,10 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 }
                 if (!empty($CDPStatus) && $this->isTheSame($request)) {
                     $accept = "";
-                    if ($this->_dataHelper->byjunoIsStatusOk($CDPStatus, "byjunocheckoutsettings/ByjunoCheckout_setup/merchant_risk")) {
+                    if ($this->_dataHelper->byjunoIsStatusOk($CDPStatus, "byjunocheckoutsettings/byjunocheckout_setup/merchant_risk")) {
                         $accept = "CLIENT";
                     }
-                    if ($this->_dataHelper->byjunoIsStatusOk($CDPStatus, "byjunocheckoutsettings/ByjunoCheckout_setup/ByjunoCheckout_risk")) {
+                    if ($this->_dataHelper->byjunoIsStatusOk($CDPStatus, "byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_risk")) {
                         $accept = "IJ";
                     }
                     if ($accept == "") {
@@ -241,23 +237,24 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 }
                 if (!$this->isTheSame($request) || empty($CDPStatus)) {
                     $ByjunoRequestName = "Credit check request";
-                    if ($request->getCompanyName1() != '' && $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/businesstobusiness',
+                    if ($request->custDetails->custType == 'C' && $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
                             \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
                         $ByjunoRequestName = "Credit check request for Company";
-                        $xml = $request->createRequestCompany();
+                        $json = $request->createRequest();
                     } else {
-                        $xml = $request->createRequest();
+                        $json = $request->createRequest();
                     }
-                    $byjunoCommunicator = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator();
-                    $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                    $byjunoCommunicator = new ByjunoCommunicator();
+                    $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
                     if ($mode == 'live') {
                         $byjunoCommunicator->setServer('live');
                     } else {
                         $byjunoCommunicator->setServer('test');
                     }
-                    $response = $byjunoCommunicator->sendRequest($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/timeout',
+                    $response = $byjunoCommunicator->sendRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
                         \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                    if ($response) {
+                    $status = 2;
+                   /* if ($response) {
                         $this->_dataHelper->_response->setRawResponse($response);
                         $this->_dataHelper->_response->processResponse();
                         $status = (int)$this->_dataHelper->_response->getCustomerRequestStatus();
@@ -268,39 +265,37 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                     } else {
                         $this->_dataHelper->saveLog($request, $xml, "empty response", "0", $ByjunoRequestName);
                     }
+                   */
 
                     $this->_savedUser = Array(
-                        "FirstName" => $request->getFirstName(),
-                        "LastName" => $request->getLastName(),
-                        "FirstLine" => $request->getFirstLine(),
-                        "CountryCode" => $request->getCountryCode(),
-                        "PostCode" => $request->getPostCode(),
-                        "Town" => $request->getTown(),
-                        "CompanyName1" => $request->getCompanyName1(),
-                        "DateOfBirth" => $request->getDateOfBirth(),
-                        "Email" => $request->getEmail(),
-                        "Fax" => $request->getFax(),
-                        "TelephonePrivate" => $request->getTelephonePrivate(),
-                        "TelephoneOffice" => $request->getTelephoneOffice(),
-                        "Gender" => $request->getGender(),
-                        "Amount" => $request->getExtraInfoByKey("ORDERAMOUNT"),
-                        "DELIVERY_FIRSTNAME" => $request->getExtraInfoByKey("DELIVERY_FIRSTNAME"),
-                        "DELIVERY_LASTNAME" => $request->getExtraInfoByKey("DELIVERY_LASTNAME"),
-                        "DELIVERY_FIRSTLINE" => $request->getExtraInfoByKey("DELIVERY_FIRSTLINE"),
-                        "DELIVERY_HOUSENUMBER" => $request->getExtraInfoByKey("DELIVERY_HOUSENUMBER"),
-                        "DELIVERY_COUNTRYCODE" => $request->getExtraInfoByKey("DELIVERY_COUNTRYCODE"),
-                        "DELIVERY_POSTCODE" => $request->getExtraInfoByKey("DELIVERY_POSTCODE"),
-                        "DELIVERY_TOWN" => $request->getExtraInfoByKey("DELIVERY_TOWN"),
-                        "DELIVERY_COMPANYNAME" => $request->getExtraInfoByKey("DELIVERY_COMPANYNAME")
+                        "FirstName" => $request->custDetails->firstName,
+                        "LastName" => $request->custDetails->lastName,
+                        "FirstLine" => $request->billingAddr->addrFirstLine ,
+                        "CountryCode" => $request->billingAddr->country,
+                        "PostCode" => $request->billingAddr->postalCode,
+                        "Town" => $request->billingAddr->town,
+                        "CompanyName1" => $request->custDetails->companyName,
+                        "DateOfBirth" => $request->custDetails->dateOfBirth,
+                        "Email" => $request->custContacts->email,
+                        "TelephonePrivate" => $request->custContacts->phoneMobile,
+                        "Gender" => $request->custDetails->salutation,
+                        "Amount" => $request->amount,
+                        "DELIVERY_FIRSTNAME" => $request->deliveryDetails->deliveryFirstName,
+                        "DELIVERY_LASTNAME" => $request->deliveryDetails->deliverySecondName,
+                        "DELIVERY_FIRSTLINE" => $request->deliveryDetails->deliveryAddrFirstLine,
+                        "DELIVERY_COUNTRYCODE" => $request->deliveryDetails->deliveryAddrCountry,
+                        "DELIVERY_POSTCODE" => $request->deliveryDetails->deliveryAddrPostalCode,
+                        "DELIVERY_TOWN" => $request->deliveryDetails->deliveryAddrTown,
+                        "DELIVERY_COMPANYNAME" => $request->deliveryDetails->deliveryCompanyName
                     );
                     $this->_dataHelper->_checkoutSession->setIsTheSame($this->_savedUser);
                     $this->_dataHelper->_checkoutSession->setCDPStatus($status);
 
                     $accept = "";
-                    if ($this->_dataHelper->byjunoIsStatusOk($status, "byjunocheckoutsettings/ByjunoCheckout_setup/merchant_risk")) {
+                    if ($this->_dataHelper->byjunoIsStatusOk($status, "byjunocheckoutsettings/byjunocheckout_setup/merchant_risk")) {
                         $accept = "CLIENT";
                     }
-                    if ($this->_dataHelper->byjunoIsStatusOk($status, "byjunocheckoutsettings/ByjunoCheckout_setup/ByjunoCheckout_risk")) {
+                    if ($this->_dataHelper->byjunoIsStatusOk($status, "byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_risk")) {
                         $accept = "IJ";
                     }
 
@@ -317,7 +312,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
     /* @var $payment \Magento\Quote\Model\Quote\Payment */
     public function validateCustomByjunoFields(\Magento\Payment\Model\InfoInterface $payment, $isCompany)
     {
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/gender_enable",
+        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_enable",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             if ($payment->getAdditionalInformation('customer_gender') == null || $payment->getAdditionalInformation('customer_gender') == '') {
                 throw new LocalizedException(
@@ -338,7 +333,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             }
         }
         if (!$isCompany) {
-            if ($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/birthday_enable",
+            if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/birthday_enable",
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1 && !$birthday_provided) {
                 if ($payment->getAdditionalInformation('customer_dob') == null || $payment->getAdditionalInformation('customer_dob') == '') {
                     throw new LocalizedException(
@@ -360,7 +355,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 }
             }
         } else {
-            if ($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/b2b_uid",
+            if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/b2b_uid",
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
                 if ($payment->getAdditionalInformation('customer_b2b_uid') == null || $payment->getAdditionalInformation('customer_b2b_uid') == '') {
                     throw new LocalizedException(
@@ -370,7 +365,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             }
         }
 
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/country_phone_validation",
+        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/country_phone_validation",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1 && $payment->getQuote() != null) {
 
             $pattern = "/^[0-9]{4}$/";
@@ -399,22 +394,22 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         $memo = $payment->getCreditmemo();
         $incoiceId = $memo->getInvoice()->getIncrementId();
         $webshopProfileId = $payment->getAdditionalInformation("webshop_profile_id");
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/byjunos5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunos5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
         $request = $this->_dataHelper->CreateMagentoShopRequestS5Paid($order, $amount, "REFUND", $incoiceId, $webshopProfileId);
         $ByjunoRequestName = 'Byjuno Checkout S5 Refund';
         $xml = $request->createRequest();
         $byjunoCommunicator = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator();
-        $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+        $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         if ($mode == 'live') {
             $byjunoCommunicator->setServer('live');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/ByjunoCheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else {
             $byjunoCommunicator->setServer('test');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/ByjunoCheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
-        $response = $byjunoCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        $response = $byjunoCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
         if ($response) {
             $this->_dataHelper->_responseS4->setRawResponse($response);
             $this->_dataHelper->_responseS4->processResponse();
@@ -426,7 +421,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         }
         if ($status == 'ERR') {
             throw new LocalizedException(
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/ByjunoCheckout_s5_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s5_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
             );
         } else {
             $this->_dataHelper->_byjunoCreditmemoSender->sendCreditMemo($memo, $email);
@@ -453,12 +448,12 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 __("Internal invoice (InvoiceObserver) error")
             );
         }
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/byjunos4transacton", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/byjunos4transacton", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
         if ($payment->getAdditionalInformation("s3_ok") == null || $payment->getAdditionalInformation("s3_ok") == 'false') {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/ByjunoCheckout_s4_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: S3_NOT_CREATED)")
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s4_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: S3_NOT_CREATED)")
             );
         }
         $incrementValue =  $this->_eavConfig->getEntityType($invoice->getEntityType())->fetchNewIncrementId($invoice->getStoreId());
@@ -471,15 +466,15 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         $ByjunoRequestName = 'Byjuno Checkout S4';
         $xml = $request->createRequest();
         $byjunoCommunicator = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator();
-        $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+        $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         if ($mode == 'live') {
             $byjunoCommunicator->setServer('live');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/ByjunoCheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else {
             $byjunoCommunicator->setServer('test');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/ByjunoCheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
-        $response = $byjunoCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        $response = $byjunoCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
         if ($response) {
             $this->_dataHelper->_responseS4->setRawResponse($response);
             $this->_dataHelper->_responseS4->processResponse();
@@ -491,7 +486,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         }
         if ($status == 'ERR') {
             throw new LocalizedException(
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/ByjunoCheckout_s4_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s4_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
             );
         } else {
             $this->_dataHelper->_byjunoInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);

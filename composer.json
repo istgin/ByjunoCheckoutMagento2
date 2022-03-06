@@ -1,5 +1,5 @@
 {
-    "name": "byjuno/ByjunoCheckoutCore",
+    "name": "byjunocheckout/byjunocheckoutcore",
     "description": "Byjuno Checkout integration for Magento 2",
     "type": "magento2-module",
     "version": "1.7.2",
@@ -7,7 +7,9 @@
         "OSL-3.0"
     ],
     "minimum-stability": "stable",
-    "require": { },
+    "require": {
+        "ext-curl": "*"
+    },
     "autoload": {
         "files": [
             "registration.php"

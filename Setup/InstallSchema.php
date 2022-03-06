@@ -21,7 +21,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer->startSetup();
 
         // Get tutorial_simplenews table
-        $tableName = $installer->getTable('ByjunoCheckout_log');
+        $tableName = $installer->getTable('byjunocheckout_log');
         // Check if the table already exists
 
         if ($installer->getConnection()->isTableExists($tableName) != true) {

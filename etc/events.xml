@@ -1,8 +1,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="checkout_submit_all_after">
-        <observer name="ByjunoCheckout_observer_checkout_submit_all_after" instance="ByjunoCheckout\ByjunoCheckoutCore\Observer\CheckoutSubmitByjuno"/>
+        <observer name="byjunocheckou_observer_checkout_submit_all_after" instance="ByjunoCheckout\ByjunoCheckoutCore\Observer\CheckoutSubmitByjuno"/>
     </event>
     <event name="sales_order_payment_capture">
-        <observer name="ByjunoCheckout_sales_order_payment_capture" instance="ByjunoCheckout\ByjunoCheckoutCore\Observer\InvoiceObserver"/>
+        <observer name="byjunocheckout_sales_order_payment_capture" instance="ByjunoCheckout\ByjunoCheckoutCore\Observer\InvoiceObserver"/>
     </event>
 </config>

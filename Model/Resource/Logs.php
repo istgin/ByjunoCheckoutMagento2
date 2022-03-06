@@ -17,6 +17,6 @@ class Logs extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('ByjunoCheckout_log', 'id');
+        $this->_init('byjunocheckout_log', 'id');
     }
 }

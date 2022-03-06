@@ -53,7 +53,7 @@ class InstallData implements InstallDataInterface
          */
         $eavSetup->addAttribute(
             \Magento\Sales\Model\Order::ENTITY,
-            'ByjunoCheckout_status',
+            'byjunocheckout_status',
             [
                 'type' => 'string',
                 'backend' => '',
@@ -78,7 +78,7 @@ class InstallData implements InstallDataInterface
 
         $eavSetup->addAttribute(
             \Magento\Sales\Model\Order::ENTITY,
-            'ByjunoCheckout_credit_rating',
+            'byjunocheckout_credit_rating',
             [
                 'type' => 'string',
                 'backend' => '',
@@ -103,7 +103,7 @@ class InstallData implements InstallDataInterface
 
         $eavSetup->addAttribute(
             \Magento\Sales\Model\Order::ENTITY,
-            'ByjunoCheckout_credit_level',
+            'byjunocheckout_credit_level',
             [
                 'type' => 'string',
                 'backend' => '',
@@ -127,7 +127,7 @@ class InstallData implements InstallDataInterface
         );
         $eavSetup->addAttribute(
             \Magento\Sales\Model\Order::ENTITY,
-            'ByjunoCheckout_payment_method',
+            'byjunocheckout_payment_method',
             [
                 'type' => 'string',
                 'backend' => '',
@@ -153,9 +153,9 @@ class InstallData implements InstallDataInterface
         $data = [];
         $dataSate = [];
         $statuses = [
-            'pending_byjuno' => Array( "name" => __('Byjuno Checkout wait for payment'), 'is_default' => 1, "visible_on_front" => 1, "state" => "new"),
-            'pending_ByjunoCheckout_payment' => Array( "name" =>__('Byjuno Checkout S2 confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "pending_payment"),
-            'ByjunoCheckout_confirmed'  => Array( "name" =>__('Byjuno Checkout S3 confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "processing"),
+            'pending_byjuno_checkout' => Array( "name" => __('Byjuno Checkout wait for payment'), 'is_default' => 1, "visible_on_front" => 1, "state" => "new"),
+            'pending_byjunocheckout_payment_checkout' => Array( "name" =>__('Byjuno Checkout confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "pending_payment"),
+            'byjunocheckout_confirmed_checkout'  => Array( "name" =>__('Byjuno Checkout V2 confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "processing"),
         ];
         foreach ($statuses as $code => $info) {
             $data[] = ['status' => $code, 'label' => $info["name"]];

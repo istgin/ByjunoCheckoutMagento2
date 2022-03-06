@@ -21,10 +21,10 @@ class ExplainS4 extends Field
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $ByjunoCheckout_s4_explain = $this->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/byjunos4transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjunocheckout_s4_explain = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunos4transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $message = 'S4 Transaction (Settlement/Invoice) must be delivered to Byjuno Checkout manually or from ERP system';
         $color = 'FFE5E6';
-        if ($ByjunoCheckout_s4_explain == 1) {
+        if ($byjunocheckout_s4_explain == 1) {
             $message = 'S4 Transaction (Settlement/Invoice) will be sent to Byjuno Checkout when new Invoice is created on the order';
             $color = 'ddffdf';
         }

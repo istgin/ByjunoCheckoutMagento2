@@ -21,10 +21,10 @@ class ExplainS5 extends Field
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $ByjunoCheckout_s5_explain = $this->_scopeConfig->getValue('byjunocheckoutsettings/ByjunoCheckout_setup/byjunos5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjunocheckout_s5_explain = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunos5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $message = 'S5 Transactions (Cancel and/or Refund) must be delivered to Byjuno Checkout manually or from ERP System';
         $color = 'FFE5E6';
-        if ($ByjunoCheckout_s5_explain == 1) {
+        if ($byjunocheckout_s5_explain == 1) {
             $message = 'S5 Transactions will be sent to Byjuno:<br/>
 Cancel - for not invoiced amount<br/>
 Refund - per Credit Memo';

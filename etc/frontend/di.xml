@@ -9,7 +9,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="ByjunoCheckout_invoice_config_provider" xsi:type="object">ByjunoCheckout\ByjunoCheckoutCore\Model\Ui\ConfigProvider</item>
+                <item name="byjunocheckout_invoice_config_provider" xsi:type="object">ByjunoCheckout\ByjunoCheckoutCore\Model\Ui\ConfigProvider</item>
             </argument>
         </arguments>
     </type>

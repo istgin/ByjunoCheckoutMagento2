@@ -17,10 +17,10 @@ define(
         return Component.extend({
             redirectAfterPlaceOrder: false,
             defaults: {
-                template: 'ByjunoCheckout_ByjunoCheckoutCore/payment/form_installment',
-                paymentPlan: window.checkoutConfig.payment.ByjunoCheckout_installment.default_payment,
-                deliveryPlan: window.checkoutConfig.payment.ByjunoCheckout_installment.default_delivery,
-                customGender: window.checkoutConfig.payment.ByjunoCheckout_installment.default_customgender
+                template: 'ByjunoCheckout_ByjunoCheckoutCore/payment/form_invoice',
+                paymentPlan: window.checkoutConfig.payment.byjunocheckout_invoice.default_payment,
+                deliveryPlan: window.checkoutConfig.payment.byjunocheckout_invoice.default_delivery,
+                customGender: window.checkoutConfig.payment.byjunocheckout_invoice.default_customgender
             },
 
             initObservable: function () {
@@ -36,13 +36,12 @@ define(
             afterPlaceOrder: function () {
                 jquery('body').loader('show');
                 this.selectPaymentMethod();
-                jquery.mage.redirect(url.build(window.checkoutConfig.payment.ByjunoCheckout_installment.redirectUrl));
+                jquery.mage.redirect(url.build(window.checkoutConfig.payment.byjunocheckout_invoice.redirectUrl));
                 return false;
             },
 
-
             getCode: function () {
-                return 'ByjunoCheckout_installment';
+                return 'byjunocheckout_invoice';
             },
 
             getYearRange: function () {
@@ -85,65 +84,65 @@ define(
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
-                            'installment_send': this.deliveryPlan(),
-                            'installment_customer_gender': this.customGender(),
-                            'installment_customer_dob': jquery("#customer_dob_installment").val()
+                            'invoice_payment_plan': this.paymentPlan(),
+                            'invoice_send': this.deliveryPlan(),
+                            'invoice_customer_gender': this.customGender(),
+                            'invoice_customer_dob': jquery("#customer_dob_invoice").val()
                         }
                     };
                 } else if (this.isB2bAllFieldsEnabled()) {
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
-                            'installment_send': this.deliveryPlan(),
-                            'installment_customer_gender': this.customGender(),
-                            'installment_customer_b2b_uid': jquery("#customer_b2b_uid_installment").val()
+                            'invoice_payment_plan': this.paymentPlan(),
+                            'invoice_send': this.deliveryPlan(),
+                            'invoice_customer_gender': this.customGender(),
+                            'invoice_customer_b2b_uid': jquery("#customer_b2b_uid_invoice").val()
                         }
                     };
-                }  else if (this.isGenderEnabled()) {
+                } else if (this.isGenderEnabled()) {
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
-                            'installment_send': this.deliveryPlan(),
-                            'installment_customer_gender': this.customGender()
+                            'invoice_payment_plan': this.paymentPlan(),
+                            'invoice_send': this.deliveryPlan(),
+                            'invoice_customer_gender': this.customGender()
                         }
                     };
                 } else if (this.isBirthdayEnabled()) {
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
-                            'installment_send': this.deliveryPlan(),
-                            'installment_customer_dob': jquery("#customer_dob_invoice").val()
+                            'invoice_payment_plan': this.paymentPlan(),
+                            'invoice_send': this.deliveryPlan(),
+                            'invoice_customer_dob': jquery("#customer_dob_invoice").val()
                         }
                     };
                 } else if (this.isB2bUid()) {
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
-                            'installment_send': this.deliveryPlan(),
-                            'installment_customer_b2b_uid': jquery("#customer_b2b_uid_installment").val()
+                            'invoice_payment_plan': this.paymentPlan(),
+                            'invoice_send': this.deliveryPlan(),
+                            'invoice_customer_b2b_uid': jquery("#customer_b2b_uid_invoice").val()
                         }
                     };
-                }  else {
+                } else {
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
-                            'installment_send': this.deliveryPlan()
+                            'invoice_payment_plan': this.paymentPlan(),
+                            'invoice_send': this.deliveryPlan()
                         }
                     };
                 }
             },
             getLogo: function () {
-                return window.checkoutConfig.payment.ByjunoCheckout_installment.logo;
+                return window.checkoutConfig.payment.byjunocheckout_invoice.logo;
             },
 
             getPaymentPlans: function () {
-                return _.map(window.checkoutConfig.payment.ByjunoCheckout_installment.methods, function (value, key) {
+                return _.map(window.checkoutConfig.payment.byjunocheckout_invoice.methods, function (value, key) {
                     return {
                         'value': value.value,
                         'link': value.link,
@@ -153,17 +152,17 @@ define(
             },
 
             isDeliveryVisibility: function() {
-                return window.checkoutConfig.payment.ByjunoCheckout_installment.paper_invoice;
+                return window.checkoutConfig.payment.byjunocheckout_invoice.paper_invoice;
             },
 
             isPaymentPlanVisible: function() {
-                return (window.checkoutConfig.payment.ByjunoCheckout_installment.methods.length > 1);
+                return (window.checkoutConfig.payment.byjunocheckout_invoice.methods.length > 1);
             },
 
             getDeliveryPlans: function () {
                 var list = [];
-                for (var i = 0; i < window.checkoutConfig.payment.ByjunoCheckout_installment.delivery.length; i++) {
-                    var value = window.checkoutConfig.payment.ByjunoCheckout_installment.delivery[i];
+                for (var i = 0; i < window.checkoutConfig.payment.byjunocheckout_invoice.delivery.length; i++) {
+                    var value = window.checkoutConfig.payment.byjunocheckout_invoice.delivery[i];
                     if (value.value == 'email') {
                         list.push(
                             {
@@ -198,20 +197,20 @@ define(
             },
 
             isGenderEnabled: function () {
-                return window.checkoutConfig.payment.ByjunoCheckout_installment.gender_enable;
+                return window.checkoutConfig.payment.byjunocheckout_installment.gender_enable;
             },
 
             isBirthdayEnabled: function () {
-                return window.checkoutConfig.payment.ByjunoCheckout_installment.birthday_enable;
+                return window.checkoutConfig.payment.byjunocheckout_installment.birthday_enable;
             },
             isB2bUid: function () {
-                return window.checkoutConfig.payment.ByjunoCheckout_installment.b2b_uid;
+                return window.checkoutConfig.payment.byjunocheckout_installment.b2b_uid;
             },
 
             getGenders: function() {
                 var list = [];
-                for (var i = 0; i < window.checkoutConfig.payment.ByjunoCheckout_installment.custom_genders.length; i++) {
-                    var value = window.checkoutConfig.payment.ByjunoCheckout_installment.custom_genders[i];
+                for (var i = 0; i < window.checkoutConfig.payment.byjunocheckout_invoice.custom_genders.length; i++) {
+                    var value = window.checkoutConfig.payment.byjunocheckout_invoice.custom_genders[i];
                     list.push(
                         {
                             'value': value.value,
@@ -221,6 +220,7 @@ define(
                 }
                 return list;
             }
+
         });
     }
 );

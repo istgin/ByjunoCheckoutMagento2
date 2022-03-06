@@ -16,8 +16,8 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'ByjunoCheckout_invoice',
-                component: 'ByjunoCheckout_ByjunoCheckoutCore/js/view/payment/method-renderer/ByjunoCheckout_invoice_renderer'
+                type: 'byjunocheckout_installment',
+                component: 'ByjunoCheckout_ByjunoCheckoutCore/js/view/payment/method-renderer/byjunocheckout_installment_renderer'
             }
         );
         /** Add view logic here if needed */

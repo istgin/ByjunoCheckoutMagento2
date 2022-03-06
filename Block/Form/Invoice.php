@@ -44,7 +44,7 @@ class Invoice extends \Magento\Payment\Block\Form
 
     public function getGenders()
     {
-        $gender_prefix = trim($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/gender_prefix", \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $gender_prefix = trim($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_prefix", \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $gendersArray = explode(";", $gender_prefix);
         $genders = Array();
         foreach($gendersArray as $g) {
@@ -61,7 +61,7 @@ class Invoice extends \Magento\Payment\Block\Form
     public function getGendersEnable()
     {
         $gender_enable = false;
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/gender_enable",
+        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_enable",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $gender_enable = true;
         }
@@ -72,13 +72,13 @@ class Invoice extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
         }
         $birthday_enable = false;
-        if (!$isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/birthday_enable",
+        if (!$isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/birthday_enable",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $birthday_enable = true;
         }
@@ -89,13 +89,13 @@ class Invoice extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
         }
         $b2b_uid = false;
-        if ($isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/b2b_uid",
+        if ($isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/b2b_uid",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $b2b_uid = true;
         }
@@ -106,7 +106,7 @@ class Invoice extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
@@ -114,24 +114,24 @@ class Invoice extends \Magento\Payment\Block\Form
 
         $methodsAvailableInvoice = Array();
 
-        $ByjunoCheckout_single_invoice_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_single_invoice/ByjunoCheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($ByjunoCheckout_single_invoice_allow == '0' || ($ByjunoCheckout_single_invoice_allow == '1' && !$isCompany) || ($ByjunoCheckout_single_invoice_allow == '2' && $isCompany))
+        $byjunocheckout_single_invoice_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/byjunocheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($byjunocheckout_single_invoice_allow == '0' || ($byjunocheckout_single_invoice_allow == '1' && !$isCompany) || ($byjunocheckout_single_invoice_allow == '2' && $isCompany))
         ) {
             $methodsAvailableInvoice[] = Array(
                 "value" => 'invoice_single_enable',
-                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_single_invoice/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
-        $ByjunoCheckout_invoice_partial_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_invoice_partial/ByjunoCheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($ByjunoCheckout_invoice_partial_allow == '0' || ($ByjunoCheckout_invoice_partial_allow == '1' && !$isCompany) || ($ByjunoCheckout_invoice_partial_allow == '2' && $isCompany))) {
+        $byjunocheckout_invoice_partial_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/byjunocheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($byjunocheckout_invoice_partial_allow == '0' || ($byjunocheckout_invoice_partial_allow == '1' && !$isCompany) || ($byjunocheckout_invoice_partial_allow == '2' && $isCompany))) {
             $methodsAvailableInvoice[] = Array(
                 "value" => 'invoice_partial_enable',
-                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_invoice_partial/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -143,13 +143,13 @@ class Invoice extends \Magento\Payment\Block\Form
         $invoiceDelivery = Array();
         $invoiceDelivery[] = Array(
             "value" => "email",
-            "text" => __($this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_invoice_localization/ByjunoCheckout_invoice_email_text",
+            "text" => __($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_localization/byjunocheckout_invoice_email_text",
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE))
         );
 
         $invoiceDelivery[] = Array(
             "value" => "postal",
-            "text" => __($this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_invoice_localization/ByjunoCheckout_invoice_postal_text",
+            "text" => __($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_localization/byjunocheckout_invoice_postal_text",
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE))
         );
 

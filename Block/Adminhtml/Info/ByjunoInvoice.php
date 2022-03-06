@@ -13,9 +13,9 @@ class ByjunoInvoice extends \Magento\Payment\Block\Info
         $repayment = "";
         $webshopProfileId = $this->getInfo()->getAdditionalInformation("webshop_profile_id");
         if ($plId == 'invoice_single_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'invoice_partial_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
         $paymentSend = $this->getInfo()->getAdditionalInformation("payment_send");
         $htmlAdd = '';
@@ -45,9 +45,9 @@ class ByjunoInvoice extends \Magento\Payment\Block\Info
         $repayment = "";
         $webshopProfileId = $this->getInfo()->getAdditionalInformation("webshop_profile_id");
         if ($plId == 'invoice_single_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'invoice_partial_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/ByjunoCheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
         $paymentSend = $this->getInfo()->getAdditionalInformation("payment_send");
         $htmlAdd = '';

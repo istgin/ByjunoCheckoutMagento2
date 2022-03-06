@@ -13,15 +13,15 @@ class ByjunoInstallment extends \Magento\Payment\Block\Info
         $repayment = "";
         $webshopProfileId = $this->getInfo()->getAdditionalInformation("webshop_profile_id");
         if ($plId == 'installment_3installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_3installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_3installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_10installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_10installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_10installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_12installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_24installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_24installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_24installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_4x12installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_4x12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_4x12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
         $paymentSend = $this->getInfo()->getAdditionalInformation("payment_send");
         $htmlAdd = '';
@@ -51,15 +51,15 @@ class ByjunoInstallment extends \Magento\Payment\Block\Info
         $repayment = "";
         $webshopProfileId = $this->getInfo()->getAdditionalInformation("webshop_profile_id");
         if ($plId == 'installment_3installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_3installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_3installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_10installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_10installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_10installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_12installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_24installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_24installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_24installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_4x12installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_4x12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_4x12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
         $paymentSend = $this->getInfo()->getAdditionalInformation("payment_send");
         $htmlAdd = '';

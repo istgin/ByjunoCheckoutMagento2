@@ -44,7 +44,7 @@ class Installment extends \Magento\Payment\Block\Form
 
     public function getGenders()
     {
-        $gender_prefix = trim($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/gender_prefix", \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $gender_prefix = trim($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_prefix", \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $gendersArray = explode(";", $gender_prefix);
         $genders = Array();
         foreach($gendersArray as $g) {
@@ -61,7 +61,7 @@ class Installment extends \Magento\Payment\Block\Form
     public function getGendersEnable()
     {
         $gender_enable = false;
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/gender_enable",
+        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_enable",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $gender_enable = true;
         }
@@ -72,13 +72,13 @@ class Installment extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
         }
         $birthday_enable = false;
-        if (!$isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/birthday_enable",
+        if (!$isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/birthday_enable",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $birthday_enable = true;
         }
@@ -89,13 +89,13 @@ class Installment extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
         }
         $b2b_uid = false;
-        if ($isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/b2b_uid",
+        if ($isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/b2b_uid",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $b2b_uid = true;
         }
@@ -106,7 +106,7 @@ class Installment extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/ByjunoCheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
@@ -115,53 +115,53 @@ class Installment extends \Magento\Payment\Block\Form
 
         $methodsAvailableInstallment = Array();
 
-        $ByjunoCheckout_installment_3installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_3installment/ByjunoCheckout_installment_3installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_3installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($ByjunoCheckout_installment_3installment_allow == '0' || ($ByjunoCheckout_installment_3installment_allow == '1' && !$isCompany) || ($ByjunoCheckout_installment_3installment_allow == '2' && $isCompany))) {
+        $byjunocheckout_installment_3installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_3installment/byjunocheckout_installment_3installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_3installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($byjunocheckout_installment_3installment_allow == '0' || ($byjunocheckout_installment_3installment_allow == '1' && !$isCompany) || ($byjunocheckout_installment_3installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_3installment_enable',
-                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_3installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_3installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_3installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_3installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
-        $ByjunoCheckout_installment_10installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_10installment/ByjunoCheckout_installment_10installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_10installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($ByjunoCheckout_installment_10installment_allow == '0' || ($ByjunoCheckout_installment_10installment_allow == '1' && !$isCompany) || ($ByjunoCheckout_installment_10installment_allow == '2' && $isCompany))) {
+        $byjunocheckout_installment_10installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_10installment/byjunocheckout_installment_10installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_10installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($byjunocheckout_installment_10installment_allow == '0' || ($byjunocheckout_installment_10installment_allow == '1' && !$isCompany) || ($byjunocheckout_installment_10installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_10installment_enable',
-                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_10installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_10installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_10installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_10installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
-        $ByjunoCheckout_installment_12installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_12installment/ByjunoCheckout_installment_12installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_12installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($ByjunoCheckout_installment_12installment_allow == '0' || ($ByjunoCheckout_installment_12installment_allow == '1' && !$isCompany) || ($ByjunoCheckout_installment_12installment_allow == '2' && $isCompany))) {
+        $byjunocheckout_installment_12installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_12installment/byjunocheckout_installment_12installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_12installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($byjunocheckout_installment_12installment_allow == '0' || ($byjunocheckout_installment_12installment_allow == '1' && !$isCompany) || ($byjunocheckout_installment_12installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_12installment_enable',
-                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_12installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_12installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
-        $ByjunoCheckout_installment_24installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_24installment/ByjunoCheckout_installment_24installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_24installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($ByjunoCheckout_installment_24installment_allow == '0' || ($ByjunoCheckout_installment_24installment_allow == '1' && !$isCompany) || ($ByjunoCheckout_installment_24installment_allow == '2' && $isCompany))) {
+        $byjunocheckout_installment_24installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_24installment/byjunocheckout_installment_24installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_24installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($byjunocheckout_installment_24installment_allow == '0' || ($byjunocheckout_installment_24installment_allow == '1' && !$isCompany) || ($byjunocheckout_installment_24installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_24installment_enable',
-                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_24installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_24installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_24installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_24installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
-        $ByjunoCheckout_installment_4x12installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_4x12installment/ByjunoCheckout_installment_4x12installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_4x12installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($ByjunoCheckout_installment_4x12installment_allow == '0' || ($ByjunoCheckout_installment_4x12installment_allow == '1' && !$isCompany) || ($ByjunoCheckout_installment_4x12installment_allow == '2' && $isCompany))) {
+        $byjunocheckout_installment_4x12installment_allow = $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_4x12installment/byjunocheckout_installment_4x12installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_4x12installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($byjunocheckout_installment_4x12installment_allow == '0' || ($byjunocheckout_installment_4x12installment_allow == '1' && !$isCompany) || ($byjunocheckout_installment_4x12installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_4x12installment_enable',
-                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_4x12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_4x12installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_4x12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_4x12installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -173,13 +173,13 @@ class Installment extends \Magento\Payment\Block\Form
         $installmentDelivery = Array();
         $installmentDelivery[] = Array(
             "value" => "email",
-            "text" => __($this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_localization/ByjunoCheckout_installment_email_text",
+            "text" => __($this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_localization/byjunocheckout_installment_email_text",
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) . ": "
         );
 
         $installmentDelivery[] = Array(
             "value" => "postal",
-            "text" => __($this->_scopeConfig->getValue("byjunoinstallmentsettings/ByjunoCheckout_installment_localization/ByjunoCheckout_installment_postal_text",
+            "text" => __($this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_localization/byjunocheckout_installment_postal_text",
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) . ": "
         );
 
