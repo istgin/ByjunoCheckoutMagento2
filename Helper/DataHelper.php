@@ -41,19 +41,19 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public $_communicator;
 
 
-    function saveLog(\ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest $request, $xml_request, $xml_response, $status, $type)
+    function saveLog($request, $response, $status, $type, $firstName, $lastName, $requestId)
     {
-        $data = array('firstname' => $request->getFirstName(),
-            'lastname' => $request->getLastName(),
-            'postcode' => $request->getPostCode(),
-            'town' => $request->getTown(),
-            'country' => $request->getCountryCode(),
-            'street1' => $request->getFirstLine(),
-            'request_id' => $request->getRequestId(),
-            'status' => ($status != 0) ? $status : 'Error',
+        $json_string1 = json_decode($request);
+        $json_string11 = json_decode($json_string1, JSON_PRETTY_PRINT);
+        $json_string2 = json_decode($response);
+        $json_string22 = json_decode($json_string2, JSON_PRETTY_PRINT);
+        $data = array('firstname' => $firstName,
+            'lastname' => $lastName,
+            'status' => $status,
+            'request_id' => $requestId,
             'error' => '',
-            'request' => $xml_request,
-            'response' => $xml_response,
+            'request' => $json_string11,
+            'response' => $json_string22,
             'type' => $type,
             'ip' => $this->getClientIp());
 

@@ -225,6 +225,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 }
                 if (!$this->isTheSame($request) || empty($status)) {
                     $ByjunoRequestName = "Credit check request";
+                    $json = "{}";
                     if ($request->custDetails->custType == 'C' && $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
                             \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
                         $ByjunoRequestName = "Credit check request for Company";
@@ -246,9 +247,9 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                         /* @var $responseRes ByjunoCheckoutScreeningResponse */
                         $responseRes = $this->_dataHelper->ScreeningResponse($response);
                         $status = $responseRes->screeningDetails->allowedByjunoProductTypes;
-                     //   $this->_dataHelper->saveLog($request, $xml, $response, $status, $ByjunoRequestName);
+                        $this->_dataHelper->saveLog($json, $response, "OK", $ByjunoRequestName, $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId);
                     } else {
-                     //   $this->_dataHelper->saveLog($request, $xml, "empty response", "0", $ByjunoRequestName);
+                        $this->_dataHelper->saveLog($json, $response, "Error", $ByjunoRequestName, $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId);
                     }
 
                     $this->_savedUser = Array(

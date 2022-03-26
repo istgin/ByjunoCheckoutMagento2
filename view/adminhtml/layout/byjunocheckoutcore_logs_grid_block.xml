@@ -4,8 +4,8 @@
 
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="ByjunoCheckout_ByjunoCheckoutCore_logs.grid.container">
-            <block class="Magento\Backend\Block\Widget\Grid" name="ByjunoCheckout_ByjunoCheckoutCore_logs.grid"
+        <referenceBlock name="byjunocheckout_byjunocheckoutcore_logs.grid.container">
+            <block class="Magento\Backend\Block\Widget\Grid" name="byjunocheckout_byjunocheckoutcore_logs.grid"
                    as="grid">
                 <arguments>
                     <argument name="id" xsi:type="string">logsGrid</argument>
@@ -19,7 +19,7 @@
                     </argument>
                 </arguments>
                 <block class="Magento\Backend\Block\Widget\Grid\ColumnSet"
-                       name="ByjunoCheckout_ByjunoCheckoutCore_logs.grid.columnSet" as="grid.columnSet">
+                       name="byjunocheckout_byjunocheckoutcore_logs.grid.columnSet" as="grid.columnSet">
                     <arguments>
                         <argument name="rowUrl" xsi:type="array">
                             <item name="path" xsi:type="string">*/*/edit</item>

@@ -10,6 +10,6 @@
              action="adminhtml/system_config/edit/section/byjunocheckoutsettings" resource="ByjunoCheckout_ByjunoCheckoutCore::manage_configuration" />
         <add id="ByjunoCheckout_ByjunoCheckoutCore::manage_logs" title="Byjuno Checkout Logs"
              module="ByjunoCheckout_ByjunoCheckoutCore" sortOrder="2" parent="ByjunoCheckout_ByjunoCheckoutCore::main_menu"
-             action="ByjunoCheckoutCore/logs/index" resource="ByjunoCheckout_ByjunoCheckoutCore::manage_logs" />
+             action="byjunocheckoutcore/logs/index" resource="ByjunoCheckout_ByjunoCheckoutCore::manage_logs" />
     </menu>
 </config>

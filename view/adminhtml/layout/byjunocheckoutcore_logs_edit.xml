@@ -5,7 +5,7 @@
     <body>
         <referenceContainer name="content">
             <block class="ByjunoCheckout\ByjunoCheckoutCore\Block\Adminhtml\Edit"
-                   name="ByjunoCheckout_ByjunoCheckoutCore_logs_edit.grid.container"/>
+                   name="byjunocheckout_byjunocheckoutcore_logs_edit.grid.container"/>
         </referenceContainer>
     </body>
 </page>
