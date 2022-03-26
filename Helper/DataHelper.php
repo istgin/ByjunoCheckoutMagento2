@@ -41,14 +41,28 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public $_communicator;
 
 
-    function saveLog($request, $response, $status, $type, $firstName, $lastName, $requestId)
+    function saveLog($request, $response, $status, $type,
+                     $firstName, $lastName, $requestId,
+        $postcode, $town, $country, $street1)
     {
         $json_string1 = json_decode($request);
-        $json_string11 = json_decode($json_string1, JSON_PRETTY_PRINT);
+        if ($json_string1 == null) {
+            $json_string11 = $request;
+        } else {
+            $json_string11 = json_encode($json_string1, JSON_PRETTY_PRINT);
+        }
         $json_string2 = json_decode($response);
-        $json_string22 = json_decode($json_string2, JSON_PRETTY_PRINT);
+        if ($json_string2 == null) {
+            $json_string22 = $response;
+        } else {
+            $json_string22 = json_encode($json_string2, JSON_PRETTY_PRINT);
+        }
         $data = array('firstname' => $firstName,
             'lastname' => $lastName,
+            'postcode' => $postcode,
+            'town' => $town,
+            'country' => $country,
+            'street1' => $street1,
             'status' => $status,
             'request_id' => $requestId,
             'error' => '',

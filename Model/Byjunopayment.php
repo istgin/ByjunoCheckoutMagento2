@@ -207,6 +207,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 $this->_savedUser = $theSame;
             }
             $status = $this->_dataHelper->_checkoutSession->getScreeningStatus();
+            $status = null;
             try {
                 $request = $this->_dataHelper->CreateMagentoShopRequestCreditCheck($quote);
                 if ($request->amount == 0) {
@@ -247,9 +248,13 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                         /* @var $responseRes ByjunoCheckoutScreeningResponse */
                         $responseRes = $this->_dataHelper->ScreeningResponse($response);
                         $status = $responseRes->screeningDetails->allowedByjunoProductTypes;
-                        $this->_dataHelper->saveLog($json, $response, "OK", $ByjunoRequestName, $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId);
+                        $this->_dataHelper->saveLog($json, $response, "OK", $ByjunoRequestName,
+                            $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
+                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine);
                     } else {
-                        $this->_dataHelper->saveLog($json, $response, "Error", $ByjunoRequestName, $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId);
+                        $this->_dataHelper->saveLog($json, $response, "Error", $ByjunoRequestName,
+                            $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
+                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine);
                     }
 
                     $this->_savedUser = Array(
@@ -284,6 +289,8 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                     }
                 }
             } catch (\Exception $e) {
+                var_dump($e);
+                exit('error');
             }
         }
         return false;
