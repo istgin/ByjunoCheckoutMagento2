@@ -29,7 +29,6 @@ use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
  */
 class Installment extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
 {
-
     protected $_executed;
     protected $_dataHelper;
 	public function setId($id)
@@ -262,13 +261,11 @@ class Installment extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         if (!$isAvaliable || !$methodsAvailable) {
             return false;
         }
+        $creditStatus = false;
         if ($quote != null) {
-            $CDPresponse = $this->CDPRequest($quote);
-            if ($CDPresponse !== null) {
-                return false;
-            }
+            $creditStatus = $this->GetCreditStatus($quote, Array());
         }
-        return $isAvaliable && $methodsAvailable && parent::isAvailable($quote);
+        return $isAvaliable && $methodsAvailable && $creditStatus && parent::isAvailable($quote);
     }
 
     public function getTitle()

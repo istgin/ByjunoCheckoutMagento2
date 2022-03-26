@@ -8,6 +8,7 @@
 
 namespace ByjunoCheckout\ByjunoCheckoutCore\Model;
 
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
 use Magento\Framework\DataObject;
@@ -188,15 +189,15 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
     }
 
     /* @var $quote \Magento\Quote\Model\Quote */
-    public function CDPRequest($quote) {
+    public function GetCreditStatus($quote, $methods) {
         if ($quote == null) {
-            return null;
+            return true;
         }
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $state =  $objectManager->get('Magento\Framework\App\State');
         if ($state->getAreaCode() == "adminhtml") {
             //skip credit check for backend
-            return null;
+            return true;
         }
         if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/cdpbeforeshow', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
             && $quote != null
@@ -205,7 +206,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             if (!empty($theSame) && is_array($theSame)) {
                 $this->_savedUser = $theSame;
             }
-            $CDPStatus = $this->_dataHelper->_checkoutSession->getCDPStatus();
+            $status = $this->_dataHelper->_checkoutSession->getScreeningStatus();
             try {
                 $request = $this->_dataHelper->CreateMagentoShopRequestCreditCheck($quote);
                 if ($request->amount == 0) {
@@ -222,20 +223,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                        return false;
                    }
                 }
-                if (!empty($CDPStatus) && $this->isTheSame($request)) {
-                    $accept = "";
-                    if ($this->_dataHelper->byjunoIsStatusOk($CDPStatus, "byjunocheckoutsettings/byjunocheckout_setup/merchant_risk")) {
-                        $accept = "CLIENT";
-                    }
-                    if ($this->_dataHelper->byjunoIsStatusOk($CDPStatus, "byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_risk")) {
-                        $accept = "IJ";
-                    }
-                    if ($accept == "") {
-                        return false;
-                    }
-                    return null;
-                }
-                if (!$this->isTheSame($request) || empty($CDPStatus)) {
+                if (!$this->isTheSame($request) || empty($status)) {
                     $ByjunoRequestName = "Credit check request";
                     if ($request->custDetails->custType == 'C' && $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
                             \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
@@ -253,19 +241,15 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                     }
                     $response = $byjunoCommunicator->sendRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
                         \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                    $status = 2;
-                   /* if ($response) {
-                        $this->_dataHelper->_response->setRawResponse($response);
-                        $this->_dataHelper->_response->processResponse();
-                        $status = (int)$this->_dataHelper->_response->getCustomerRequestStatus();
-                        if (intval($status) > 15) {
-                            $status = 0;
-                        }
-                        $this->_dataHelper->saveLog($request, $xml, $response, $status, $ByjunoRequestName);
+
+                    if ($response) {
+                        /* @var $responseRes ByjunoCheckoutScreeningResponse */
+                        $responseRes = $this->_dataHelper->ScreeningResponse($response);
+                        $status = $responseRes->screeningDetails->allowedByjunoProductTypes;
+                     //   $this->_dataHelper->saveLog($request, $xml, $response, $status, $ByjunoRequestName);
                     } else {
-                        $this->_dataHelper->saveLog($request, $xml, "empty response", "0", $ByjunoRequestName);
+                     //   $this->_dataHelper->saveLog($request, $xml, "empty response", "0", $ByjunoRequestName);
                     }
-                   */
 
                     $this->_savedUser = Array(
                         "FirstName" => $request->custDetails->firstName,
@@ -289,24 +273,19 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                         "DELIVERY_COMPANYNAME" => $request->deliveryDetails->deliveryCompanyName
                     );
                     $this->_dataHelper->_checkoutSession->setIsTheSame($this->_savedUser);
-                    $this->_dataHelper->_checkoutSession->setCDPStatus($status);
-
-                    $accept = "";
-                    if ($this->_dataHelper->byjunoIsStatusOk($status, "byjunocheckoutsettings/byjunocheckout_setup/merchant_risk")) {
-                        $accept = "CLIENT";
-                    }
-                    if ($this->_dataHelper->byjunoIsStatusOk($status, "byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_risk")) {
-                        $accept = "IJ";
-                    }
-
-                    if ($accept == "") {
-                        return false;
+                    $this->_dataHelper->_checkoutSession->setScreeningStatus($status);
+                }
+                foreach ($methods as $method) {
+                    foreach ($status as $st) {
+                        if ($st == $method) {
+                            return true;
+                        }
                     }
                 }
             } catch (\Exception $e) {
             }
         }
-        return null;
+        return false;
     }
 
     /* @var $payment \Magento\Quote\Model\Quote\Payment */

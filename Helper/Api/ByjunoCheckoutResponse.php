@@ -1,9 +1,6 @@
 <?php
 /**
  * Created by Byjuno.
- * User: i.sutugins
- * Date: 14.4.9
- * Time: 16:57
  */
 namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
 
@@ -26,5 +23,4 @@ class ByjunoCheckoutResponse {
     public $merchantOrderRef; //String
     public $processingStatus; //String
     public $authorization; //Authorization
-
 }

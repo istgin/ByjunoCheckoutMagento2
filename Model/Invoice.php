@@ -100,9 +100,20 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         return parent::getConfigData($field, $storeId);
     }
 
+    public function getEnabledMethods() {
+        $methodsAvailableInvoice = Array();
+        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailableInvoice[] = "SINGLE-INVOICE";
+        }
+
+        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailableInvoice[] = "BYJUNO-INVOICE";
+        }
+        return $methodsAvailableInvoice;
+    }
+
     public function isAvailable(CartInterface $quote = null)
     {
-        return true;
         $isAvaliable =  $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if (!$isAvaliable) {
             return;
@@ -127,13 +138,11 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         if (!$isAvaliable || !$methodsAvailable) {
             return false;
         }
+        $creditStatus = false;
         if ($quote != null) {
-            $CDPresponse = $this->CDPRequest($quote);
-            if ($CDPresponse !== null) {
-                return false;
-            }
+            $creditStatus = $this->GetCreditStatus($quote, $this->getEnabledMethods());
         }
-        return $isAvaliable && $methodsAvailable && parent::isAvailable($quote);
+        return $isAvaliable && $methodsAvailable && $creditStatus && parent::isAvailable($quote);
     }
 
     public function getTitle()

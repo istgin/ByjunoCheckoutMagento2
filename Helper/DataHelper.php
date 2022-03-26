@@ -2,6 +2,8 @@
 namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
 
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutResponse;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
 
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -786,7 +788,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->custDetails->firstName = "Wilko";
         $request->custDetails->lastName = "byjuno";
         $request->custDetails->language = "de";
-        $request->custDetails->dateOfBirth = "2001.01.01";
+        $request->custDetails->dateOfBirth = "2001-01-01";
         $request->custDetails->salutation = "N";
 
         $request->billingAddr->addrFirstLine = "Im juch 6";
@@ -794,7 +796,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->town = "Zurich";
         $request->billingAddr->country = "CH";
 
-        $request->custContacts->phoneMobile = "0678787878";
+        $request->custContacts->phoneMobile = "+41777717777";
         $request->custContacts->email = "igor.sutugin@gmail.com";
 
         $request->deliveryDetails->deliveryDetailsDifferent = false;
@@ -811,9 +813,25 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         $request->merchantDetails->transactionChannel = "WEB";
         $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
-
         return $request;
+    }
 
+    function ScreeningResponse($response) {
+
+        $responseObject = json_decode($response);
+        $request = new ByjunoCheckoutRequest();
+        $result = new ByjunoCheckoutScreeningResponse();
+        $result->merchantCustRef = $responseObject->merchantCustRef;
+        $result->processingStatus = $responseObject->processingStatus;
+        $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
+        $result->replyMsgId = $responseObject->replyMsgId;
+        $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
+        $result->requestMsgId = $responseObject->requestMsgId;
+        $result->transactionId = $responseObject->transactionId;
+        if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoProductTypes))) {
+            $result->screeningDetails->allowedByjunoProductTypes = $responseObject->screeningDetails->allowedByjunoProductTypes;
+        }
+        return $result;
     }
 
     /*function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote)
