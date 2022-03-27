@@ -792,41 +792,112 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->requestMsgType = "SCR";
         $request->requestMsgId = ByjunoCheckoutRequest::GUID();
         $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
-        $request->merchantOrderRef = "XXX";
-        $request->amount = 1000;
-        $request->currency = "CHF";
+        $request->merchantOrderRef = null;
+        $request->amount = number_format($quote->getGrandTotal(), 2, '.', '') * 100;
+        $request->currency = $quote->getQuoteCurrencyCode();
 
-        $request->custDetails->merchantCustRef = "XXX";
-        $request->custDetails->loggedIn = true;
-        $request->custDetails->custType = "P";
-        $request->custDetails->firstName = "Wilko";
-        $request->custDetails->lastName = "byjuno";
-        $request->custDetails->language = "de";
-        $request->custDetails->dateOfBirth = "2001-01-01";
+        $reference = $quote->getCustomerId();
+        if (empty($reference)) {
+            $request->custDetails->merchantCustRef = "guest_" . $quote->getId();
+            $request->custDetails->loggedIn = false;
+        } else {
+            $request->custDetails->merchantCustRef = (String)$quote->getCustomerId();
+            $request->custDetails->loggedIn = true;
+        }
+        if ($quote->getBillingAddress()->getCompany()) {
+            $request->custDetails->custType = "C";
+        } else {
+            $request->custDetails->custType = "P";
+        }
+        $request->custDetails->firstName = (String)$quote->getBillingAddress()->getFirstname();
+        $request->custDetails->lastName = (String)$quote->getBillingAddress()->getLastname();
+        $request->custDetails->language = (String)substr($this->_resolver->getLocale(), 0, 2);
+        $b = $quote->getCustomerDob();
+        if (!empty($b)) {
+            try {
+                $dobObject = new \DateTime($b);
+                if ($dobObject != null) {
+                    $request->custDetails->dateOfBirth = $dobObject->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+
+            }
+        }
+        $g = $quote->getCustomerGender();
         $request->custDetails->salutation = "N";
+        if ($this->_customerMetadata->getAttributeMetadata('gender')->isVisible()) {
+            if (!empty($g)) {
+                if ($g == '1') {
+                    $request->custDetails->salutation = "M";
+                } else if ($g == '2') {
+                    $request->custDetails->salutation = "F";
+                }
+            }
+        }
 
-        $request->billingAddr->addrFirstLine = "Im juch 6";
-        $request->billingAddr->postalCode = "8061";
-        $request->billingAddr->town = "Zurich";
-        $request->billingAddr->country = "CH";
+        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
+        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
+        if ($this->_customerMetadata->getAttributeMetadata('prefix')->isVisible()) {
+            if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
+                $request->custDetails->salutation = "M";
+            } else if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
+                $request->custDetails->salutation = "F";
+            }
+        }
 
-        $request->custContacts->phoneMobile = "+41777717777";
-        $request->custContacts->email = "igor.sutugin@gmail.com";
+        $billingStreet = $quote->getBillingAddress()->getStreet();
+        $billingStreet = implode("", $billingStreet);
 
-        $request->deliveryDetails->deliveryDetailsDifferent = false;
-        $request->deliveryDetails->deliveryMethod = "PICK-UP";
+        $request->billingAddr->addrFirstLine = (String)$billingStreet;
+        $request->billingAddr->postalCode = (String)$quote->getBillingAddress()->getPostcode();
+        $request->billingAddr->town = (String)$quote->getBillingAddress()->getCity();
+        $request->billingAddr->country = strtoupper($quote->getBillingAddress()->getCountryId());
 
-        $request->order->basketItemsGoogleTaxonomies = null;
-        $request->order->basketItemsPrices = null;
+        $request->custContacts->phoneMobile = (String)trim($quote->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->email = (String)$quote->getBillingAddress()->getEmail();
 
-        $request->sessionInfo->fingerPrint = "XXX";
+        if (!$quote->isVirtual()) {
+            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryMethod = "POSTAL";
+            $request->deliveryDetails->deliveryFirstName = $this->nullToString($quote->getShippingAddress()->getFirstname());
+            $request->deliveryDetails->deliverySecondName = $this->nullToString($quote->getShippingAddress()->getLastname());
+            if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+                $request->deliveryDetails->deliveryCompanyName = $this->nullToString($quote->getShippingAddress()->getCompany());
+            }
+            $request->deliveryDetails->deliverySalutation = "N";
+
+            $shippingStreet = $quote->getShippingAddress()->getStreet();
+            $shippingStreet = implode("", $shippingStreet);
+
+            $request->deliveryDetails->deliveryAddrFirstLine = trim((String)$shippingStreet);
+            $request->deliveryDetails->deliveryAddrPostalCode = $this->nullToString($quote->getShippingAddress()->getPostcode());
+            $request->deliveryDetails->deliveryAddrTown = $this->nullToString($quote->getShippingAddress()->getCity());
+            $request->deliveryDetails->deliveryAddrCountry = strtoupper($quote->getShippingAddress()->getCountryId());
+
+        } else {
+            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryMethod = "DIGITAL";
+        }
+
+       // $request->order->basketItemsGoogleTaxonomies = null;
+        //$request->order->basketItemsPrices = null;
+
+        $sedId = $this->_checkoutSession->getTmxSession();
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+            $request->sessionInfo->fingerPrint = $sedId;
+        }
 
 
-        $request->byjunoDetails->byjunoProductType = "SINGLE-INVOICE";
-        $request->byjunoDetails->invoiceDeliveryType = "EMAIL";
+        //$request->byjunoDetails->byjunoProductType = "SINGLE-INVOICE";
+        //$request->byjunoDetails->invoiceDeliveryType = "EMAIL";
 
         $request->merchantDetails->transactionChannel = "WEB";
         $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
+
         return $request;
     }
 
