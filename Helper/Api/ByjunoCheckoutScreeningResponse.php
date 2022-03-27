@@ -6,6 +6,9 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
 
 class ByjunoCheckoutScreeningDetails {
     public $allowedByjunoProductTypes;  //array( String )
+    public function __construct() {
+        $this->allowedByjunoProductTypes = Array();
+    }
 
 }
 class ByjunoCheckoutScreeningResponse {

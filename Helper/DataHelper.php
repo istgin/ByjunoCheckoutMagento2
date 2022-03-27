@@ -833,17 +833,20 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function ScreeningResponse($response) {
 
         $responseObject = json_decode($response);
-        $request = new ByjunoCheckoutRequest();
         $result = new ByjunoCheckoutScreeningResponse();
-        $result->merchantCustRef = $responseObject->merchantCustRef;
-        $result->processingStatus = $responseObject->processingStatus;
-        $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
-        $result->replyMsgId = $responseObject->replyMsgId;
-        $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
-        $result->requestMsgId = $responseObject->requestMsgId;
-        $result->transactionId = $responseObject->transactionId;
-        if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoProductTypes))) {
-            $result->screeningDetails->allowedByjunoProductTypes = $responseObject->screeningDetails->allowedByjunoProductTypes;
+        if ($responseObject->processingStatus == "SCREENING-APPROVED") {
+            $result->merchantCustRef = $responseObject->merchantCustRef;
+            $result->processingStatus = $responseObject->processingStatus;
+            $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
+            $result->replyMsgId = $responseObject->replyMsgId;
+            $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
+            $result->requestMsgId = $responseObject->requestMsgId;
+            $result->transactionId = $responseObject->transactionId;
+            if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoProductTypes))) {
+                $result->screeningDetails->allowedByjunoProductTypes = $responseObject->screeningDetails->allowedByjunoProductTypes;
+            }
+        } else {
+            $result->processingStatus = $responseObject->processingStatus;
         }
         return $result;
     }
