@@ -27,17 +27,8 @@
                     <label>Mode</label>
                     <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\TestLive</source_model>
                 </field>
-                <field id="clientid" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="merchantid" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID</label>
-                </field>
-                <field id="userid" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>User ID</label>
-                </field>
-                <field id="password" translate="label" type="password" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Password</label>
-                </field>
-                <field id="mail" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Technical Contact (E-mail)</label>
                 </field>
                 <field id="minamount" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Mininmal amount for checkout</label>
@@ -46,7 +37,7 @@
                     <label>Maximal amount for checkout</label>
                 </field>
                 <field id="timeout" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Connection timeout to Byjuno Checkout CDP server in seconds</label>
+                    <label>Connection timeout to Byjuno Checkout server in seconds</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="tmxenabled" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -10,6 +10,23 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public static $SINGLEINVOICE = 'SINGLE-INVOICE';
     public static $BYJUNOINVOICE = 'BYJUNO-INVOICE';
+
+    public static $MESSAGE_SCREENING = 'SCR';
+
+    public static $CUSTOMER_PRIVATE = 'P';
+    public static $CUSTOMER_BUSINESS = 'C';
+
+
+    public static $GENTER_UNKNOWN = 'N';
+    public static $GENTER_MALE = 'M';
+    public static $GENTER_FEMALE = 'F';
+
+
+    public static $DELIVERY_POST = 'POST';
+    public static $DELIVERY_VIRTUAL = 'DIGITAL';
+
+    public static $SCREENING_OK = 'SCREENING-APPROVED';
+
     /**
      * @var \Magento\Quote\Api\CartRepositoryInterface
      */
@@ -263,7 +280,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                                                 \Magento\Quote\Model\Quote\Payment $paymentmethod,
                                            $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webshopProfile)
     {
-
+/*
         $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest();
         $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
@@ -466,6 +483,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $extraInfo["Value"] = 'Byjuno Checkout Magento 2 module 1.7.4';
         $request->setExtraInfo($extraInfo);
         return $request;
+*/
+        return null;
     }
 
     function CreateMagentoShopRequestPaid(\Magento\Sales\Model\Order $order,
@@ -747,8 +766,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote) {
 
         $request = new ByjunoCheckoutRequest();
-        $request->merchantId = "XXX";
-        $request->requestMsgType = "SCR";
+        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $request->requestMsgType = self::$MESSAGE_SCREENING;
         $request->requestMsgId = ByjunoCheckoutRequest::GUID();
         $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
         $request->merchantOrderRef = null;
@@ -764,9 +783,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->loggedIn = true;
         }
         if ($quote->getBillingAddress()->getCompany()) {
-            $request->custDetails->custType = "C";
+            $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
         } else {
-            $request->custDetails->custType = "P";
+            $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
         }
         $request->custDetails->firstName = (String)$quote->getBillingAddress()->getFirstname();
         $request->custDetails->lastName = (String)$quote->getBillingAddress()->getLastname();
@@ -783,13 +802,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
         $g = $quote->getCustomerGender();
-        $request->custDetails->salutation = "N";
+        $request->custDetails->salutation = self::$GENTER_UNKNOWN;
         if ($this->_customerMetadata->getAttributeMetadata('gender')->isVisible()) {
             if (!empty($g)) {
                 if ($g == '1') {
-                    $request->custDetails->salutation = "M";
+                    $request->custDetails->salutation = self::$GENTER_MALE;
                 } else if ($g == '2') {
-                    $request->custDetails->salutation = "F";
+                    $request->custDetails->salutation = self::$GENTER_FEMALE;
                 }
             }
         }
@@ -802,9 +821,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
         if ($this->_customerMetadata->getAttributeMetadata('prefix')->isVisible()) {
             if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
-                $request->custDetails->salutation = "M";
+                $request->custDetails->salutation = self::$GENTER_MALE;
             } else if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
-                $request->custDetails->salutation = "F";
+                $request->custDetails->salutation = self::$GENTER_FEMALE;
             }
         }
 
@@ -821,13 +840,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         if (!$quote->isVirtual()) {
             $request->deliveryDetails->deliveryDetailsDifferent = false;
-            $request->deliveryDetails->deliveryMethod = "POST";
+            $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($quote->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($quote->getShippingAddress()->getLastname());
             if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
                 $request->deliveryDetails->deliveryCompanyName = $this->nullToString($quote->getShippingAddress()->getCompany());
             }
-            $request->deliveryDetails->deliverySalutation = "N";
+            $request->deliveryDetails->deliverySalutation = null;
 
             $shippingStreet = $quote->getShippingAddress()->getStreet();
             $shippingStreet = implode("", $shippingStreet);
@@ -839,7 +858,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         } else {
             $request->deliveryDetails->deliveryDetailsDifferent = false;
-            $request->deliveryDetails->deliveryMethod = "DIGITAL";
+            $request->deliveryDetails->deliveryMethod = self::$DELIVERY_VIRTUAL;
         }
 
        // $request->order->basketItemsGoogleTaxonomies = null;
@@ -864,7 +883,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         $responseObject = json_decode($response);
         $result = new ByjunoCheckoutScreeningResponse();
-        if ($responseObject->processingStatus == "SCREENING-APPROVED") {
+        if ($responseObject->processingStatus == self::$SCREENING_OK) {
             $result->merchantCustRef = $responseObject->merchantCustRef;
             $result->processingStatus = $responseObject->processingStatus;
             $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
