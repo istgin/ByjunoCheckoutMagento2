@@ -7,6 +7,9 @@ use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse
 
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
+
+    public static $SINGLEINVOICE = 'SINGLE-INVOICE';
+    public static $BYJUNOINVOICE = 'BYJUNO-INVOICE';
     /**
      * @var \Magento\Quote\Api\CartRepositoryInterface
      */
@@ -161,50 +164,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $ipaddress = $_SERVER[$addrMethod];
         }
         return $ipaddress;
-    }
-
-    public function mapMethod($type)
-    {
-        if ($type == 'installment_3installment_enable') {
-            return "INSTALLMENT";
-        } else if ($type == 'installment_10installment_enable') {
-            return "INSTALLMENT";
-        } else if ($type == 'installment_12installment_enable') {
-            return "INSTALLMENT";
-        } else if ($type == 'installment_24installment_enable') {
-            return "INSTALLMENT";
-        } else if ($type == 'installment_4x12installment_enable') {
-            return "INSTALLMENT";
-        } else if ($type == 'installment_4x10installment_enable') {
-            return "INSTALLMENT";
-        } else if ($type == 'invoice_single_enable') {
-            return "INVOICE";
-        } else if ($type == 'invoice_partial_enable') {
-            return "INVOICE";
-        }
-        return "INVOICE";
-    }
-
-    private function mapRepayment($type)
-    {
-        if ($type == 'installment_3installment_enable') {
-            return "10";
-        } else if ($type == 'installment_10installment_enable') {
-            return "5";
-        } else if ($type == 'installment_12installment_enable') {
-            return "8";
-        } else if ($type == 'installment_24installment_enable') {
-            return "9";
-        } else if ($type == 'installment_4x12installment_enable') {
-            return "1";
-        } else if ($type == 'installment_4x10installment_enable') {
-            return "2";
-        } else if ($type == 'invoice_single_enable') {
-            return "3";
-        } else if ($type == 'invoice_partial_enable') {
-            return "4";
-        }
-        return "0";
     }
 
     function getByjunoErrorMessage($status, $paymentType = 'b2c')
@@ -862,7 +821,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         if (!$quote->isVirtual()) {
             $request->deliveryDetails->deliveryDetailsDifferent = false;
-            $request->deliveryDetails->deliveryMethod = "POSTAL";
+            $request->deliveryDetails->deliveryMethod = "POST";
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($quote->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($quote->getShippingAddress()->getLastname());
             if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
@@ -913,8 +872,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
             $result->requestMsgId = $responseObject->requestMsgId;
             $result->transactionId = $responseObject->transactionId;
-            if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoProductTypes))) {
-                $result->screeningDetails->allowedByjunoProductTypes = $responseObject->screeningDetails->allowedByjunoProductTypes;
+            if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoPaymentMethods))) {
+                $result->screeningDetails->allowedByjunoPaymentMethods = $responseObject->screeningDetails->allowedByjunoPaymentMethods;
             }
         } else {
             $result->processingStatus = $responseObject->processingStatus;

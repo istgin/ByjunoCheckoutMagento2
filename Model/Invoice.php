@@ -103,11 +103,11 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
     public function getEnabledMethods() {
         $methodsAvailableInvoice = Array();
         if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
-            $methodsAvailableInvoice[] = "SINGLE-INVOICE";
+            $methodsAvailableInvoice[] = DataHelper::$SINGLEINVOICE;
         }
 
         if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
-            $methodsAvailableInvoice[] = "BYJUNO-INVOICE";
+            $methodsAvailableInvoice[] = DataHelper::$BYJUNOINVOICE;
         }
         return $methodsAvailableInvoice;
     }
@@ -116,24 +116,17 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
     {
         $isAvaliable =  $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if (!$isAvaliable) {
-            return;
-        }
-        $isCompany = false;
-        if (!empty($this->_checkoutSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
-        )
-        {
-            $isCompany = true;
+            return false;
         }
         $byjunocheckout_invoice_partial_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/byjunocheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $byjunocheckout_single_invoice_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/byjunocheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
         $methodsAvailable =
             ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($byjunocheckout_invoice_partial_allow == '0' || ($byjunocheckout_invoice_partial_allow == '1' && !$isCompany) || ($byjunocheckout_invoice_partial_allow == '2' && $isCompany)))
+            && ($byjunocheckout_invoice_partial_allow == '0' || $byjunocheckout_invoice_partial_allow == '1'))
             ||
             ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($byjunocheckout_single_invoice_allow == '0' || ($byjunocheckout_single_invoice_allow == '1' && !$isCompany) || ($byjunocheckout_single_invoice_allow == '2' && $isCompany)));
+            && ($byjunocheckout_single_invoice_allow == '0' || $byjunocheckout_single_invoice_allow == '1'));
 
         if (!$isAvaliable || !$methodsAvailable) {
             return false;
@@ -219,8 +212,8 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         }
         $this->validateCustomByjunoFields($payment, $isCompany);
         if ($payment->getAdditionalInformation('payment_plan') == null ||
-            ($payment->getAdditionalInformation('payment_plan') != 'invoice_single_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'invoice_partial_enable')) {
+            ($payment->getAdditionalInformation('payment_plan') != DataHelper::$SINGLEINVOICE &&
+                $payment->getAdditionalInformation('payment_plan') != DataHelper::$BYJUNOINVOICE)) {
             throw new LocalizedException(
                 __("Invalid payment plan")
             );

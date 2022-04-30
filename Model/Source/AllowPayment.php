@@ -50,9 +50,9 @@ class AllowPayment implements ArrayInterface
     public function toArray()
     {
         $catagoryList = array();
-        $catagoryList["0"] = 'Both (B2C & B2B)';
-        $catagoryList["1"] = 'B2C only';
-        $catagoryList["2"] = 'B2B only';
+        $catagoryList["0"] = 'Allowed when screening approved. In case if screening disabled - always allowed';
+        $catagoryList["1"] = 'Always allowed';
+        $catagoryList["2"] = 'Denied';
         return $catagoryList;
     }
 

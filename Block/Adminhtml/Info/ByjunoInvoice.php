@@ -1,6 +1,8 @@
 <?php
 namespace ByjunoCheckout\ByjunoCheckoutCore\Block\Adminhtml\Info;
 
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+
 class ByjunoInvoice extends \Magento\Payment\Block\Info
 {
     /**
@@ -12,9 +14,9 @@ class ByjunoInvoice extends \Magento\Payment\Block\Info
         $plId = $this->getInfo()->getAdditionalInformation("payment_plan");
         $repayment = "";
         $webshopProfileId = $this->getInfo()->getAdditionalInformation("webshop_profile_id");
-        if ($plId == 'invoice_single_enable') {
+        if ($plId == DataHelper::$SINGLEINVOICE) {
             $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        } else if ($plId == 'invoice_partial_enable') {
+        } else if ($plId == DataHelper::$BYJUNOINVOICE) {
             $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
         $paymentSend = $this->getInfo()->getAdditionalInformation("payment_send");
@@ -44,9 +46,9 @@ class ByjunoInvoice extends \Magento\Payment\Block\Info
         $plId = $this->getInfo()->getAdditionalInformation("payment_plan");
         $repayment = "";
         $webshopProfileId = $this->getInfo()->getAdditionalInformation("webshop_profile_id");
-        if ($plId == 'invoice_single_enable') {
+        if ($plId == DataHelper::$SINGLEINVOICE) {
             $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        } else if ($plId == 'invoice_partial_enable') {
+        } else if ($plId == DataHelper::$BYJUNOINVOICE) {
             $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
         $paymentSend = $this->getInfo()->getAdditionalInformation("payment_send");

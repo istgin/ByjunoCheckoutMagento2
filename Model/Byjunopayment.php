@@ -247,7 +247,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                     if ($response) {
                         /* @var $responseRes ByjunoCheckoutScreeningResponse */
                         $responseRes = $this->_dataHelper->ScreeningResponse($response);
-                        $status = $responseRes->screeningDetails->allowedByjunoProductTypes;
+                        $status = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
                         $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                             $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine);

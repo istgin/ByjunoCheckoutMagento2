@@ -225,6 +225,7 @@ class Installment extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
 
     public function isAvailable(CartInterface $quote = null)
     {
+        return false;
         $isAvaliable =  $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if (!$isAvaliable) {
             return;

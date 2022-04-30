@@ -5,6 +5,8 @@
  */
 namespace ByjunoCheckout\ByjunoCheckoutCore\Block\Form;
 
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+
 /**
  * @api
  * @since 100.0.2
@@ -119,7 +121,7 @@ class Invoice extends \Magento\Payment\Block\Form
             && ($byjunocheckout_single_invoice_allow == '0' || ($byjunocheckout_single_invoice_allow == '1' && !$isCompany) || ($byjunocheckout_single_invoice_allow == '2' && $isCompany))
         ) {
             $methodsAvailableInvoice[] = Array(
-                "value" => 'invoice_single_enable',
+                "value" => DataHelper::$SINGLEINVOICE,
                 "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
@@ -129,7 +131,7 @@ class Invoice extends \Magento\Payment\Block\Form
         if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             && ($byjunocheckout_invoice_partial_allow == '0' || ($byjunocheckout_invoice_partial_allow == '1' && !$isCompany) || ($byjunocheckout_invoice_partial_allow == '2' && $isCompany))) {
             $methodsAvailableInvoice[] = Array(
-                "value" => 'invoice_partial_enable',
+                "value" => DataHelper::$BYJUNOINVOICE,
                 "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
