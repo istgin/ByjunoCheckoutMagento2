@@ -28,7 +28,7 @@
                     <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\TestLive</source_model>
                 </field>
                 <field id="merchantid" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Client ID</label>
+                    <label>Merchant ID</label>
                 </field>
                 <field id="minamount" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Mininmal amount for checkout</label>
