@@ -26,6 +26,8 @@ class ByjunoLogger
                 'ip' => $array['ip'],
                 'status' => $array['status'],
                 'request_id' => $array['request_id'],
+                'order_id' => $array['order_id'],
+                'transaction_id' => $array['transaction_id'],
                 'type' => $array['type'],
                 'error' => $array['error'],
                 'response' => $array['response'],

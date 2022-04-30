@@ -63,7 +63,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     function saveLog($request, $response, $status, $type,
                      $firstName, $lastName, $requestId,
-        $postcode, $town, $country, $street1)
+        $postcode, $town, $country, $street1, $transactionId)
     {
         $json_string1 = json_decode($request);
         if ($json_string1 == null) {
@@ -89,6 +89,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             'request' => $json_string11,
             'response' => $json_string22,
             'type' => $type,
+            'order_id' => "-",
+            'transaction_id' => $transactionId,
             'ip' => $this->getClientIp());
 
         $this->_byjunoLogger->log($data);

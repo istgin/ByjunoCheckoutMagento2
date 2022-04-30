@@ -54,6 +54,22 @@
                             <argument name="index" xsi:type="string">type</argument>
                         </arguments>
                     </block>
+                    <block class="Magento\Backend\Block\Widget\Grid\Column" as="order_id">
+                        <arguments>
+                            <argument name="header" xsi:type="string" translate="true">
+                                Order ID
+                            </argument>
+                            <argument name="index" xsi:type="string">order_id</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Backend\Block\Widget\Grid\Column" as="transaction_id">
+                        <arguments>
+                            <argument name="header" xsi:type="string" translate="true">
+                                Transaction ID
+                            </argument>
+                            <argument name="index" xsi:type="string">transaction_id</argument>
+                        </arguments>
+                    </block>
                     <block class="Magento\Backend\Block\Widget\Grid\Column" as="firstname">
                         <arguments>
                             <argument name="header" xsi:type="string" translate="true">

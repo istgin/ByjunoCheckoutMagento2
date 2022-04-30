@@ -132,6 +132,20 @@ class InstallSchema implements InstallSchemaInterface
                     'Request'
                 )
                 ->addColumn(
+                    'order_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Request id'
+                )
+                ->addColumn(
+                    'transaction_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Request id'
+                )
+                ->addColumn(
                     'creation_date',
                     Table::TYPE_DATETIME,
                     null,

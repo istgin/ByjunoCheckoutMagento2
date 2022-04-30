@@ -250,11 +250,11 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                         $status = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
                         $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
-                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine);
+                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId);
                     } else {
                         $this->_dataHelper->saveLog($json, $response, "Query error", $ByjunoRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
-                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine);
+                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-");
                     }
 
                     $this->_savedUser = Array(
