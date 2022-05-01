@@ -6,6 +6,7 @@ use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoLogger;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Model\Order;
 
 class Startpayment extends Action
 {
@@ -74,7 +75,7 @@ class Startpayment extends Action
         return array($status, $requestType);
     }
 
-    public static function executeS2Quote(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Payment $payment, DataHelper $_internalDataHelper, $savePrefix = "")
+   /* public static function executeS2Quote(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Payment $payment, DataHelper $_internalDataHelper, $savePrefix = "")
     {
         $request = $_internalDataHelper->CreateMagentoShopRequestOrderQuote($quote,
             $payment,
@@ -128,8 +129,8 @@ class Startpayment extends Action
         return array($status, $requestType, $_internalDataHelper->_response);
 
     }
-
-    public static function executeBackendOrder(DataHelper $helper, \Magento\Sales\Model\Order $order)
+*/
+    public static function executeBackendOrder(DataHelper $helper, Order $order)
     {
         self::$_dataHelper = $helper;
         /* @var $payment \Magento\Sales\Model\Order\Payment */
@@ -163,10 +164,10 @@ class Startpayment extends Action
                     $payment->save();
 
                     if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
-                        $order->setState(\Magento\Sales\Model\Order::STATE_COMPLETE);
+                        $order->setState(Order::STATE_COMPLETE);
                         $order->setStatus("complete");
                     } else if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'processing') {
-                        $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+                        $order->setState(Order::STATE_PROCESSING);
                         $order->setStatus("processing");
                     } else {
                         $order->setStatus("pending");
@@ -207,11 +208,11 @@ class Startpayment extends Action
 
     public function execute()
     {
-        if (self::$_dataHelper->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+       // if (self::$_dataHelper->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('checkout/onepage/success');
             return $resultRedirect;
-        }
+      //  }
         $order = self::$_dataHelper->_checkoutSession->getLastRealOrder();
         /* @var $payment \Magento\Sales\Model\Order\Payment */
         $payment = $order->getPayment();
@@ -241,10 +242,10 @@ class Startpayment extends Action
                     $payment->setAdditionalInformation("s3_ok", 'true');
                     $payment->save();
                     if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
-                        $order->setState(\Magento\Sales\Model\Order::STATE_COMPLETE);
+                        $order->setState(Order::STATE_COMPLETE);
                         $order->setStatus("complete");
                     } else if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'processing') {
-                        $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+                        $order->setState(Order::STATE_PROCESSING);
                         $order->setStatus("processing");
                     } else {
                         $order->setStatus("pending");
@@ -297,9 +298,11 @@ class Startpayment extends Action
         return $resultRedirect;
     }
 
-    public static function executeS3Order(\Magento\Sales\Model\Order $order, DataHelper $_internalDataHelper)
+    public static function executeS3Order(Order $order, DataHelper $_internalDataHelper)
     {
+        return null;
         /* @var $payment \Magento\Sales\Model\Order\Payment */
+        /*
         $payment = $order->getPayment();
         try {
             $statusS2 = $_internalDataHelper->_checkoutSession->getIntrumStatus();
@@ -324,10 +327,10 @@ class Startpayment extends Action
                     $transaction->setIsClosed(false);
                     $payment->setAdditionalInformation("s3_ok", 'true');
                     if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
-                        $order->setState(\Magento\Sales\Model\Order::STATE_COMPLETE);
+                        $order->setState(Order::STATE_COMPLETE);
                         $order->setStatus("complete");
                     } else if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'processing') {
-                        $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+                        $order->setState(Order::STATE_PROCESSING);
                         $order->setStatus("processing");
                     } else {
                         $order->setStatus("pending");
@@ -369,11 +372,12 @@ class Startpayment extends Action
             return $error;
         }
         return null;
+        */
     }
 
     private static function restoreQuote()
     {
-        /** @var \Magento\Sales\Model\Order $order */
+        /** @var Order $order */
         $order = self::$_dataHelper->_checkoutSession->getLastRealOrder();
         if ($order->getId()) {
             try {

@@ -95,7 +95,7 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
     public function getConfigData($field, $storeId = null)
     {
         if ($field == 'order_place_redirect_url') {
-            return 'ByjunoCheckoutCore/checkout/startpayment';
+            return 'byjunocheckoutcore/checkout/startpayment';
         }
         return parent::getConfigData($field, $storeId);
     }
@@ -232,10 +232,10 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
                 __("Invalid invoice send way")
             );
         }
-
+        /*
         if ($payment instanceof \Magento\Quote\Model\Quote\Payment && !$this->_executed) {
             $this->_executed  = true;
-            /* @var $payment \Magento\Quote\Model\Quote\Payment */
+            /* @var $payment \Magento\Quote\Model\Quote\Payment * /
             $quote = $this->_checkoutSession->getQuote();
             $prefix = "";
             if ($this->_state->getAreaCode() == "adminhtml") {
@@ -259,6 +259,7 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         } else {
             //skip
         }
+        */
 
         return $this;
     }
@@ -268,9 +269,13 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         return $this;
     }
 
+    /* @return Invoice
+     * @throws LocalizedException
+     * @var $payment \Magento\Sales\Model\Order\Payment
+     */
     public function authorize(InfoInterface $payment, $amount)
     {
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+        //if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
             /* @var $order \Magento\Sales\Model\Order */
             $order = $payment->getOrder();
             $result = Startpayment::executeS3Order($order, $this->_dataHelper);
@@ -281,9 +286,9 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
                     __($result)
                 );
             }
-        } else {
-            return $this;
-        }
+      //  } else {
+      //      return $this;
+    //    }
     }
 
 }

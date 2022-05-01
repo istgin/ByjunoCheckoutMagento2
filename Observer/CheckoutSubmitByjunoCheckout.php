@@ -3,7 +3,7 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use PHPUnit\Framework\Exception;
 
-class CheckoutSubmitByjuno Checkout implements ObserverInterface {
+class CheckoutSubmitByjunoCheckout implements ObserverInterface {
     protected $helper;
     protected $categoryRepository;
     /**
