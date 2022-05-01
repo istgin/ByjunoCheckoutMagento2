@@ -24,7 +24,6 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use Magento\Quote\Model\Quote\Payment;
-use Magento\Tests\NamingConvention\true\bool;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
 
@@ -211,7 +210,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             $status = $this->_dataHelper->_checkoutSession->getScreeningStatus();
             $status = null;
             try {
-                $request = $this->_dataHelper->CreateMagentoShopRequestCreditCheck($quote);
+                $request = $this->_dataHelper->CreateMagentoShopRequestScreening($quote);
                 if ($request->amount == 0) {
                     return false;
                 }
@@ -243,12 +242,12 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                     } else {
                         $byjunoCommunicator->setServer('test');
                     }
-                    $response = $byjunoCommunicator->sendRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+                    $response = $byjunoCommunicator->sendScreeningRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
                         \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
 
                     if ($response) {
                         /* @var $responseRes ByjunoCheckoutScreeningResponse */
-                        $responseRes = $this->_dataHelper->ScreeningResponse($response);
+                        $responseRes = $this->_dataHelper->screeningResponse($response);
                         $status = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
                         $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,

@@ -40,11 +40,17 @@ class ConfigProvider implements ConfigProviderInterface
      */
     protected $methodInstanceInstallment;
 
+    /**
+     * @var DataHelper
+     */
+    protected $dataHelper;
+
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         PaymentHelper $paymentHelper,
         \Magento\Framework\Locale\Resolver $resolver,
-        \Magento\Checkout\Model\Session $checkoutSession
+        \Magento\Checkout\Model\Session $checkoutSession,
+        DataHelper $dataHelper
     )
     {
         $this->_checkoutSession = $checkoutSession;
@@ -52,6 +58,7 @@ class ConfigProvider implements ConfigProviderInterface
         $this->methodInstanceInstallment = $paymentHelper->getMethodInstance(self::CODE_INSTALLMENT);
         $this->_scopeConfig = $scopeConfig;
         $this->_resolver = $resolver;
+        $this->dataHelper = $dataHelper;
     }
 
     private function getByjunoLogoInstallment()
@@ -114,16 +121,16 @@ class ConfigProvider implements ConfigProviderInterface
         $status = $this->_checkoutSession->getScreeningStatus();
         if ($status == null) {
             $status = Array();
-        }
+    }
         $methodsAvailableInvoice = Array();
-
+        $availableMethods = $this->dataHelper->getMethodsMapping();
         $byjunocheckout_single_invoice_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/byjunocheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
         && (($byjunocheckout_single_invoice_allow == '0' && $this->isAllowedByScreening($status, DataHelper::$SINGLEINVOICE)) || $byjunocheckout_single_invoice_allow == '1')) {
             $methodsAvailableInvoice[] = Array(
-                "value" => DataHelper::$SINGLEINVOICE,
-                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "value" => $availableMethods[DataHelper::$SINGLEINVOICE]["value"],
+                "name" => $availableMethods[DataHelper::$SINGLEINVOICE]["name"],
+                "link" => $availableMethods[DataHelper::$SINGLEINVOICE]["link"]
             );
         }
 
@@ -131,9 +138,9 @@ class ConfigProvider implements ConfigProviderInterface
         if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             && (($byjunocheckout_invoice_partial_allow == '0' && $this->isAllowedByScreening($status, DataHelper::$BYJUNOINVOICE)) || $byjunocheckout_invoice_partial_allow == '1')) {
             $methodsAvailableInvoice[] = Array(
-                "value" => DataHelper::$BYJUNOINVOICE,
-                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "value" => $availableMethods[DataHelper::$BYJUNOINVOICE]["value"],
+                "name" => $availableMethods[DataHelper::$BYJUNOINVOICE]["name"],
+                "link" => $availableMethods[DataHelper::$BYJUNOINVOICE]["link"]
             );
         }
         $defaultInvoicePlan = DataHelper::$BYJUNOINVOICE;

@@ -159,6 +159,14 @@ define(
                 return (window.checkoutConfig.payment.byjunocheckout_invoice.methods.length > 1);
             },
 
+            isSinglePaymentPlanVisible: function() {
+                return (window.checkoutConfig.payment.byjunocheckout_invoice.methods.length === 1);
+            },
+
+            isSinglePaymentPlanVisibleTC: function() {
+                return window.checkoutConfig.payment.byjunocheckout_invoice.methods[0].link;
+            },
+
             getDeliveryPlans: function () {
                 var list = [];
                 for (var i = 0; i < window.checkoutConfig.payment.byjunocheckout_invoice.delivery.length; i++) {

@@ -72,7 +72,7 @@ class SessionInfo
 
 class ByjunoDetails
 {
-    public $byjunoProductType; //String
+    public $byjunoPaymentMethod; //String
     public $invoiceDeliveryType; //String
 
 }

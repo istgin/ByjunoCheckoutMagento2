@@ -4,6 +4,15 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoS4Request;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoS5Request;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\CustomerConsents;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Quote\Model\Quote\Payment;
+use Magento\Sales\Model\Order;
+use Magento\Setup\Exception;
+use Magento\Store\Model\ScopeInterface;
 
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -12,6 +21,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $BYJUNOINVOICE = 'BYJUNO-INVOICE';
 
     public static $MESSAGE_SCREENING = 'SCR';
+    public static $MESSAGE_AUTH = 'AUT';
 
     public static $CUSTOMER_PRIVATE = 'P';
     public static $CUSTOMER_BUSINESS = 'C';
@@ -60,6 +70,21 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public $_communicator;
 
+    public function getMethodsMapping() {
+        $methods = Array(
+            self::$SINGLEINVOICE => Array(
+                "value" => self::$SINGLEINVOICE,
+                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/link", ScopeInterface::SCOPE_STORE)
+            ),
+            self::$BYJUNOINVOICE => Array(
+                "value" => self::$BYJUNOINVOICE,
+                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/link", ScopeInterface::SCOPE_STORE)
+            ),
+        );
+        return $methods;
+    }
 
     function saveLog($request, $response, $status, $type,
                      $firstName, $lastName, $requestId,
@@ -96,7 +121,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_byjunoLogger->log($data);
     }
 
-    function saveS4Log(\Magento\Sales\Model\Order $order, \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoS4Request $request, $xml_request, $xml_response, $status, $type)
+    function saveS4Log(Order $order, ByjunoS4Request $request, $xml_request, $xml_response, $status, $type)
     {
 
         $data = array('firstname' => $order->getBillingAddress()->getFirstname(),
@@ -116,7 +141,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_byjunoLogger->log($data);
     }
 
-    function saveS5Log(\Magento\Sales\Model\Order $order, \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoS5Request $request, $xml_request, $xml_response, $status, $type)
+    function saveS5Log(Order $order, ByjunoS5Request $request, $xml_request, $xml_response, $status, $type)
     {
 
         $data = array('firstname' => $order->getBillingAddress()->getFirstname(),
@@ -178,7 +203,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $ipaddress = 'UNKNOWN';
         }
-        $addrMethod = $this->_scopeConfig->getValue('byjunocheckoutsettings/advanced/ip_detect_string', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $addrMethod = $this->_scopeConfig->getValue('byjunocheckoutsettings/advanced/ip_detect_string', ScopeInterface::SCOPE_STORE);
         if (!empty($addrMethod) && !empty($_SERVER[$addrMethod])) {
             $ipaddress = $_SERVER[$addrMethod];
         }
@@ -199,12 +224,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 $message = 'Die Firma ist nicht im Handelsregister eingetragen';
             }
         } else {
-            $message = $this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_fail_message', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $message = $this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_fail_message', ScopeInterface::SCOPE_STORE);
         }
         return $message;
     }
 
-    public function saveStatusToOrder(\Magento\Sales\Model\Order $order)
+    public function saveStatusToOrder(Order $order)
     {
         $order->addStatusHistoryComment('<b>Byjuno Checkout status: OK</b>');
         $order->save();
@@ -256,12 +281,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function byjunoIsStatusOk($status, $position)
     {
         try {
-            $config = trim($this->_scopeConfig->getValue($position, \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+            $config = trim($this->_scopeConfig->getValue($position, ScopeInterface::SCOPE_STORE));
             if ($config === "")
             {
                 return false;
             }
-            $stateArray = explode(",", $this->_scopeConfig->getValue($position, \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+            $stateArray = explode(",", $this->_scopeConfig->getValue($position, ScopeInterface::SCOPE_STORE));
             if (in_array($status, $stateArray)) {
                 return true;
             }
@@ -272,7 +297,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     function CreateMagentoShopRequestOrderQuote(\Magento\Quote\Model\Quote $quote,
-                                                \Magento\Quote\Model\Quote\Payment $paymentmethod,
+                                                Payment $paymentmethod,
                                            $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webshopProfile)
     {
 /*
@@ -482,18 +507,18 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return null;
     }
 
-    function CreateMagentoShopRequestPaid(\Magento\Sales\Model\Order $order,
+    function CreateMagentoShopRequestPaid(Order $order,
                                           \Magento\Sales\Model\Order\Payment $paymentmethod,
                                           $gender_custom, $dob_custom, $transaction, $riskOwner, $pref_lang, $b2b_uid, $webshopProfile)
     {
 
         $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest();
-        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setVersion("1.00");
         try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
         } catch (\Exception $e) {
 
         }
@@ -521,9 +546,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            ScopeInterface::SCOPE_STORE);
         $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            ScopeInterface::SCOPE_STORE);
 
         $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
         $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
@@ -592,7 +617,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->setExtraInfo($extraInfo);
         }
         $txid_extrainfo = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/txid_extrainfo',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            ScopeInterface::SCOPE_STORE);
 
         if (!empty($transaction) && $txid_extrainfo == 1) {
             $extraInfo["Name"] = 'ICP-FLD-CUSTOM1';
@@ -623,7 +648,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         $sedId = $this->_checkoutSession->getTmxSession();
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $extraInfo["Name"] = 'DEVICE_FINGERPRINT_ID';
             $extraInfo["Value"] = $sedId;
             $request->setExtraInfo($extraInfo);
@@ -660,7 +685,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $extraInfo["Value"] = $order->getShippingAddress()->getCity();
             $request->setExtraInfo($extraInfo);
 
-            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
 
                 $extraInfo["Name"] = 'DELIVERY_COMPANYNAME';
                 $extraInfo["Value"] = $order->getShippingAddress()->getCompany();
@@ -712,15 +737,15 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     }
 
-    function CreateMagentoShopRequestS4Paid(\Magento\Sales\Model\Order $order, \Magento\Sales\Model\Order\Invoice $invoice, $webshopProfile)
+    function CreateMagentoShopRequestS4Paid(Order $order, \Magento\Sales\Model\Order\Invoice $invoice, $webshopProfile)
     {
-        $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoS4Request();
-        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request = new ByjunoS4Request();
+        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setVersion("1.00");
         try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
         } catch (\Exception $e) {
 
         }
@@ -758,10 +783,10 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $str;
     }
 
-    function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote) {
+    function CreateMagentoShopRequestScreening(\Magento\Quote\Model\Quote $quote) {
 
         $request = new ByjunoCheckoutRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE);
         $request->requestMsgType = self::$MESSAGE_SCREENING;
         $request->requestMsgId = ByjunoCheckoutRequest::GUID();
         $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
@@ -798,7 +823,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
         $g = $quote->getCustomerGender();
         $request->custDetails->salutation = self::$GENTER_UNKNOWN;
-        if ($this->_customerMetadata->getAttributeMetadata('gender')->isVisible()) {
+        $genderEntity = null;
+        try {
+            $genderEntity = $this->_customerMetadata->getAttributeMetadata('gender');
+        } catch (\Exception $e) {
+        }
+        if ($genderEntity != null && $genderEntity->isVisible()) {
             if (!empty($g)) {
                 if ($g == '1') {
                     $request->custDetails->salutation = self::$GENTER_MALE;
@@ -809,12 +839,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            ScopeInterface::SCOPE_STORE);
         $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            ScopeInterface::SCOPE_STORE);
         $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
         $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
-        if ($this->_customerMetadata->getAttributeMetadata('prefix')->isVisible()) {
+        if ($genderEntity != null && $genderEntity->isVisible()) {
             if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_MALE;
             } else if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
@@ -838,7 +868,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($quote->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($quote->getShippingAddress()->getLastname());
-            if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+            if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
                 $request->deliveryDetails->deliveryCompanyName = $this->nullToString($quote->getShippingAddress()->getCompany());
             }
             $request->deliveryDetails->deliverySalutation = null;
@@ -860,7 +890,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         //$request->order->basketItemsPrices = null;
 
         $sedId = $this->_checkoutSession->getTmxSession();
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $request->sessionInfo->fingerPrint = $sedId;
         }
 
@@ -874,7 +904,194 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $request;
     }
 
-    function ScreeningResponse($response) {
+    function screeningResponse($response) {
+
+        $responseObject = json_decode($response);
+        $result = new ByjunoCheckoutScreeningResponse();
+        if ($responseObject->processingStatus == self::$SCREENING_OK) {
+            $result->merchantCustRef = $responseObject->merchantCustRef;
+            $result->processingStatus = $responseObject->processingStatus;
+            $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
+            $result->replyMsgId = $responseObject->replyMsgId;
+            $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
+            $result->requestMsgId = $responseObject->requestMsgId;
+            $result->transactionId = $responseObject->transactionId;
+            if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoPaymentMethods))) {
+                $result->screeningDetails->allowedByjunoPaymentMethods = $responseObject->screeningDetails->allowedByjunoPaymentMethods;
+            }
+        } else {
+            $result->processingStatus = $responseObject->processingStatus;
+        }
+        return $result;
+    }
+
+    public function createMagentoShopRequestAuthorization(Order $order,
+                                                          \Magento\Sales\Model\Order\Payment $paymentMethod,
+                                                          $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webShopProfile) {
+
+        $request = new ByjunoCheckoutRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $request->requestMsgType = self::$MESSAGE_AUTH;
+        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->merchantOrderRef = $order->getRealOrderId();
+        $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
+        $request->currency = $order->getOrderCurrencyCode();
+
+        $reference = $order->getCustomerId();
+        if (empty($reference)) {
+            $request->custDetails->merchantCustRef = "guest_" . $order->getId();
+            $request->custDetails->loggedIn = false;
+        } else {
+            $request->custDetails->merchantCustRef = (String)$order->getCustomerId();
+            $request->custDetails->loggedIn = true;
+        }
+        if ($order->getBillingAddress()->getCompany()) {
+            $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
+        } else {
+            $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
+        }
+        $request->custDetails->firstName = (String)$order->getBillingAddress()->getFirstname();
+        $request->custDetails->lastName = (String)$order->getBillingAddress()->getLastname();
+        if (!empty($pref_lang)) {
+            $request->custDetails->language = (String)$pref_lang;
+        } else {
+            $request->custDetails->language = (String)substr($this->_resolver->getLocale(), 0, 2);
+        }
+
+        if (!empty($b2b_uid)) {
+            $request->custDetails->companyRegNum = (String)$b2b_uid;
+        }
+
+        $b = $order->getCustomerDob();
+        if (!empty($b)) {
+            try {
+                $dobObject = new \DateTime($b);
+                if ($dobObject != null) {
+                    $request->custDetails->dateOfBirth = $dobObject->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+
+            }
+        }
+
+        if (!empty($dob_custom)) {
+            try {
+                $dobObject = new \DateTime($dob_custom);
+                if ($dobObject != null) {
+                    $request->custDetails->dateOfBirth = $dobObject->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+
+            }
+        }
+
+        $g = $order->getCustomerGender();
+        $request->custDetails->salutation = self::$GENTER_UNKNOWN;
+
+        $genderEntity = null;
+        try {
+            $genderEntity = $this->_customerMetadata->getAttributeMetadata('gender');
+        } catch (\Exception $e) {
+        }
+
+        if ($genderEntity != null && $genderEntity->isVisible()) {
+            if (!empty($g)) {
+                if ($g == '1') {
+                    $request->custDetails->salutation = self::$GENTER_MALE;
+                } else if ($g == '2') {
+                    $request->custDetails->salutation = self::$GENTER_FEMALE;
+                }
+            }
+        }
+
+        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+            ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+            ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
+        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
+        if ($genderEntity != null && $genderEntity->isVisible()) {
+            if (in_array(strtolower($order->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
+                $request->custDetails->salutation = self::$GENTER_MALE;
+            } else if (in_array(strtolower($order->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
+                $request->custDetails->salutation = self::$GENTER_FEMALE;
+            }
+        }
+
+        if (!empty($gender_custom)) {
+            if (in_array(strtolower($gender_custom), $gender_male_possible_prefix)) {
+                $request->custDetails->salutation = self::$GENTER_MALE;
+            } else if (in_array(strtolower($gender_custom), $gender_female_possible_prefix)) {
+                $request->custDetails->salutation = self::$GENTER_FEMALE;
+            }
+        }
+
+        $billingStreet = $order->getBillingAddress()->getStreet();
+        $billingStreet = implode("", $billingStreet);
+
+        $request->billingAddr->addrFirstLine = (String)$billingStreet;
+        $request->billingAddr->postalCode = (String)$order->getBillingAddress()->getPostcode();
+        $request->billingAddr->town = (String)$order->getBillingAddress()->getCity();
+        $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId());
+
+        $request->custContacts->phoneMobile = (String)trim($order->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->email = (String)$order->getBillingAddress()->getEmail();
+
+        if (!$order->getIsVirtual()) {
+            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
+            $request->deliveryDetails->deliveryFirstName = $this->nullToString($order->getShippingAddress()->getFirstname());
+            $request->deliveryDetails->deliverySecondName = $this->nullToString($order->getShippingAddress()->getLastname());
+            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
+                $request->deliveryDetails->deliveryCompanyName = $this->nullToString($order->getShippingAddress()->getCompany());
+            }
+            $request->deliveryDetails->deliverySalutation = null;
+
+            $shippingStreet = $order->getShippingAddress()->getStreet();
+            $shippingStreet = implode("", $shippingStreet);
+
+            $request->deliveryDetails->deliveryAddrFirstLine = trim((String)$shippingStreet);
+            $request->deliveryDetails->deliveryAddrPostalCode = $this->nullToString($order->getShippingAddress()->getPostcode());
+            $request->deliveryDetails->deliveryAddrTown = $this->nullToString($order->getShippingAddress()->getCity());
+            $request->deliveryDetails->deliveryAddrCountry = strtoupper($order->getShippingAddress()->getCountryId());
+
+        } else {
+            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryMethod = self::$DELIVERY_VIRTUAL;
+        }
+
+        $request->order->basketItemsGoogleTaxonomies = Array();
+        $request->order->basketItemsPrices = Array();
+
+        $sedId = $this->_checkoutSession->getTmxSession();
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+            $request->sessionInfo->fingerPrint = $sedId;
+        }
+
+        $request->byjunoDetails->byjunoPaymentMethod = $paymentMethod->getAdditionalInformation('payment_plan');
+        if ($paymentMethod->getAdditionalInformation('payment_send') == 'postal') {
+            $request->byjunoDetails->invoiceDeliveryType = "POSTAL";
+        } else {
+            $request->byjunoDetails->invoiceDeliveryType = "EMAIL";
+        }
+
+        $customerConsents = new CustomerConsents();
+        $customerConsents->consentType = "BYJUNO-TC";
+        $customerConsents->consentProvidedAt = "MERCHANT";
+        $customerConsents->consentDate = ByjunoCheckoutRequest::Date();
+        $methods = $this->getMethodsMapping();
+        $customerConsents->consentReference = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
+
+        $request->customerConsents = Array($customerConsents);
+
+        $request->merchantDetails->transactionChannel = "WEB";
+        $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
+
+        return $request;
+    }
+
+    function authorizationResponse($response) {
 
         $responseObject = json_decode($response);
         $result = new ByjunoCheckoutScreeningResponse();
@@ -1057,16 +1274,16 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
     */
 
-    function CreateMagentoShopRequestS5Paid(\Magento\Sales\Model\Order $order, $amount, $transactionType, $invoiceId = '', $webshopProfile)
+    function CreateMagentoShopRequestS5Paid(Order $order, $amount, $transactionType, $invoiceId = '', $webshopProfile)
     {
 
-        $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoS5Request();
-        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request = new ByjunoS5Request();
+        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setVersion("1.00");
         try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
         } catch (\Exception $e) {
 
         }

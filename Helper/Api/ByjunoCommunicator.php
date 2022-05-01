@@ -27,13 +27,21 @@ class ByjunoCommunicator
         return $this->server;
     }
 
-    public function sendRequest($xmlRequest, $timeout = 30) {
+    public function sendScreeningRequest($xmlRequest, $timeout = 30) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Screening', $timeout);
+    }
+
+    public function sendAuthRequest($xmlRequest, $timeout = 30) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout);
+    }
+
+    private function sendRequest($xmlRequest, $endpoint, $timeout) {
         $response = "";
         if (intval($timeout) < 0) {
             $timeout = 30;
         }
 
-        $url = 'http://20.67.150.71/api/v1.0/Screening';
+        $url = 'http://20.67.150.71/'.$endpoint;
        /* if ($this->server == 'test') {
             $url .= 'services/creditCheckDACH_01_41_TEST/response.cfm';
         } else {

@@ -2,14 +2,15 @@
 
 namespace ByjunoCheckout\ByjunoCheckoutCore\Controller\Checkout;
 
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoLogger;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
-use mysql_xdevapi\Exception;
+use Magento\Store\Model\ScopeInterface;
 
-class StartPayment extends Action
+class Startpayment extends Action
 {
     protected $_config;
     /**
@@ -45,7 +46,7 @@ class StartPayment extends Action
             $payment->getAdditionalInformation('webshop_profile_id'));
         $ByjunoRequestName = "Order paid" . $savePrefix;
         $requestType = 'b2c';
-        if ($request->getCompanyName1() != '' && $dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+        if ($request->getCompanyName1() != '' && $dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
             $ByjunoRequestName = "Order paid for Company" . $savePrefix;
             $requestType = 'b2b';
             $xml = $request->createRequestCompany();
@@ -54,13 +55,13 @@ class StartPayment extends Action
             $xml = $request->createRequest();
             $payment->setAdditionalInformation("is_b2b", false);
         }
-        $mode = $dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $mode = $dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
         if ($mode == 'live') {
             $dataHelper->_communicator->setServer('live');
         } else {
             $dataHelper->_communicator->setServer('test');
         }
-        $response = $dataHelper->_communicator->sendRequest($xml, (int)$dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $response = $dataHelper->_communicator->sendScreeningRequest($xml, (int)$dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout', ScopeInterface::SCOPE_STORE));
         $status = 0;
         if ($response) {
             $dataHelper->_response->setRawResponse($response);
@@ -164,10 +165,10 @@ class StartPayment extends Action
                     $payment->setAdditionalInformation("auth_executed_ok", 'true');
                     $payment->save();
 
-                    if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
+                    if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'completed') {
                         $order->setState(Order::STATE_COMPLETE);
                         $order->setStatus("complete");
-                    } else if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'processing') {
+                    } else if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'processing') {
                         $order->setState(Order::STATE_PROCESSING);
                         $order->setStatus("processing");
                     } else {
@@ -176,11 +177,11 @@ class StartPayment extends Action
 
                     self::$_dataHelper->saveStatusToOrder($order, $responseS2);
                     try {
-                        $mode = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                        $mode = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
                         if ($mode == 'live') {
-                            $email = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                            $email = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', ScopeInterface::SCOPE_STORE);
                         } else {
-                            $email = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                            $email = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', ScopeInterface::SCOPE_STORE);
                         }
                         self::$_dataHelper->_byjunoOrderSender->sendOrder($order, $email);
                     } catch (\Exception $e) {
@@ -243,10 +244,10 @@ class StartPayment extends Action
                     $transaction->save();
                     $payment->setAdditionalInformation("auth_executed_ok", 'true');
                     $payment->save();
-                    if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
+                    if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'completed') {
                         $order->setState(Order::STATE_COMPLETE);
                         $order->setStatus("complete");
-                    } else if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'processing') {
+                    } else if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'processing') {
                         $order->setState(Order::STATE_PROCESSING);
                         $order->setStatus("processing");
                     } else {
@@ -254,13 +255,13 @@ class StartPayment extends Action
                     }
                     self::$_dataHelper->saveStatusToOrder($order, $responseS2);
                     try {
-                        $mode = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                        $mode = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
                         if ($mode == 'live') {
-                            $email = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                            $email = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', ScopeInterface::SCOPE_STORE);
                         } else {
-                            $email = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                            $email = self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', ScopeInterface::SCOPE_STORE);
                         }
-                        if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/force_send_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+                        if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/force_send_email', ScopeInterface::SCOPE_STORE) == '1') {
                             self::$_dataHelper->_originalOrderSender->send($order);
                         }
                         self::$_dataHelper->_byjunoOrderSender->sendOrder($order, $email);
@@ -306,9 +307,54 @@ class StartPayment extends Action
         $payment = $order->getPayment();
 
         try {
-      //      $byjunoTrx = $_internalDataHelper->_checkoutSession->getByjunoTransaction();
-      //      list($statusS3, $requestTypeS3) = self::executeS3($order, $payment, $byjunoTrx, $payment->getAdditionalInformation('accept'), "", $_internalDataHelper);
-           // if ($_internalDataHelper->byjunoIsStatusOk($statusS3, "byjunocheckoutsettings/byjunocheckout_setup/accepted_s3")) {
+          //      $byjunoTrx = $_internalDataHelper->_checkoutSession->getByjunoTransaction();
+          //      list($statusS3, $requestTypeS3) = self::executeS3($order, $payment, $byjunoTrx, $payment->getAdditionalInformation('accept'), "", $_internalDataHelper);
+            $request = $_internalDataHelper->createMagentoShopRequestAuthorization(
+                $order,
+                $payment,
+                $payment->getAdditionalInformation('customer_gender'),
+                $payment->getAdditionalInformation('customer_dob'),
+                $payment->getAdditionalInformation('pref_lang'),
+                $payment->getAdditionalInformation('customer_b2b_uid'),
+                $payment->getAdditionalInformation('webshop_profile_id')
+            );
+            $ByjunoRequestName = "Authorization check request";
+            $json = "{}";
+            if ($request->custDetails->custType == 'C' && $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
+                    ScopeInterface::SCOPE_STORE) == '1') {
+                $ByjunoRequestName = "Authorization request for Company";
+            }
+            $json = $request->createRequest();
+            $byjunoCommunicator = new ByjunoCommunicator();
+            $mode = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+            if ($mode == 'live') {
+                $byjunoCommunicator->setServer('live');
+            } else {
+                $byjunoCommunicator->setServer('test');
+            }
+            $response = $byjunoCommunicator->sendAuthRequest($json, (int)$_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+                ScopeInterface::SCOPE_STORE));
+
+
+            if ($response) {
+                /* @var $responseRes ByjunoCheckoutScreeningResponse */
+                $responseRes = $_internalDataHelper->authorizationResponse($response);
+                $status = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
+                $_internalDataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
+                    $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
+                    $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId);
+                throw new LocalizedException(
+                    __("AAA")
+                );
+            } else {
+                $_internalDataHelper->saveLog($json, $response, "Query error", $ByjunoRequestName,
+                    $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
+                    $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-");
+            }
+            throw new LocalizedException(
+                __("ERR")
+            );
+               // if ($_internalDataHelper->byjunoIsStatusOk($statusS3, "byjunocheckoutsettings/byjunocheckout_setup/accepted_s3")) {
             if (true) {
                 $byjunoTrx = "byjunotx-" . uniqid();
                 $payment->setTransactionId($byjunoTrx);
@@ -320,10 +366,10 @@ class StartPayment extends Action
                 $order->setStatus("processing");
 
                 $payment->setAdditionalInformation("auth_executed_ok", 'true');
-                if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
+                if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'completed') {
                     $order->setState(Order::STATE_COMPLETE);
                     $order->setStatus("complete");
-                } else if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'processing') {
+                } else if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'processing') {
                     $order->setState(Order::STATE_PROCESSING);
                     $order->setStatus("processing");
                 } else {
@@ -332,13 +378,13 @@ class StartPayment extends Action
 
                 $_internalDataHelper->saveStatusToOrder($order);
                 try {
-                    $mode = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                    $mode = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
                     if ($mode == 'live') {
-                        $email = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                        $email = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', ScopeInterface::SCOPE_STORE);
                     } else {
-                        $email = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                        $email = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', ScopeInterface::SCOPE_STORE);
                     }
-                    if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/force_send_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+                    if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/force_send_email', ScopeInterface::SCOPE_STORE) == '1') {
                         $_internalDataHelper->_originalOrderSender->send($order);
                     }
                     $_internalDataHelper->_byjunoOrderSender->sendOrder($order, $email);

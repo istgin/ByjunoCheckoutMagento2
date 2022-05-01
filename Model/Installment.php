@@ -10,7 +10,6 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Model;
 
 use ByjunoCheckout\ByjunoCheckoutCore\Controller\Checkout\Startpayment;
 use Magento\Framework\DataObject;
-use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Payment\Model\MethodInterface;
@@ -275,16 +274,16 @@ class Installment extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         return $this->_scopeConfig->getValue("byjunoinstallmentsettings/byjunocheckout_installment_setup/title_installment", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    public function order(InfoInterface $payment, $amount)
+    public function order(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         return $this;
     }
 
     /* @return Installment
      * @throws LocalizedException
-     * @var $payment \Magento\Sales\Model\Order\Payment
+     * @var $payment \Magento\Payment\Model\InfoInterface
      */
-    public function authorize(InfoInterface $payment, $amount)
+    public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
        // if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
             /* @var $order \Magento\Sales\Model\Order */
