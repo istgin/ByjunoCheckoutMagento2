@@ -66,7 +66,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
 
     public function isInitializeNeeded()
     {
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+       if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/payment_mode", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '0') {
             return false;
         } else {
             return true;
@@ -438,7 +438,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/byjunos4transacton", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
-        if ($payment->getAdditionalInformation("s3_ok") == null || $payment->getAdditionalInformation("s3_ok") == 'false') {
+        if ($payment->getAdditionalInformation("auth_executed_ok") == null || $payment->getAdditionalInformation("auth_executed_ok") == 'false') {
             throw new LocalizedException (
                 __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s4_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: S3_NOT_CREATED)")
             );

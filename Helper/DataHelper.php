@@ -204,16 +204,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $message;
     }
 
-    public function saveStatusToOrder(\Magento\Sales\Model\Order $order, \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoResponse $byjunoS2Response)
+    public function saveStatusToOrder(\Magento\Sales\Model\Order $order)
     {
-        if ($byjunoS2Response) {
-            $order->addStatusHistoryComment('<b>Byjuno Checkout status: ' . $this->valueToStatus($byjunoS2Response->getCustomerRequestStatus()) . '</b>
-            <br/>Credit rating: ' . $byjunoS2Response->getCustomerCreditRating() . '
-            <br/>Credit rating level: ' . $byjunoS2Response->getCustomerCreditRatingLevel() . '<br/>Status code: ' . $byjunoS2Response->getCustomerRequestStatus() . '</b>');
-            $order->setByjunoStatus($byjunoS2Response->getCustomerRequestStatus());
-            $order->setByjunoCreditRating($byjunoS2Response->getCustomerCreditRating());
-            $order->setByjunoCreditLevel($byjunoS2Response->getCustomerCreditRatingLevel());
-        }
+        $order->addStatusHistoryComment('<b>Byjuno Checkout status: OK</b>');
         $order->save();
     }
 

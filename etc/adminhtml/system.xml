@@ -16,6 +16,13 @@
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="payment_mode" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment mode</label>
+                    <comment>B2B integration allow to to do credit check if customer provide company
+                        credentials
+                    </comment>
+                    <source_model>ByjunoCheckout\ByjunoCheckoutCore\Model\Source\PaymentMode</source_model>
+                </field>
                 <field id="businesstobusiness" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable B2B check</label>
                     <comment>B2B integration allow to to do credit check if customer provide company

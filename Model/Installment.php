@@ -98,7 +98,7 @@ class Installment extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         $payment->setAdditionalInformation('payment_plan', null);
         $payment->setAdditionalInformation('payment_send', null);
         $payment->setAdditionalInformation('payment_send_to', null);
-        $payment->setAdditionalInformation('s3_ok', null);
+        $payment->setAdditionalInformation('auth_executed_ok', null);
         $payment->setAdditionalInformation('webshop_profile_id', null);
         if (isset($dataKey['installment_payment_plan'])) {
             $payment->setAdditionalInformation('payment_plan', $dataKey['installment_payment_plan']);
@@ -143,7 +143,7 @@ class Installment extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         } else {
             $payment->setAdditionalInformation('customer_b2b_uid', '');
         }
-        $payment->setAdditionalInformation('s3_ok', 'false');
+        $payment->setAdditionalInformation('auth_executed_ok', 'false');
         $payment->setAdditionalInformation("webshop_profile_id", $this->getStore());
         return $this;
     }

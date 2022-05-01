@@ -3,32 +3,56 @@
  * Created by PhpStorm.
  * User: Igor
  * Date: 15.10.2016
- * Time: 18:38
+ * Time: 15:43
  */
+
 namespace ByjunoCheckout\ByjunoCheckoutCore\Model\Source;
 
-use Magento\Backend\Block\Template\Context;
-use Magento\Config\Block\System\Config\Form\Field;
-use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Option\ArrayInterface;
 
-class ExplainS4 extends Field
+class PaymentMode implements ArrayInterface
 {
-    /**
-     * Return element html
-     *
-     * @param  AbstractElement $element
-     * @return string
-     */
-    protected function _getElementHtml(AbstractElement $element)
+    protected $_categoryHelper;
+
+    public function __construct(\Magento\Catalog\Helper\Category $catalogCategory)
     {
-        $byjunocheckout_s4_explain = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunos4transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $message = 'S4 Transaction (Settlement/Invoice) must be delivered to Byjuno Checkout manually or from ERP system';
-        $color = 'FFE5E6';
-        if ($byjunocheckout_s4_explain == 1) {
-            $message = 'S4 Transaction (Settlement/Invoice) will be sent to Byjuno Checkout when new Invoice is created on the order';
-            $color = 'ddffdf';
+        $this->_categoryHelper = $catalogCategory;
+    }
+
+
+    /*
+     * Option getter
+     * @return array
+     */
+    public function toOptionArray()
+    {
+
+
+        $arr = $this->toArray();
+        $ret = [];
+
+        foreach ($arr as $key => $value)
+        {
+
+            $ret[] = [
+                'value' => $key,
+                'label' => $value
+            ];
         }
-        return '<div style="white-space: nowrap; background-color: #'.$color.'; padding: 10px 5px 10px 5px">'.$message.'</div>';
+
+        return $ret;
+    }
+
+    /*
+     * Get options in "key-value" format
+     * @return array
+     */
+    public function toArray()
+    {
+        $catagoryList = array();
+        $catagoryList["0"] = 'Byjuno api with no redirect';
+        $catagoryList["1"] = 'Byjuno checkout redirect';
+        return $catagoryList;
     }
 
 }

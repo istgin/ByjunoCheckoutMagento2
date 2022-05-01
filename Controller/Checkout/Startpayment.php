@@ -7,6 +7,7 @@ use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoLogger;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
+use mysql_xdevapi\Exception;
 
 class Startpayment extends Action
 {
@@ -160,7 +161,7 @@ class Startpayment extends Action
                     $transaction->setIsClosed(false);
                     $transaction->save();
 
-                    $payment->setAdditionalInformation("s3_ok", 'true');
+                    $payment->setAdditionalInformation("auth_executed_ok", 'true');
                     $payment->save();
 
                     if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
@@ -239,7 +240,7 @@ class Startpayment extends Action
                     $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true);
                     $transaction->setIsClosed(false);
                     $transaction->save();
-                    $payment->setAdditionalInformation("s3_ok", 'true');
+                    $payment->setAdditionalInformation("auth_executed_ok", 'true');
                     $payment->save();
                     if (self::$_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
                         $order->setState(Order::STATE_COMPLETE);
@@ -298,81 +299,70 @@ class Startpayment extends Action
         return $resultRedirect;
     }
 
-    public static function executeS3Order(Order $order, DataHelper $_internalDataHelper)
+    public static function executeAuthorizeRequestOrder(Order $order, DataHelper $_internalDataHelper)
     {
-        return null;
         /* @var $payment \Magento\Sales\Model\Order\Payment */
-        /*
         $payment = $order->getPayment();
+
         try {
-            $statusS2 = $_internalDataHelper->_checkoutSession->getIntrumStatus();
-            $typeS2 = $_internalDataHelper->_checkoutSession->getIntrumRequestType();
-            $responseS2String = $_internalDataHelper->_checkoutSession->getS2Response();
-            if ($responseS2String == "") {
-                throw new \Exception(__("Empty response set"));
-            }
-            $_internalDataHelper->_response->setRawResponse($responseS2String);
-            $_internalDataHelper->_response->processResponse();
-            $responseS2 = clone $_internalDataHelper->_response;
-            if ($payment->getAdditionalInformation('accept') != "") {
-                $byjunoTrx = $_internalDataHelper->_checkoutSession->getByjunoTransaction();
-                list($statusS3, $requestTypeS3) = self::executeS3($order, $payment, $byjunoTrx, $payment->getAdditionalInformation('accept'), "", $_internalDataHelper);
-                if ($_internalDataHelper->byjunoIsStatusOk($statusS3, "byjunocheckoutsettings/byjunocheckout_setup/accepted_s3")) {
-                    if ($byjunoTrx == "") {
-                        $byjunoTrx = "byjunotx-" . uniqid();
-                    }
-                    $payment->setTransactionId($byjunoTrx);
-                    $payment->setParentTransactionId($payment->getTransactionId());
-                    $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true);
-                    $transaction->setIsClosed(false);
-                    $payment->setAdditionalInformation("s3_ok", 'true');
-                    if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
-                        $order->setState(Order::STATE_COMPLETE);
-                        $order->setStatus("complete");
-                    } else if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'processing') {
-                        $order->setState(Order::STATE_PROCESSING);
-                        $order->setStatus("processing");
-                    } else {
-                        $order->setStatus("pending");
-                    }
-                    $_internalDataHelper->saveStatusToOrder($order, $responseS2);
-                    try {
-                        $mode = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-                        if ($mode == 'live') {
-                            $email = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-                        } else {
-                            $email = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-                        }
-                        if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/force_send_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
-                            $_internalDataHelper->_originalOrderSender->send($order);
-                        }
-                        $_internalDataHelper->_byjunoOrderSender->sendOrder($order, $email);
-                    } catch (\Exception $e) {
-                        $_internalDataHelper->_loggerPsr->critical($e);
-                    }
-                    $_internalDataHelper->_checkoutSession->setTmxSession('');
-                    $_internalDataHelper->_checkoutSession->setCDPStatus('');
+      //      $byjunoTrx = $_internalDataHelper->_checkoutSession->getByjunoTransaction();
+      //      list($statusS3, $requestTypeS3) = self::executeS3($order, $payment, $byjunoTrx, $payment->getAdditionalInformation('accept'), "", $_internalDataHelper);
+           // if ($_internalDataHelper->byjunoIsStatusOk($statusS3, "byjunocheckoutsettings/byjunocheckout_setup/accepted_s3")) {
+            if (true) {
+                $byjunoTrx = "byjunotx-" . uniqid();
+                $payment->setTransactionId($byjunoTrx);
+                $payment->setParentTransactionId($payment->getTransactionId());
+               // $payment->setIsTransactionPending(true);
+                $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true);
+                $transaction->setIsClosed(false);
+                $order->setState(Order::STATE_PROCESSING);
+                $order->setStatus("processing");
+
+                $payment->setAdditionalInformation("auth_executed_ok", 'true');
+                if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'completed') {
+                    $order->setState(Order::STATE_COMPLETE);
+                    $order->setStatus("complete");
+                } else if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/success_state', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'processing') {
+                    $order->setState(Order::STATE_PROCESSING);
+                    $order->setStatus("processing");
                 } else {
-                    $error = $_internalDataHelper->getByjunoErrorMessage($statusS3, $requestTypeS3) . "(S3)";
-                    $order->registerCancellation($error)->save();
-                    return $error;
+                    $order->setStatus("pending");
                 }
+
+                $_internalDataHelper->saveStatusToOrder($order);
+                try {
+                    $mode = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                    if ($mode == 'live') {
+                        $email = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                    } else {
+                        $email = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+                    }
+                    if ($_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/force_send_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+                        $_internalDataHelper->_originalOrderSender->send($order);
+                    }
+                    $_internalDataHelper->_byjunoOrderSender->sendOrder($order, $email);
+                } catch (\Exception $e) {
+                    $_internalDataHelper->_loggerPsr->critical($e);
+                }
+             //   $_internalDataHelper->_checkoutSession->setTmxSession('');
+             //   $_internalDataHelper->_checkoutSession->setCDPStatus('');
             } else {
-                $error = $_internalDataHelper->getByjunoErrorMessage(
-                    $statusS2,
-                    $typeS2
-                );
-                $order->registerCancellation($error)->save();
+                $error = "ERRORXXX";//$_internalDataHelper->getByjunoErrorMessage($statusS3, $requestTypeS3) . "(S3)";
+              //  $order->registerCancellation($error)->save();
                 return $error;
             }
 
         } catch (\Exception $e) {
-            $error = __("Unexpected error");
-            $order->registerCancellation($error)->save();
+            $error = __($e->getMessage());
+          //  try {
+              //  $order->registerCancellation($error)->save();
+         //   } catch (\Exception $e) {
+             //   $error = "Error cancel order";
+             //   return $error;
+           // }
             return $error;
         }
         return null;
-        */
     }
 
     private static function restoreQuote()

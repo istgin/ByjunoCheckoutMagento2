@@ -409,6 +409,7 @@
         <byjunocheckoutsettings>
             <byjunocheckout_setup>
                 <active>0</active>
+                <payment_mode>0</payment_mode>
                 <currentmode>test</currentmode>
                 <minamount>10</minamount>
                 <maxamount>10000</maxamount>

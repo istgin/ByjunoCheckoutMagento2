@@ -153,9 +153,10 @@ class InstallData implements InstallDataInterface
         $data = [];
         $dataSate = [];
         $statuses = [
-            'pending_byjunocheckout' => Array( "name" => __('Byjuno Checkout wait for payment'), 'is_default' => 1, "visible_on_front" => 1, "state" => "new"),
-            'pending_byjunocheckout_payment_checkout' => Array( "name" =>__('Byjuno Checkout confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "pending_payment"),
-            'byjunocheckout_confirmed_checkout'  => Array( "name" =>__('Byjuno Checkout V2 confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "processing"),
+            'byjunocheckout_new' => Array( "name" => __('Byjuno Checkout new payment generated'), 'is_default' => 0, "visible_on_front" => 1, "state" => "new"),
+            'byjunocheckout_pending' => Array( "name" => __('Byjuno Checkout wait for payment'), 'is_default' => 0, "visible_on_front" => 1, "state" => "pending_payment"),
+            'byjunocheckout_review' => Array( "name" =>__('Byjuno Checkout confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "payment_review"),
+            'byjunocheckout_processing'  => Array( "name" =>__('Byjuno Checkout processing'), 'is_default' => 0, "visible_on_front" => 1, "state" => "processing"),
         ];
         foreach ($statuses as $code => $info) {
             $data[] = ['status' => $code, 'label' => $info["name"]];

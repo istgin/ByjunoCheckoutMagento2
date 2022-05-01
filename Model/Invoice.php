@@ -94,8 +94,13 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
 
     public function getConfigData($field, $storeId = null)
     {
+        // Checkout page active
         if ($field == 'order_place_redirect_url') {
             return 'byjunocheckoutcore/checkout/startpayment';
+        }
+        // No checkout page
+        if ($field == 'order_status' && true) {
+            return 'byjunocheckout_processing';
         }
         return parent::getConfigData($field, $storeId);
     }
@@ -150,7 +155,7 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         $payment->setAdditionalInformation('payment_plan', null);
         $payment->setAdditionalInformation('payment_send', null);
         $payment->setAdditionalInformation('payment_send_to', null);
-        $payment->setAdditionalInformation('s3_ok', null);
+        $payment->setAdditionalInformation('auth_executed_ok', null);
         $payment->setAdditionalInformation('webshop_profile_id', null);
         if (isset($dataKey['invoice_payment_plan'])) {
             $payment->setAdditionalInformation('payment_plan', $dataKey['invoice_payment_plan']);
@@ -195,7 +200,7 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         } else {
             $payment->setAdditionalInformation('customer_b2b_uid', '');
         }
-        $payment->setAdditionalInformation('s3_ok', 'false');
+        $payment->setAdditionalInformation('auth_executed_ok', 'false');
         $payment->setAdditionalInformation("webshop_profile_id", $this->getStore());
         return $this;
     }
@@ -275,10 +280,11 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
      */
     public function authorize(InfoInterface $payment, $amount)
     {
-        //if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+
+        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/payment_mode", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '0') {
             /* @var $order \Magento\Sales\Model\Order */
             $order = $payment->getOrder();
-            $result = Startpayment::executeS3Order($order, $this->_dataHelper);
+            $result = Startpayment::executeAuthorizeRequestOrder($order, $this->_dataHelper);
             if ($result == null) {
                 return $this;
             } else {
@@ -286,9 +292,9 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
                     __($result)
                 );
             }
-      //  } else {
-      //      return $this;
-    //    }
+        } else {
+            return $this;
+        }
     }
 
 }
