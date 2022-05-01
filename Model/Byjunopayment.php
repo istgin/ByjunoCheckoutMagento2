@@ -23,6 +23,8 @@ use Magento\Payment\Gateway\Command\CommandPoolInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
+use Magento\Quote\Model\Quote\Payment;
+use Magento\Tests\NamingConvention\true\bool;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
 
@@ -296,9 +298,14 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         return false;
     }
 
-    /* @var $payment \Magento\Quote\Model\Quote\Payment */
-    public function validateCustomByjunoFields(\Magento\Payment\Model\InfoInterface $payment, $isCompany)
+    /* @throws LocalizedException
+     * @var $infoInterface InfoInterface
+     * @var $isCompany bool
+     */
+    public function validateCustomByjunoFields(InfoInterface $infoInterface, $isCompany)
     {
+        /** @var $payment Payment */
+        $payment = $infoInterface;
         if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_enable",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             if ($payment->getAdditionalInformation('customer_gender') == null || $payment->getAdditionalInformation('customer_gender') == '') {

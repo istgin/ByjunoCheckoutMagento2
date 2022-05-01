@@ -9,7 +9,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use mysql_xdevapi\Exception;
 
-class Startpayment extends Action
+class StartPayment extends Action
 {
     protected $_config;
     /**
@@ -209,6 +209,7 @@ class Startpayment extends Action
 
     public function execute()
     {
+        exit('aaa');
        // if (self::$_dataHelper->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('checkout/onepage/success');

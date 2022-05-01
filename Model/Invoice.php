@@ -96,7 +96,11 @@ class Invoice extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
     {
         // Checkout page active
         if ($field == 'order_place_redirect_url') {
-            return 'byjunocheckoutcore/checkout/startpayment';
+            if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/payment_mode", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '0') {
+                return 'byjunocheckoutcore/checkout/startpayment';
+            } else {
+                return 'byjunocheckoutcore/checkout/startcheckout';
+            }
         }
         // No checkout page
         if ($field == 'order_status' && true) {
