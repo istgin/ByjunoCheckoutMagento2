@@ -10,7 +10,7 @@ class Authorization {
     public $authorizationCurrency; //String
 
 }
-class ByjunoCheckoutResponse {
+class ByjunoCheckoutAuthorizationResponse {
     public $requestMsgType; //String
     public $requestMsgId; //String
     public $requestMsgDateTime; //Date

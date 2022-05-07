@@ -208,7 +208,6 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 $this->_savedUser = $theSame;
             }
             $status = $this->_dataHelper->_checkoutSession->getScreeningStatus();
-            $status = null;
             try {
                 $request = $this->_dataHelper->CreateMagentoShopRequestScreening($quote);
                 if ($request->amount == 0) {
@@ -226,11 +225,11 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                    }
                 }
                 if (!$this->isTheSame($request) || empty($status)) {
-                    $ByjunoRequestName = "Credit check request";
+                    $ByjunoRequestName = "Screening request";
                     $json = "{}";
                     if ($request->custDetails->custType == 'C' && $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
                             \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
-                        $ByjunoRequestName = "Credit check request for Company";
+                        $ByjunoRequestName = "Screening request for company";
                         $json = $request->createRequest();
                     } else {
                         $json = $request->createRequest();
@@ -251,11 +250,11 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                         $status = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
                         $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
-                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId);
+                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId, "-");
                     } else {
                         $this->_dataHelper->saveLog($json, $response, "Query error", $ByjunoRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
-                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-");
+                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-", "-");
                     }
 
                     $this->_savedUser = Array(
