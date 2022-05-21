@@ -229,15 +229,16 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                    }
                 }
                 if (!$this->isTheSame($request) || empty($status)) {
-                    $ByjunoRequestName = "Screening request";
-                    $json = "{}";
-                    if ($request->custDetails->custType == 'C' && $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
-                            \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
-                        $ByjunoRequestName = "Screening request for company";
-                        $json = $request->createRequest();
-                    } else {
-                        $json = $request->createRequest();
-                    }
+                    $ByjunoRequestName = $request->requestMsgType;
+                  //  $json = "{}";
+                 //   if ($request->custDetails->custType == 'C' && $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
+                 //           \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+                 //       $ByjunoRequestName = "Screening request for company";
+                 //       $json = $request->createRequest();
+                 //   } else {
+                 //       $json = $request->createRequest();
+                 //   }
+                    $json = $request->createRequest();
                     $byjunoCommunicator = new ByjunoCommunicator();
                     $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
                     if ($mode == 'live') {
@@ -449,16 +450,22 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         }
         if ($payment->getAdditionalInformation("auth_executed_ok") == null || $payment->getAdditionalInformation("auth_executed_ok") == 'false') {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: S3_NOT_CREATED)")
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
             );
         }
         $incrementValue =  $this->_eavConfig->getEntityType($invoice->getEntityType())->fetchNewIncrementId($invoice->getStoreId());
         if ($invoice->getIncrementId() == null) {
             $invoice->setIncrementId($incrementValue);
         }
-        $request = $this->_dataHelper->CreateMagentoShopRequestSettlePaid($order, $invoice, $payment, $webshopProfileId);
+        $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
+        if ($tx == null || !$tx || empty($tx["transaction_id"])) {
+            throw new LocalizedException (
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
+            );
+        }
+        $request = $this->_dataHelper->CreateMagentoShopRequestSettlePaid($order, $invoice, $payment, $webshopProfileId, $tx["transaction_id"]);
 
-        $ByjunoRequestName = "Settle request";
+        $ByjunoRequestName = $request->requestMsgType;
         $json = $request->createRequest();
         $byjunoCommunicator = new ByjunoCommunicator();
         $mode = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);

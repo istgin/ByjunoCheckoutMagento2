@@ -123,6 +123,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_byjunoLogger->log($data);
     }
 
+    function getTransactionForOrder($orderId)
+    {
+        return $this->_byjunoLogger->getAuthTransaction($orderId);
+    }
+
     function saveS4Log(Order $order, ByjunoS4Request $request, $xml_request, $xml_response, $status, $type)
     {
 
@@ -738,14 +743,14 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     }
 
-    function CreateMagentoShopRequestSettlePaid(Order $order, Invoice $invoice, Order\Payment $payment, $webshopProfile)
+    function CreateMagentoShopRequestSettlePaid(Order $order, Invoice $invoice, Order\Payment $payment, $webshopProfile, $tx)
     {
         $request = new ByjunoCheckoutSettleRequest();
         $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_SET;
         $request->requestMsgId = ByjunoCheckoutRequest::GUID();
         $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
-        $request->transactionId = "XXX";
+        $request->transactionId = $tx;
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
         $request->currency = $order->getOrderCurrencyCode();

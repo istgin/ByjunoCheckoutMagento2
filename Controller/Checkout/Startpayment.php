@@ -242,12 +242,12 @@ class Startpayment extends Action
                 $payment->getAdditionalInformation('customer_b2b_uid'),
                 $payment->getAdditionalInformation('webshop_profile_id')
             );
-            $ByjunoRequestName = "Authorization request";
-            $json = "{}";
-            if ($request->custDetails->custType == 'C' && $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
-                    ScopeInterface::SCOPE_STORE) == '1') {
-                $ByjunoRequestName = "Authorization request for company";
-            }
+            $ByjunoRequestName = $request->requestMsgType;
+           // $json = "{}";
+           // if ($request->custDetails->custType == 'C' && $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
+           //         ScopeInterface::SCOPE_STORE) == '1') {
+           //     $ByjunoRequestName = "Authorization request for company";
+           // }
             $json = $request->createRequest();
             $byjunoCommunicator = new ByjunoCommunicator();
             $mode = $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);

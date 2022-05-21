@@ -7,6 +7,9 @@
  */
 namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
 
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+use Magento\Framework\Exception\LocalizedException;
+
 class ByjunoLogger
 {
     public function log($array) {
@@ -35,5 +38,19 @@ class ByjunoLogger
                 'creation_date' => date ("Y-m-d H:i:s")
             )
         );
+    }
+
+    public function getAuthTransaction($orderId) {
+
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $connection = $objectManager->create('\Magento\Framework\App\ResourceConnection');
+        $tableName = $connection->getTableName("byjunocheckout_log");
+        $conn = $connection->getConnection();
+
+        $select = $conn->select()->from($tableName)
+            ->where('order_id = ?', $orderId)
+            ->where('type = ?',  DataHelper::$MESSAGE_AUTH);
+        $result = $conn->fetchRow($select);
+        return $result;
     }
 };
