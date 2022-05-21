@@ -30,9 +30,9 @@
                     </byjunocheckout_installment_postal_text>
                     <byjunocheckout_installment_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an
                     </byjunocheckout_installment_email_text>
-                    <byjunocheckout_s4_fail>Das Senden der Rechnung an Byjuno Checkout ist fehlgeschlagen. Die Rechnung wurde nicht
+                    <byjunocheckout_settle_fail>Das Senden der Rechnung an Byjuno Checkout ist fehlgeschlagen. Die Rechnung wurde nicht
                         generiert. Bitte versuchen Sie es erneut.
-                    </byjunocheckout_s4_fail>
+                    </byjunocheckout_settle_fail>
                     <byjunocheckout_s5_fail>Das Senden der Bestelländerung an Byjuno Checkout ist fehlgeschlagen. Storno/Rückerstattung
                         konnte nicht durchgeführt werden. Bitte versuchen Sie es erneut.
                     </byjunocheckout_s5_fail>
@@ -121,9 +121,9 @@
                     </byjunocheckout_installment_postal_text>
                     <byjunocheckout_installment_email_text>Expédition facture via e-mail (sans frais) à
                     </byjunocheckout_installment_email_text>
-                    <byjunocheckout_s4_fail>La transmission de la facture à Byjuno Checkout a échoué. La facture n’a pas été produite,
+                    <byjunocheckout_settle_fail>La transmission de la facture à Byjuno Checkout a échoué. La facture n’a pas été produite,
                         veuillez essayer à nouveau.
-                    </byjunocheckout_s4_fail>
+                    </byjunocheckout_settle_fail>
                     <byjunocheckout_s5_fail>La transmission de la commande modifiée a échoué. L’annulation/le remboursement n’a pas
                         pu être exécuté. Veuillez essayer à nouveau.
                     </byjunocheckout_s5_fail>
@@ -216,9 +216,9 @@
                     </byjunocheckout_installment_postal_text>
                     <byjunocheckout_installment_email_text>Invio fattura tramite e-mail (senza spese aggiuntive) all’indirizzo
                     </byjunocheckout_installment_email_text>
-                    <byjunocheckout_s4_fail>La trasmissione della fattura a Byjuno Checkout non é riuscita. La fattura non é stata generata.
+                    <byjunocheckout_settle_fail>La trasmissione della fattura a Byjuno Checkout non é riuscita. La fattura non é stata generata.
                         La preghiamo di riprovare.
-                    </byjunocheckout_s4_fail>
+                    </byjunocheckout_settle_fail>
                     <byjunocheckout_s5_fail>La trasmissione della modifica dell’ordine non é riuscita. Storno/Rimborso non é stato
                         eseguito. La preghiamo di riprovare.
                     </byjunocheckout_s5_fail>
@@ -308,9 +308,9 @@
                     </byjunocheckout_installment_postal_text>
                     <byjunocheckout_installment_email_text>Installments Delivery method by E-Mail (no fees) to
                     </byjunocheckout_installment_email_text>
-                    <byjunocheckout_s4_fail>The invoice transfer to Byjuno Checkout failed; the invoice could not be generated, please
+                    <byjunocheckout_settle_fail>The invoice transfer to Byjuno Checkout failed; the invoice could not be generated, please
                         retry.
-                    </byjunocheckout_s4_fail>
+                    </byjunocheckout_settle_fail>
                     <byjunocheckout_s5_fail>The transfer of the updated order to Byjuno Checkout failed; Cancel/Refund could not be
                         completed, please retry.
                     </byjunocheckout_s5_fail>
@@ -419,14 +419,14 @@
                 <businesstobusiness>0</businesstobusiness>
                 <byjunocheckout_prod_email>invoices@byjuno.ch</byjunocheckout_prod_email>
                 <byjunocheckout_test_email>test-invoices@byjuno.ch</byjunocheckout_test_email>
-                <byjunos4transacton>0</byjunos4transacton>
+                <byjunosettletransacton>0</byjunosettletransacton>
                 <byjunos5transacton>0</byjunos5transacton>
                 <gender_enable>0</gender_enable>
                 <birthday_enable>0</birthday_enable>
                 <gender_prefix>Herr;Frau</gender_prefix>
                 <gender_male_possible_prefix>Herr;Mr</gender_male_possible_prefix>
                 <gender_female_possible_prefix>Frau;Mrs;Ms</gender_female_possible_prefix>
-                <cdpbeforeshow>0</cdpbeforeshow>
+                <screeningbeforeshow>0</screeningbeforeshow>
                 <country_phone_validation>1</country_phone_validation>
                 <ip_detect_string />
                 <byjunocheckout_invoice_paper>0</byjunocheckout_invoice_paper>
@@ -457,9 +457,9 @@
                     an
                 </byjunocheckout_installment_postal_text>
                 <byjunocheckout_installment_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an</byjunocheckout_installment_email_text>
-                <byjunocheckout_s4_fail>Das Senden der Rechnung an Byjuno Checkout ist fehlgeschlagen. Die Rechnung wurde nicht generiert.
+                <byjunocheckout_settle_fail>Das Senden der Rechnung an Byjuno Checkout ist fehlgeschlagen. Die Rechnung wurde nicht generiert.
                     Bitte versuchen Sie es erneut.
-                </byjunocheckout_s4_fail>
+                </byjunocheckout_settle_fail>
                 <byjunocheckout_s5_fail>Das Senden der Bestelländerung an Byjuno Checkout ist fehlgeschlagen. Storno/Rückerstattung konnte
                     nicht durchgeführt werden. Bitte versuchen Sie es erneut.
                 </byjunocheckout_s5_fail>

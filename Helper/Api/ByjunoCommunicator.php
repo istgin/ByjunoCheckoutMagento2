@@ -35,6 +35,10 @@ class ByjunoCommunicator
         return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout);
     }
 
+    public function sendSettleRequest($xmlRequest, $timeout = 30) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $timeout);
+    }
+
     private function sendRequest($xmlRequest, $endpoint, $timeout) {
         $response = "";
         if (intval($timeout) < 0) {

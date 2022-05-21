@@ -57,6 +57,12 @@ class DeliveryDetails
 
 }
 
+class SettlementDetails
+{
+    public $merchantInvoiceRef; //String
+    public $isFinal; //boolean
+}
+
 class Order
 {
     public $basketItemsGoogleTaxonomies;  //array( String )

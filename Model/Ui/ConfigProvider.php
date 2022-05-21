@@ -93,7 +93,7 @@ class ConfigProvider implements ConfigProviderInterface
 
     private function isAllowedByScreening($screeningStatus, $method)
     {
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/cdpbeforeshow', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '0') {
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/screeningbeforeshow', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '0') {
             return true;
         }
         foreach ($screeningStatus as $st) {

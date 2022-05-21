@@ -5,9 +5,12 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleRequest;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\CustomerConsents;
 use Magento\Quote\Model\Quote\Payment;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Invoice;
 use Magento\Store\Model\ScopeInterface;
 
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
@@ -18,6 +21,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public static $MESSAGE_SCREENING = 'SCR';
     public static $MESSAGE_AUTH = 'AUT';
+    public static $MESSAGE_SET = 'SET';
 
     public static $CUSTOMER_PRIVATE = 'P';
     public static $CUSTOMER_BUSINESS = 'C';
@@ -32,6 +36,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $DELIVERY_VIRTUAL = 'DIGITAL';
 
     public static $SCREENING_OK = 'SCREENING-APPROVED';
+    public static $AUTH_SUCCESS = 'SUCCESS';
 
     /**
      * @var \Magento\Quote\Api\CartRepositoryInterface
@@ -504,7 +509,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     function CreateMagentoShopRequestPaid(Order $order,
-                                          \Magento\Sales\Model\Order\Payment $paymentmethod,
+                                          Order\Payment $paymentmethod,
                                           $gender_custom, $dob_custom, $transaction, $riskOwner, $pref_lang, $b2b_uid, $webshopProfile)
     {
 
@@ -733,8 +738,22 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     }
 
-    function CreateMagentoShopRequestS4Paid(Order $order, \Magento\Sales\Model\Order\Invoice $invoice, $webshopProfile)
+    function CreateMagentoShopRequestSettlePaid(Order $order, Invoice $invoice, Order\Payment $payment, $webshopProfile)
     {
+        $request = new ByjunoCheckoutSettleRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
+        $request->requestMsgType = self::$MESSAGE_SET;
+        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->transactionId = "XXX";
+        $request->merchantOrderRef = $order->getRealOrderId();
+        $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
+        $request->currency = $order->getOrderCurrencyCode();
+        $request->settlementDetails->isFinal = $payment->isCaptureFinal($order->getGrandTotal());
+        $request->settlementDetails->merchantInvoiceRef = $invoice->getIncrementId();
+        return $request;
+        /*
+
         $request = new ByjunoS4Request();
         $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
@@ -769,7 +788,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->setOpenBalance(number_format($invoice->getGrandTotal(), 2, '.', ''));
 
         return $request;
-
+        */
     }
 
     function nullToString($str)
@@ -925,7 +944,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     public function createMagentoShopRequestAuthorization(Order $order,
-                                                          \Magento\Sales\Model\Order\Payment $paymentMethod,
+                                                          Order\Payment $paymentMethod,
                                                           $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webShopProfile)
     {
 
@@ -1123,6 +1142,20 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
         return $result;
         */
+    }
+
+    function settleResponse($response)
+    {
+        $responseObject = json_decode($response);
+        $result = new ByjunoCheckoutSettleResponse();
+        if ($responseObject->processingStatus == self::$AUTH_SUCCESS) {
+            // TODO if need
+            $result->processingStatus = $responseObject->processingStatus;
+            $result->transactionId = $responseObject->transactionId;
+        } else {
+            $result->processingStatus = $responseObject->processingStatus;
+        }
+        return $result;
     }
 
     /*function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote)

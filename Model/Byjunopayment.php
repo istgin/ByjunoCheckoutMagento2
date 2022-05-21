@@ -8,9 +8,11 @@
 
 namespace ByjunoCheckout\ByjunoCheckoutCore\Model;
 
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
+use ByjunoCheckout\ByjunoCheckoutCore\Observer\InvoiceObserver;
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
@@ -24,6 +26,8 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use Magento\Quote\Model\Quote\Payment;
+use Magento\Sales\Model\Order;
+use Magento\Store\Model\ScopeInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
 
@@ -200,7 +204,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             //skip credit check for backend
             return true;
         }
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/cdpbeforeshow', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/screeningbeforeshow', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
             && $quote != null
             && $quote->getBillingAddress() != null) {
             $theSame = $this->_dataHelper->_checkoutSession->getIsTheSame();
@@ -434,27 +438,79 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         /* @var $invoice \Magento\Sales\Model\Order\Invoice */
         $order = $payment->getOrder();
         $webshopProfileId = $payment->getAdditionalInformation("webshop_profile_id");
-        $invoice = \ByjunoCheckout\ByjunoCheckoutCore\Observer\InvoiceObserver::$Invoice;
+        $invoice = InvoiceObserver::$Invoice;
         if ($invoice == null) {
             throw new LocalizedException(
                 __("Internal invoice (InvoiceObserver) error")
             );
         }
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/byjunos4transacton", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/byjunosettletransacton", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
         if ($payment->getAdditionalInformation("auth_executed_ok") == null || $payment->getAdditionalInformation("auth_executed_ok") == 'false') {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s4_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: S3_NOT_CREATED)")
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: S3_NOT_CREATED)")
             );
         }
         $incrementValue =  $this->_eavConfig->getEntityType($invoice->getEntityType())->fetchNewIncrementId($invoice->getStoreId());
         if ($invoice->getIncrementId() == null) {
             $invoice->setIncrementId($incrementValue);
         }
-        $request = $this->_dataHelper->CreateMagentoShopRequestS4Paid($order, $invoice, $webshopProfileId);
+        $request = $this->_dataHelper->CreateMagentoShopRequestSettlePaid($order, $invoice, $payment, $webshopProfileId);
 
+        $ByjunoRequestName = "Settle request";
+        $json = $request->createRequest();
+        $byjunoCommunicator = new ByjunoCommunicator();
+        $mode = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+        if ($mode == 'live') {
+            $byjunoCommunicator->setServer('live');
+            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
 
+        } else {
+            $byjunoCommunicator->setServer('test');
+            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+
+        }
+        $response = $byjunoCommunicator->sendSettleRequest($json, (int)$this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+            ScopeInterface::SCOPE_STORE));
+
+        $status = "";
+        $responseRes = null;
+        if ($response) {
+            /* @var $responseRes ByjunoCheckoutAuthorizationResponse */
+            $responseRes = $this->_dataHelper->settleResponse($response);
+            $status = $responseRes->processingStatus;
+            $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
+               "-","-", $request->requestMsgId,
+                "-", "-", "-","-", $responseRes->transactionId, $order->getRealOrderId());
+        } else {
+            $this->_dataHelper->saveLog($json, $response, "Query error", $ByjunoRequestName,
+                "-","-", $request->requestMsgId,
+                "-", "-", "-","-", "-", "-");
+        }
+        if ($status == "SUCCESS") {
+            $this->_dataHelper->_byjunoInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
+            $authTransaction = $payment->getAuthorizationTransaction();
+            if ($authTransaction && !$authTransaction->getIsClosed()) {
+                $authTransaction->setIsClosed($payment->isCaptureFinal($amount));
+                $authTransaction->save();
+            }
+
+            $payment->setTransactionId($responseRes->transactionId);
+            $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE, null, true);
+            $transaction->setIsClosed(true);
+            $payment->save();
+
+            $transaction->save();
+            return $this;
+
+        } else {
+            throw new LocalizedException(
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId))
+            );
+        }
+
+/*
         $ByjunoRequestName = 'Byjuno Checkout S4';
         $xml = $request->createRequest();
         $byjunoCommunicator = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator();
@@ -478,7 +534,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         }
         if ($status == 'ERR') {
             throw new LocalizedException(
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s4_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
+                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
             );
         } else {
             $this->_dataHelper->_byjunoInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
@@ -497,6 +553,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
 
         $transaction->save();
         return $this;
+*/
     }
 
 
