@@ -824,7 +824,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->merchantCustRef = (String)$quote->getCustomerId();
             $request->custDetails->loggedIn = true;
         }
-        if ($quote->getBillingAddress()->getCompany()) {
+        if ($quote->getBillingAddress()->getCompany()
+            && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
             $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
         } else {
             $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
@@ -970,7 +971,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->merchantCustRef = (String)$order->getCustomerId();
             $request->custDetails->loggedIn = true;
         }
-        if ($order->getBillingAddress()->getCompany()) {
+        if ($order->getBillingAddress()->getCompany() && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
             $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
         } else {
             $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
@@ -1067,7 +1068,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($order->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($order->getShippingAddress()->getLastname());
-            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
+            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
                 $request->deliveryDetails->deliveryCompanyName = $this->nullToString($order->getShippingAddress()->getCompany());
             }
             $request->deliveryDetails->deliverySalutation = null;
