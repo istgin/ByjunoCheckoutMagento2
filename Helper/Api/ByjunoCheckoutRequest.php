@@ -37,6 +37,8 @@ class BillingAddr
 
 class CustContacts
 {
+    public $phonePrivate; //String
+    public $phoneBusiness; //String
     public $phoneMobile; //String
     public $email; //String
 

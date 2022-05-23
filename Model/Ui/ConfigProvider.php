@@ -117,11 +117,15 @@ class ConfigProvider implements ConfigProviderInterface
         {
             $isCompany = true;
         }
-
-        $status = $this->_checkoutSession->getScreeningStatus();
-        if ($status == null) {
-            $status = Array();
-    }
+        $quote = $this->_checkoutSession->getQuote();
+        if ($quote == null) {
+            return [];
+        }
+        $this->dataHelper->GetCreditStatus($quote, $this->dataHelper->getInvoiceEnabledMethods());
+        $status = DataHelper::$screeningStatus;
+        if (empty($status)) {
+            return [];
+        }
         $methodsAvailableInvoice = Array();
         $availableMethods = $this->dataHelper->getMethodsMapping();
         $byjunocheckout_single_invoice_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/byjunocheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);

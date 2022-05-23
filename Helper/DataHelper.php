@@ -7,6 +7,7 @@ use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleResponse;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\CustomerConsents;
 use Magento\Quote\Model\Quote\Payment;
 use Magento\Sales\Model\Order;
@@ -36,7 +37,10 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $DELIVERY_VIRTUAL = 'DIGITAL';
 
     public static $SCREENING_OK = 'SCREENING-APPROVED';
-    public static $AUTH_SUCCESS = 'SUCCESS';
+    public static $SETTLE_OK = 'SUCCESS';
+    public static $AUTH_OK = 'AUTHORIZED';
+
+    public static $screeningStatus;
 
     /**
      * @var \Magento\Quote\Api\CartRepositoryInterface
@@ -300,6 +304,178 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    protected $_savedUser = Array(
+        "FirstName" => "",
+        "LastName" => "",
+        "FirstLine" => "",
+        "CountryCode" => "",
+        "PostCode" => "",
+        "Town" => "",
+        "CompanyName1",
+        "DateOfBirth",
+        "Email",
+        "TelephonePrivate",
+        "Gender",
+        "DELIVERY_FIRSTNAME",
+        "DELIVERY_LASTNAME",
+        "DELIVERY_FIRSTLINE",
+        "DELIVERY_COUNTRYCODE",
+        "DELIVERY_POSTCODE",
+        "DELIVERY_TOWN",
+        "DELIVERY_COMPANYNAME"
+    );
+
+    public function getInvoiceEnabledMethods()
+    {
+        $methodsAvailableInvoice = Array();
+        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailableInvoice[] = DataHelper::$SINGLEINVOICE;
+        }
+
+        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailableInvoice[] = DataHelper::$BYJUNOINVOICE;
+        }
+        return $methodsAvailableInvoice;
+    }
+
+    /* @var $quote \Magento\Quote\Model\Quote */
+    public function GetCreditStatus($quote, $methods) {
+        if ($quote == null) {
+            return true;
+        }
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $state =  $objectManager->get('Magento\Framework\App\State');
+        if ($state->getAreaCode() == "adminhtml") {
+            //skip credit check for backend
+            return true;
+        }
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/screeningbeforeshow', ScopeInterface::SCOPE_STORE) == '1'
+            && $quote != null
+            && $quote->getBillingAddress() != null) {
+            $theSame = $this->_checkoutSession->getIsTheSame();
+            if (!empty($theSame) && is_array($theSame)) {
+                $this->_savedUser = $theSame;
+            }
+            $status = $this->_checkoutSession->getScreeningStatus();
+            try {
+                $request = $this->CreateMagentoShopRequestScreening($quote);
+                if ($request->amount == 0) {
+                    return false;
+                }
+                $arrCheck = Array(
+                    "FirstName" => $request->custDetails->firstName,
+                    "LastName" => $request->custDetails->lastName,
+                    "CountryCode" => $request->billingAddr->country,
+                    "Town" => $request->billingAddr->town
+                );
+                foreach($arrCheck as $arrK => $arrV) {
+                    if (empty($arrV)) {
+                        return false;
+                    }
+                }
+                if (!$this->isTheSame($request) || empty($status)) {
+                    $ByjunoRequestName = $request->requestMsgType;
+                    //  $json = "{}";
+                    //   if ($request->custDetails->custType == 'C' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
+                    //           \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+                    //       $ByjunoRequestName = "Screening request for company";
+                    //       $json = $request->createRequest();
+                    //   } else {
+                    //       $json = $request->createRequest();
+                    //   }
+                    $json = $request->createRequest();
+                    $byjunoCommunicator = new ByjunoCommunicator();
+                    $mode = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+                    if ($mode == 'live') {
+                        $byjunoCommunicator->setServer('live');
+                    } else {
+                        $byjunoCommunicator->setServer('test');
+                    }
+                    $response = $byjunoCommunicator->sendScreeningRequest($json, (int)$this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+                        ScopeInterface::SCOPE_STORE));
+
+                    if ($response) {
+                        /* @var $responseRes ByjunoCheckoutScreeningResponse */
+                        $responseRes = $this->screeningResponse($response);
+                        $status = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
+                        $this->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
+                            $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
+                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId, "-");
+                    } else {
+                        $this->saveLog($json, $response, "Query error", $ByjunoRequestName,
+                            $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
+                            $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-", "-");
+                    }
+
+                    $this->_savedUser = Array(
+                        "FirstName" => $request->custDetails->firstName,
+                        "LastName" => $request->custDetails->lastName,
+                        "FirstLine" => $request->billingAddr->addrFirstLine ,
+                        "CountryCode" => $request->billingAddr->country,
+                        "PostCode" => $request->billingAddr->postalCode,
+                        "Town" => $request->billingAddr->town,
+                        "CompanyName1" => $request->custDetails->companyName,
+                        "DateOfBirth" => $request->custDetails->dateOfBirth,
+                        "Email" => $request->custContacts->email,
+                        "TelephonePrivate" => $request->custContacts->phoneMobile,
+                        "Gender" => $request->custDetails->salutation,
+                        "Amount" => $request->amount,
+                        "DELIVERY_FIRSTNAME" => $request->deliveryDetails->deliveryFirstName,
+                        "DELIVERY_LASTNAME" => $request->deliveryDetails->deliverySecondName,
+                        "DELIVERY_FIRSTLINE" => $request->deliveryDetails->deliveryAddrFirstLine,
+                        "DELIVERY_COUNTRYCODE" => $request->deliveryDetails->deliveryAddrCountry,
+                        "DELIVERY_POSTCODE" => $request->deliveryDetails->deliveryAddrPostalCode,
+                        "DELIVERY_TOWN" => $request->deliveryDetails->deliveryAddrTown,
+                        "DELIVERY_COMPANYNAME" => $request->deliveryDetails->deliveryCompanyName
+                    );
+                    $this->_checkoutSession->setIsTheSame($this->_savedUser);
+                    $this->_checkoutSession->setScreeningStatus($status);
+                }
+                //REMOVE ID
+                $status = Array("BYJUNO-INVOICE");
+                DataHelper::$screeningStatus = $status;
+                foreach ($methods as $method) {
+                    foreach ($status as $st) {
+                        if ($st == $method) {
+                            return true;
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                var_dump($e);
+                exit('error');
+            }
+        }
+        return false;
+    }
+
+    public function isTheSame(ByjunoCheckoutRequest $request) {
+
+        if ($request->custDetails->firstName != $this->_savedUser["FirstName"]
+            || $request->custDetails->lastName != $this->_savedUser["LastName"]
+            || $request->billingAddr->addrFirstLine != $this->_savedUser["FirstLine"]
+            || $request->billingAddr->country != $this->_savedUser["CountryCode"]
+            || $request->billingAddr->postalCode != $this->_savedUser["PostCode"]
+            || $request->billingAddr->town != $this->_savedUser["Town"]
+            || $request->custDetails->companyName != $this->_savedUser["CompanyName1"]
+            || $request->custDetails->dateOfBirth != $this->_savedUser["DateOfBirth"]
+            || $request->custContacts->email != $this->_savedUser["Email"]
+            || $request->custContacts->phoneMobile != $this->_savedUser["TelephonePrivate"]
+            || $request->custDetails->salutation != $this->_savedUser["Gender"]
+            || $request->amount != $this->_savedUser["Amount"]
+            || $request->deliveryDetails->deliveryFirstName != $this->_savedUser["DELIVERY_FIRSTNAME"]
+            || $request->deliveryDetails->deliverySecondName != $this->_savedUser["DELIVERY_LASTNAME"]
+            || $request->deliveryDetails->deliveryAddrFirstLine != $this->_savedUser["DELIVERY_FIRSTLINE"]
+            || $request->deliveryDetails->deliveryAddrCountry != $this->_savedUser["DELIVERY_COUNTRYCODE"]
+            || $request->deliveryDetails->deliveryAddrPostalCode != $this->_savedUser["DELIVERY_POSTCODE"]
+            || $request->deliveryDetails->deliveryAddrTown != $this->_savedUser["DELIVERY_TOWN"]
+            || $request->deliveryDetails->deliveryCompanyName != $this->_savedUser["DELIVERY_COMPANYNAME"]
+        ) {
+            return false;
+        }
+        return true;
     }
 
     function CreateMagentoShopRequestOrderQuote(\Magento\Quote\Model\Quote $quote,
@@ -884,6 +1060,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->country = strtoupper($quote->getBillingAddress()->getCountryId());
 
         $request->custContacts->phoneMobile = (String)trim($quote->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phoneBusiness = (String)trim($quote->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phonePrivate = (String)trim($quote->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->email = (String)$quote->getBillingAddress()->getEmail();
 
         if (!$quote->isVirtual()) {
@@ -1061,6 +1239,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId());
 
         $request->custContacts->phoneMobile = (String)trim($order->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phonePrivate = (String)trim($order->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phoneBusiness = (String)trim($order->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->email = (String)$order->getBillingAddress()->getEmail();
 
         if (!$order->getIsVirtual()) {
@@ -1118,43 +1298,20 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     function authorizationResponse($response)
     {
-
-        $result = new ByjunoCheckoutAuthorizationResponse();
-        $result->merchantCustRef = "responseObject->merchantCustRef";
-        $result->processingStatus = "SUCCESS";
-        $result->replyMsgDateTime = "responseObject->replyMsgDateTime";
-        $result->replyMsgId = "responseObject->replyMsgId";
-        $result->requestMsgDateTime = "responseObject->requestMsgDateTime";
-        $result->requestMsgId = "responseObject->requestMsgId";
-        $result->transactionId = "responseObject->transactionId";
-        return $result;
-        //TODO due error
-        /*
         $responseObject = json_decode($response);
-        $result = new ByjunoCheckoutScreeningResponse();
-        if ($responseObject->processingStatus == self::$SCREENING_OK) {
-            $result->merchantCustRef = $responseObject->merchantCustRef;
-            $result->processingStatus = $responseObject->processingStatus;
-            $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
-            $result->replyMsgId = $responseObject->replyMsgId;
-            $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
-            $result->requestMsgId = $responseObject->requestMsgId;
+        $result = new ByjunoCheckoutAuthorizationResponse();
+        $result->processingStatus = $responseObject->processingStatus;
+        if ($responseObject->processingStatus == self::$AUTH_OK) {
             $result->transactionId = $responseObject->transactionId;
-            if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoPaymentMethods))) {
-                $result->screeningDetails->allowedByjunoPaymentMethods = $responseObject->screeningDetails->allowedByjunoPaymentMethods;
-            }
-        } else {
-            $result->processingStatus = $responseObject->processingStatus;
         }
         return $result;
-        */
     }
 
     function settleResponse($response)
     {
         $responseObject = json_decode($response);
         $result = new ByjunoCheckoutSettleResponse();
-        if ($responseObject->processingStatus == self::$AUTH_SUCCESS) {
+        if ($responseObject->processingStatus == self::$SETTLE_OK) {
             // TODO if need
             $result->processingStatus = $responseObject->processingStatus;
             $result->transactionId = $responseObject->transactionId;

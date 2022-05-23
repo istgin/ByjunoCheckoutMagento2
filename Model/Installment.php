@@ -264,7 +264,7 @@ class Installment extends \ByjunoCheckout\ByjunoCheckoutCore\Model\Byjunopayment
         }
         $creditStatus = false;
         if ($quote != null) {
-            $creditStatus = $this->GetCreditStatus($quote, Array());
+            $creditStatus = $this->_dataHelper->GetCreditStatus($quote, Array());
         }
         return $isAvaliable && $methodsAvailable && $creditStatus && parent::isAvailable($quote);
     }

@@ -117,19 +117,6 @@ class Invoice extends Byjunopayment
         return parent::getConfigData($field, $storeId);
     }
 
-    public function getEnabledMethods()
-    {
-        $methodsAvailableInvoice = Array();
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)) {
-            $methodsAvailableInvoice[] = DataHelper::$SINGLEINVOICE;
-        }
-
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)) {
-            $methodsAvailableInvoice[] = DataHelper::$BYJUNOINVOICE;
-        }
-        return $methodsAvailableInvoice;
-    }
-
     public function isAvailable(CartInterface $quote = null)
     {
         $isAvaliable = $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/active", ScopeInterface::SCOPE_STORE);
@@ -153,7 +140,7 @@ class Invoice extends Byjunopayment
         if ($quote != null) {
             /* @var $q Quote */
             $q = $quote;
-            $creditStatus = $this->GetCreditStatus($q, $this->getEnabledMethods());
+            $creditStatus = $this->_dataHelper->GetCreditStatus($q, $this->_dataHelper->getInvoiceEnabledMethods());
         }
         return $isAvaliable && $methodsAvailable && $creditStatus && parent::isAvailable($quote);
     }

@@ -212,7 +212,7 @@ class Startpayment extends Action
         $status = self::$_dataHelper->_checkoutSession->getByjunoCheckoutStatus();
         self::$_dataHelper->_checkoutSession->setScreeningStatus("");
         $resultRedirect = $this->resultRedirectFactory->create();
-        if ($status == "SUCCESS") {
+        if ($status == DataHelper::$AUTH_OK) {
             self::$_dataHelper->_checkoutSession->setByjunoCheckoutStatus('');
             $resultRedirect->setPath('checkout/onepage/success');
         } else {
@@ -273,7 +273,7 @@ class Startpayment extends Action
                     $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                     $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-", "-");
             }
-            if ($status == "SUCCESS") {
+            if ($status == DataHelper::$AUTH_OK) {
                 $byjunoTrx = $responseRes->transactionId;
                 $payment->setTransactionId($byjunoTrx);
                 $payment->setParentTransactionId($payment->getTransactionId());
@@ -314,18 +314,11 @@ class Startpayment extends Action
 
             } else {
                 $error = "Payment rejected";//$_internalDataHelper->getByjunoErrorMessage($statusS3, $requestTypeS3) . "(S3)";
-                $order->registerCancellation($error)->save();
                 return $error;
             }
 
         } catch (\Exception $e) {
             $error = __($e->getMessage());
-            try {
-                $order->registerCancellation($error)->save();
-            } catch (\Exception $e) {
-                $error = "Error cancel order";
-                return $error;
-            }
             return $error;
         }
         return null;
