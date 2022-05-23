@@ -9,6 +9,7 @@ use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\CustomerConsents;
+use Magento\Framework\App\ObjectManager;
 use Magento\Quote\Model\Quote\Payment;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
@@ -37,7 +38,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $DELIVERY_VIRTUAL = 'DIGITAL';
 
     public static $SCREENING_OK = 'SCREENING-APPROVED';
-    public static $SETTLE_OK = 'SUCCESS';
+    public static $SETTLE_OK = 'SETTLED';
     public static $AUTH_OK = 'AUTHORIZED';
 
     public static $screeningStatus;
@@ -345,7 +346,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if ($quote == null) {
             return true;
         }
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $objectManager = ObjectManager::getInstance();
         $state =  $objectManager->get('Magento\Framework\App\State');
         if ($state->getAreaCode() == "adminhtml") {
             //skip credit check for backend

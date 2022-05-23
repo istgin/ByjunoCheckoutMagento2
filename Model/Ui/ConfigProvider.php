@@ -96,6 +96,9 @@ class ConfigProvider implements ConfigProviderInterface
         if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/screeningbeforeshow', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '0') {
             return true;
         }
+        if ($screeningStatus == null) {
+            return true;
+        }
         foreach ($screeningStatus as $st) {
             if ($st == $method) {
                 return true;
@@ -124,7 +127,7 @@ class ConfigProvider implements ConfigProviderInterface
         $this->dataHelper->GetCreditStatus($quote, $this->dataHelper->getInvoiceEnabledMethods());
         $status = DataHelper::$screeningStatus;
         if (empty($status)) {
-            return [];
+            $status = null;
         }
         $methodsAvailableInvoice = Array();
         $availableMethods = $this->dataHelper->getMethodsMapping();

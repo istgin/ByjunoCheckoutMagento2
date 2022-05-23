@@ -339,7 +339,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 "-","-", $request->requestMsgId,
                 "-", "-", "-","-", "-", "-");
         }
-        if ($status == "SUCCESS") {
+        if ($status == DataHelper::$SETTLE_OK) {
             $this->_dataHelper->_byjunoInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
             $authTransaction = $payment->getAuthorizationTransaction();
             if ($authTransaction && !$authTransaction->getIsClosed()) {
