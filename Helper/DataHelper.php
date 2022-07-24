@@ -41,6 +41,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $SETTLE_OK = 'SETTLED';
     public static $AUTH_OK = 'AUTHORIZED';
 
+
+    public static $REQUEST_ERROR = 'REQUEST_ERROR';
+
     public static $screeningStatus;
 
     /**
@@ -1111,19 +1114,23 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         $responseObject = json_decode($response);
         $result = new ByjunoCheckoutScreeningResponse();
-        if ($responseObject->processingStatus == self::$SCREENING_OK) {
-            $result->merchantCustRef = $responseObject->merchantCustRef;
-            $result->processingStatus = $responseObject->processingStatus;
-            $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
-            $result->replyMsgId = $responseObject->replyMsgId;
-            $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
-            $result->requestMsgId = $responseObject->requestMsgId;
-            $result->transactionId = $responseObject->transactionId;
-            if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoPaymentMethods))) {
-                $result->screeningDetails->allowedByjunoPaymentMethods = $responseObject->screeningDetails->allowedByjunoPaymentMethods;
-            }
+        if (empty($responseObject->processingStatus)) {
+            $result->processingStatus = self::$REQUEST_ERROR;
         } else {
-            $result->processingStatus = $responseObject->processingStatus;
+            if ($responseObject->processingStatus == self::$SCREENING_OK) {
+                $result->merchantCustRef = $responseObject->merchantCustRef;
+                $result->processingStatus = $responseObject->processingStatus;
+                $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
+                $result->replyMsgId = $responseObject->replyMsgId;
+                $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
+                $result->requestMsgId = $responseObject->requestMsgId;
+                $result->transactionId = $responseObject->transactionId;
+                if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoPaymentMethods))) {
+                    $result->screeningDetails->allowedByjunoPaymentMethods = $responseObject->screeningDetails->allowedByjunoPaymentMethods;
+                }
+            } else {
+                $result->processingStatus = $responseObject->processingStatus;
+            }
         }
         return $result;
     }
@@ -1301,9 +1308,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $responseObject = json_decode($response);
         $result = new ByjunoCheckoutAuthorizationResponse();
-        $result->processingStatus = $responseObject->processingStatus;
-        if ($responseObject->processingStatus == self::$AUTH_OK) {
-            $result->transactionId = $responseObject->transactionId;
+        if (empty($responseObject->processingStatus)) {
+            $result->processingStatus = self::$REQUEST_ERROR;
+        } else {
+            $result->processingStatus = $responseObject->processingStatus;
+            if ($responseObject->processingStatus == self::$AUTH_OK) {
+                $result->transactionId = $responseObject->transactionId;
+            }
         }
         return $result;
     }
@@ -1312,12 +1323,16 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $responseObject = json_decode($response);
         $result = new ByjunoCheckoutSettleResponse();
-        if ($responseObject->processingStatus == self::$SETTLE_OK) {
-            // TODO if need
-            $result->processingStatus = $responseObject->processingStatus;
-            $result->transactionId = $responseObject->transactionId;
+        if (empty($responseObject->processingStatus)) {
+            $result->processingStatus = self::$REQUEST_ERROR;
         } else {
-            $result->processingStatus = $responseObject->processingStatus;
+            if ($responseObject->processingStatus == self::$SETTLE_OK) {
+                // TODO if need
+                $result->processingStatus = $responseObject->processingStatus;
+                $result->transactionId = $responseObject->transactionId;
+            } else {
+                $result->processingStatus = $responseObject->processingStatus;
+            }
         }
         return $result;
     }

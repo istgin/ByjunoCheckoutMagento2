@@ -45,7 +45,7 @@ class ByjunoCommunicator
             $timeout = 30;
         }
 
-        $url = 'http://20.67.150.71/'.$endpoint;
+        $url = 'https://transaction-gateway.test.byjunoag.ch/'.$endpoint;
        /* if ($this->server == 'test') {
             $url .= 'services/creditCheckDACH_01_41_TEST/response.cfm';
         } else {
