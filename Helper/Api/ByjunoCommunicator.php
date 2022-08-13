@@ -27,19 +27,23 @@ class ByjunoCommunicator
         return $this->server;
     }
 
-    public function sendScreeningRequest($xmlRequest, $timeout = 30) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Screening', $timeout);
+    public function sendScreeningRequest($xmlRequest, $timeout, $username, $password) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Screening', $timeout, $username, $password);
     }
 
-    public function sendAuthRequest($xmlRequest, $timeout = 30) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout);
+    public function sendAuthRequest($xmlRequest, $timeout, $username, $password) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout, $username, $password);
     }
 
-    public function sendSettleRequest($xmlRequest, $timeout = 30) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $timeout);
+    public function sendSettleRequest($xmlRequest, $timeout, $username, $password) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $timeout, $username, $password);
     }
 
-    private function sendRequest($xmlRequest, $endpoint, $timeout) {
+    public function sendCreditRequest($xmlRequest, $timeout, $username, $password) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/credit', $timeout, $username, $password);
+    }
+
+    private function sendRequest($xmlRequest, $endpoint, $timeout, $username, $password) {
         $response = "";
         if (intval($timeout) < 0) {
             $timeout = 30;
@@ -62,6 +66,8 @@ class ByjunoCommunicator
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+
+        curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $password);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);

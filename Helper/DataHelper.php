@@ -3,6 +3,8 @@
 namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
 
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutCreditRequest;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutCreditResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleRequest;
@@ -24,6 +26,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $MESSAGE_SCREENING = 'SCR';
     public static $MESSAGE_AUTH = 'AUT';
     public static $MESSAGE_SET = 'SET';
+    public static $MESSAGE_CNL = 'CNT';
 
     public static $CUSTOMER_PRIVATE = 'P';
     public static $CUSTOMER_BUSINESS = 'C';
@@ -40,6 +43,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $SCREENING_OK = 'SCREENING-APPROVED';
     public static $SETTLE_OK = 'SETTLED';
     public static $AUTH_OK = 'AUTHORIZED';
+    public static $CREDIT_OK = 'SUCCESS';
 
 
     public static $REQUEST_ERROR = 'REQUEST_ERROR';
@@ -398,7 +402,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                         $byjunoCommunicator->setServer('test');
                     }
                     $response = $byjunoCommunicator->sendScreeningRequest($json, (int)$this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
-                        ScopeInterface::SCOPE_STORE));
+                        ScopeInterface::SCOPE_STORE),
+                        $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunologin', ScopeInterface::SCOPE_STORE),
+                        $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunopassword', ScopeInterface::SCOPE_STORE));
 
                     if ($response) {
                         /* @var $responseRes ByjunoCheckoutScreeningResponse */
@@ -1337,6 +1343,24 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $result;
     }
 
+    function creditResponse($response)
+    {
+        $responseObject = json_decode($response);
+        $result = new ByjunoCheckoutCreditResponse();
+        if (empty($responseObject->processingStatus)) {
+            $result->processingStatus = self::$REQUEST_ERROR;
+        } else {
+            if ($responseObject->processingStatus == self::$CREDIT_OK) {
+                // TODO if need
+                $result->processingStatus = $responseObject->processingStatus;
+                $result->transactionId = $responseObject->transactionId;
+            } else {
+                $result->processingStatus = $responseObject->processingStatus;
+            }
+        }
+        return $result;
+    }
+
     /*function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote)
     {
         $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest();
@@ -1499,9 +1523,22 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
     */
 
-    function CreateMagentoShopRequestS5Paid(Order $order, $amount, $transactionType, $invoiceId = '', $webshopProfile)
+    function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId = '', $webshopProfile, $tx)
     {
 
+
+        $request = new ByjunoCheckoutCreditRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
+        $request->requestMsgType = self::$MESSAGE_CNL;
+        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->transactionId = $tx;
+        $request->merchantOrderRef = $order->getRealOrderId();
+        $request->amount = number_format($amount, 2, '.', '') * 100;
+        $request->currency = $order->getOrderCurrencyCode();
+        $request->settlementDetails->merchantInvoiceRef = $invoiceId;
+        return $request;
+        /*
         $request = new ByjunoS5Request();
         $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
@@ -1537,5 +1574,60 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         return $request;
+        */
+    }
+
+    function CreateMagentoShopRequestS5Paid(Order $order, $amount, $transactionType, $invoiceId = '', $webshopProfile, $tx)
+    {
+
+
+        $request = new ByjunoCheckoutSettleRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
+        $request->requestMsgType = self::$MESSAGE_SET;
+        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->transactionId = $tx;
+        $request->merchantOrderRef = $order->getRealOrderId();
+        $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
+        $request->currency = $order->getOrderCurrencyCode();
+        $request->settlementDetails->merchantInvoiceRef = $invoiceId;
+        return $request;
+        /*
+        $request = new ByjunoS5Request();
+        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setVersion("1.00");
+        try {
+            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        } catch (\Exception $e) {
+
+        }
+        $request->setRequestId(uniqid((String)$order->getIncrementId() . "_"));
+
+        $request->setOrderId($order->getIncrementId());
+        $reference = $order->getCustomerId();
+        if (empty($reference)) {
+            $request->setClientRef("guest_" . $order->getId());
+        } else {
+            $request->setClientRef($order->getCustomerId());
+        }
+        $orderDateString = \Zend_Locale_Format::getDate(
+            $order->getCreatedAt(),
+            array(
+                'date_format' => \Magento\Framework\Stdlib\DateTime::DATE_INTERNAL_FORMAT,
+            )
+        );
+        $request->setTransactionDate($orderDateString["year"] . "-" . $orderDateString["month"] . '-' . $orderDateString["day"]);
+        $request->setTransactionAmount(number_format($amount, 2, '.', ''));
+        $request->setTransactionCurrency($order->getOrderCurrencyCode());
+        $request->setTransactionType($transactionType);
+        $request->setAdditional2($invoiceId);
+        if ($transactionType == "EXPIRED") {
+            $request->setOpenBalance("0");
+        }
+
+        return $request;
+        */
     }
 }

@@ -37,6 +37,12 @@
                 <field id="merchantid" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Merchant ID</label>
                 </field>
+                <field id="byjunologin" translate="label" type="text" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Login</label>
+                </field>
+                <field id="byjunopassword" translate="label" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Password</label>
+                </field>
                 <field id="minamount" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Mininmal amount for checkout</label>
                 </field>

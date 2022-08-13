@@ -257,7 +257,9 @@ class Startpayment extends Action
                 $byjunoCommunicator->setServer('test');
             }
             $response = $byjunoCommunicator->sendAuthRequest($json, (int)$_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
-                ScopeInterface::SCOPE_STORE));
+                ScopeInterface::SCOPE_STORE),
+                $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunologin', ScopeInterface::SCOPE_STORE),
+                $_internalDataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunopassword', ScopeInterface::SCOPE_STORE));
 
             $status = "";
             $responseRes = null;
