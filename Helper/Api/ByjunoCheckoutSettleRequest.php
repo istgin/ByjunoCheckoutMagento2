@@ -22,7 +22,7 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
 }
  */
 
-class ByjunoCheckoutSettleRequest extends ByjunoCheckoutRequest
+class ByjunoCheckoutSettleRequest extends ByjunoCheckoutAutRequest
 {
     public $merchantId; //String
     public $requestMsgType; //String

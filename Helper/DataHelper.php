@@ -3,9 +3,11 @@
 namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
 
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutChkRequest;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutChkResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutCreditRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutCreditResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAutRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleResponse;
@@ -27,6 +29,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $MESSAGE_AUTH = 'AUT';
     public static $MESSAGE_SET = 'SET';
     public static $MESSAGE_CNL = 'CNT';
+    public static $MESSAGE_CHK = 'CHK';
 
     public static $CUSTOMER_PRIVATE = 'P';
     public static $CUSTOMER_BUSINESS = 'C';
@@ -44,6 +47,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $SETTLE_OK = 'SETTLED';
     public static $AUTH_OK = 'AUTHORIZED';
     public static $CREDIT_OK = 'SUCCESS';
+    public static $CHK_OK = 'SUCCESS';
 
 
     public static $REQUEST_ERROR = 'REQUEST_ERROR';
@@ -229,22 +233,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $ipaddress;
     }
 
-    function getByjunoErrorMessage($status, $paymentType = 'b2c')
+    function getByjunoErrorMessage()
     {
-        $message = '';
-        if ($status == 10 && $paymentType == 'b2b') {
-            if (substr($this->_resolver->getLocale(), 0, 2) == 'en') {
-                $message = 'Company is not found in Register of Commerce';
-            } else if (substr($this->_resolver->getLocale(), 0, 2) == 'fr') {
-                $message = 'La société n‘est pas inscrit au registre du commerce';
-            } else if (substr($this->_resolver->getLocale(), 0, 2) == 'it') {
-                $message = 'L‘azienda non é registrata nel registro di commercio';
-            } else {
-                $message = 'Die Firma ist nicht im Handelsregister eingetragen';
-            }
-        } else {
-            $message = $this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_fail_message', ScopeInterface::SCOPE_STORE);
-        }
+        $message = $this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_fail_message', ScopeInterface::SCOPE_STORE);
         return $message;
     }
 
@@ -461,7 +452,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return false;
     }
 
-    public function isTheSame(ByjunoCheckoutRequest $request) {
+    public function isTheSame(ByjunoCheckoutAutRequest $request) {
 
         if ($request->custDetails->firstName != $this->_savedUser["FirstName"]
             || $request->custDetails->lastName != $this->_savedUser["LastName"]
@@ -934,8 +925,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request = new ByjunoCheckoutSettleRequest();
         $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_SET;
-        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
         $request->transactionId = $tx;
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
@@ -993,11 +984,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function CreateMagentoShopRequestScreening(\Magento\Quote\Model\Quote $quote)
     {
 
-        $request = new ByjunoCheckoutRequest();
+        $request = new ByjunoCheckoutAutRequest();
         $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE);
         $request->requestMsgType = self::$MESSAGE_SCREENING;
-        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
         $request->merchantOrderRef = null;
         $request->amount = number_format($quote->getGrandTotal(), 2, '.', '') * 100;
         $request->currency = $quote->getQuoteCurrencyCode();
@@ -1146,11 +1137,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                                                           $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webShopProfile)
     {
 
-        $request = new ByjunoCheckoutRequest();
+        $request = new ByjunoCheckoutAutRequest();
         $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
         $request->requestMsgType = self::$MESSAGE_AUTH;
-        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
         $request->currency = $order->getOrderCurrencyCode();
@@ -1298,12 +1289,155 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $customerConsents = new CustomerConsents();
         $customerConsents->consentType = "BYJUNO-TC";
         $customerConsents->consentProvidedAt = "MERCHANT";
-        $customerConsents->consentDate = ByjunoCheckoutRequest::Date();
+        $customerConsents->consentDate = ByjunoCheckoutAutRequest::Date();
         $methods = $this->getMethodsMapping();
         $customerConsents->consentReference = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
 
         $request->customerConsents = Array($customerConsents);
 
+        $request->merchantDetails->transactionChannel = "WEB";
+        $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
+
+        return $request;
+    }
+
+    public function createMagentoShopRequestCheckout(Order $order,
+                                                          Order\Payment $paymentMethod, $webShopProfile)
+    {
+
+        $request = new ByjunoCheckoutChkRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $request->requestMsgType = self::$MESSAGE_CHK;
+        $request->requestMsgId = ByjunoCheckoutChkRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutChkRequest::Date();
+        $request->merchantOrderRef = $order->getRealOrderId();
+        $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
+        $request->currency = $order->getOrderCurrencyCode();
+
+        $reference = $order->getCustomerId();
+        if (empty($reference)) {
+            $request->custDetails->merchantCustRef = "guest_" . $order->getId();
+            $request->custDetails->loggedIn = false;
+        } else {
+            $request->custDetails->merchantCustRef = (String)$order->getCustomerId();
+            $request->custDetails->loggedIn = true;
+        }
+        if ($order->getBillingAddress()->getCompany() && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
+            $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
+        } else {
+            $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
+        }
+        $request->custDetails->firstName = (String)$order->getBillingAddress()->getFirstname();
+        $request->custDetails->lastName = (String)$order->getBillingAddress()->getLastname();
+        $request->custDetails->language = (String)substr($this->_resolver->getLocale(), 0, 2);
+
+        $b = $order->getCustomerDob();
+        if (!empty($b)) {
+            try {
+                $dobObject = new \DateTime($b);
+                if ($dobObject != null) {
+                    $request->custDetails->dateOfBirth = $dobObject->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+
+            }
+        }
+
+        $g = $order->getCustomerGender();
+        $request->custDetails->salutation = self::$GENTER_UNKNOWN;
+
+        $genderEntity = null;
+        try {
+            $genderEntity = $this->_customerMetadata->getAttributeMetadata('gender');
+        } catch (\Exception $e) {
+        }
+
+        if ($genderEntity != null && $genderEntity->isVisible()) {
+            if (!empty($g)) {
+                if ($g == '1') {
+                    $request->custDetails->salutation = self::$GENTER_MALE;
+                } else if ($g == '2') {
+                    $request->custDetails->salutation = self::$GENTER_FEMALE;
+                }
+            }
+        }
+
+        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+            ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+            ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
+        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
+        if ($genderEntity != null && $genderEntity->isVisible()) {
+            if (in_array(strtolower($order->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
+                $request->custDetails->salutation = self::$GENTER_MALE;
+            } else if (in_array(strtolower($order->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
+                $request->custDetails->salutation = self::$GENTER_FEMALE;
+            }
+        }
+
+        $billingStreet = $order->getBillingAddress()->getStreet();
+        $billingStreet = implode("", $billingStreet);
+
+        $request->billingAddr->addrFirstLine = (String)$billingStreet;
+        $request->billingAddr->postalCode = (String)$order->getBillingAddress()->getPostcode();
+        $request->billingAddr->town = (String)$order->getBillingAddress()->getCity();
+        $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId());
+
+        $request->custContacts->phoneMobile = (String)trim($order->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phonePrivate = (String)trim($order->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phoneBusiness = (String)trim($order->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->email = (String)$order->getBillingAddress()->getEmail();
+
+        if (!$order->getIsVirtual()) {
+            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
+            $request->deliveryDetails->deliveryFirstName = $this->nullToString($order->getShippingAddress()->getFirstname());
+            $request->deliveryDetails->deliverySecondName = $this->nullToString($order->getShippingAddress()->getLastname());
+            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
+                $request->deliveryDetails->deliveryCompanyName = $this->nullToString($order->getShippingAddress()->getCompany());
+            }
+            $request->deliveryDetails->deliverySalutation = null;
+
+            $shippingStreet = $order->getShippingAddress()->getStreet();
+            $shippingStreet = implode("", $shippingStreet);
+
+            $request->deliveryDetails->deliveryAddrFirstLine = trim((String)$shippingStreet);
+            $request->deliveryDetails->deliveryAddrPostalCode = $this->nullToString($order->getShippingAddress()->getPostcode());
+            $request->deliveryDetails->deliveryAddrTown = $this->nullToString($order->getShippingAddress()->getCity());
+            $request->deliveryDetails->deliveryAddrCountry = strtoupper($order->getShippingAddress()->getCountryId());
+
+        } else {
+            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryMethod = self::$DELIVERY_VIRTUAL;
+        }
+
+        $request->order->basketItemsGoogleTaxonomies = Array();
+        $request->order->basketItemsPrices = Array();
+
+        $sedId = $this->_checkoutSession->getTmxSession();
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+            $request->sessionInfo->fingerPrint = $sedId;
+        }
+
+        $request->byjunoDetails->byjunoPaymentMethod = $paymentMethod->getAdditionalInformation('payment_plan');
+        if ($paymentMethod->getAdditionalInformation('payment_send') == 'postal') {
+            $request->byjunoDetails->invoiceDeliveryType = "POSTAL";
+        } else {
+            $request->byjunoDetails->invoiceDeliveryType = "EMAIL";
+        }
+
+        $customerConsents = new CustomerConsents();
+        $customerConsents->consentType = "BYJUNO-TC";
+        $customerConsents->consentProvidedAt = "MERCHANT";
+        $customerConsents->consentDate = ByjunoCheckoutChkRequest::Date();
+        $methods = $this->getMethodsMapping();
+        $customerConsents->consentReference = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
+
+        $request->customerConsents = Array($customerConsents);
+
+        $request->merchantDetails->returnUrlError = "https://www.ss.com";
+        $request->merchantDetails->returnUrlSuccess = "https://www.google.com";
         $request->merchantDetails->transactionChannel = "WEB";
         $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
 
@@ -1319,6 +1453,21 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $result->processingStatus = $responseObject->processingStatus;
             if ($responseObject->processingStatus == self::$AUTH_OK) {
+                $result->transactionId = $responseObject->transactionId;
+            }
+        }
+        return $result;
+    }
+
+    function checkoutResponse($response)
+    {
+        $responseObject = json_decode($response);
+        $result = new ByjunoCheckoutChkResponse();
+        if (empty($responseObject->processingStatus)) {
+            $result->processingStatus = self::$REQUEST_ERROR;
+        } else {
+            $result->processingStatus = $responseObject->processingStatus;
+            if ($responseObject->processingStatus == self::$CHK_OK) {
                 $result->transactionId = $responseObject->transactionId;
             }
         }
@@ -1530,8 +1679,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request = new ByjunoCheckoutCreditRequest();
         $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_CNL;
-        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
         $request->transactionId = $tx;
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($amount, 2, '.', '') * 100;
@@ -1584,8 +1733,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request = new ByjunoCheckoutSettleRequest();
         $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_SET;
-        $request->requestMsgId = ByjunoCheckoutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutRequest::Date();
+        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
         $request->transactionId = $tx;
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;

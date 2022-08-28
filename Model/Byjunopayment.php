@@ -11,7 +11,7 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Model;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutRequest;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAutRequest;
 use ByjunoCheckout\ByjunoCheckoutCore\Observer\InvoiceObserver;
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
