@@ -19,7 +19,7 @@ use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 class ByjunoOrderSender extends OrderSender
 {
     private $email;
-    protected function checkAndSend(\Magento\Sales\Model\Order $order)
+    protected function checkAndSend(Order $order)
     {
         $this->identityContainer->setStore($order->getStore());
         if (!$this->identityContainer->isEnabled()) {
@@ -43,7 +43,7 @@ class ByjunoOrderSender extends OrderSender
         return true;
     }
 
-    public function sendOrder(\Magento\Sales\Model\Order $order, $email)
+    public function sendOrder(Order $order, $email)
     {
         ByjunoSenderBuilder::$orderId = $order->getIncrementId();
         $this->email = $email;

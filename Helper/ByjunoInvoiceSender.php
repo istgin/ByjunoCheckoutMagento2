@@ -10,6 +10,7 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender;
+use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
 /**
@@ -19,7 +20,7 @@ use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 class ByjunoInvoiceSender extends InvoiceSender
 {
     private $email;
-    protected function checkAndSend(\Magento\Sales\Model\Order $order)
+    protected function checkAndSend(Order $order)
     {
         $this->identityContainer->setStore($order->getStore());
         if (!$this->identityContainer->isEnabled()) {
@@ -44,10 +45,10 @@ class ByjunoInvoiceSender extends InvoiceSender
         return true;
     }
 
-    public function sendInvoice(\Magento\Sales\Model\Order\Invoice $invoice, $email, \ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper $helper)
+    public function sendInvoice(Invoice $invoice, $email, DataHelper $helper)
     {
         $this->email = $email;
-        $pdfcls = $helper->_objectManager->create(\Magento\Sales\Model\Order\Pdf\Invoice::class)->getPdf([$invoice]);
+        $pdfcls = $helper->_objectManager->create(Order\Pdf\Invoice::class)->getPdf([$invoice]);
         $pdf = $pdfcls->render();
         $order = $invoice->getOrder();
         $transport = [
