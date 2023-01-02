@@ -32,7 +32,7 @@ class ByjunoCommunicator
     }
 
     public function sendAuthRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'https://transaction-gateway.sit.byjunoag.ch/api/v1.0/Transactions/authorize', $timeout, $username, $password);
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout, $username, $password);
     }
 
     public function sendSettleRequest($xmlRequest, $timeout, $username, $password) {
