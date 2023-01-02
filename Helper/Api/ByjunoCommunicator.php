@@ -32,7 +32,7 @@ class ByjunoCommunicator
     }
 
     public function sendAuthRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout, $username, $password);
+        return $this->sendRequest($xmlRequest, 'https://transaction-gateway.sit.byjunoag.ch/api/v1.0/Transactions/authorize', $timeout, $username, $password);
     }
 
     public function sendSettleRequest($xmlRequest, $timeout, $username, $password) {
@@ -48,7 +48,7 @@ class ByjunoCommunicator
         if (intval($timeout) < 0) {
             $timeout = 30;
         }
-        $url = 'https://transaction-gateway.test.byjunoag.ch/'.$endpoint;
+        $url = 'https://transaction-gateway.sit.byjunoag.ch/'.$endpoint;
        /* if ($this->server == 'test') {
             $url .= 'services/creditCheckDACH_01_41_TEST/response.cfm';
         } else {

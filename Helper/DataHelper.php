@@ -120,20 +120,20 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $json_string22 = json_encode($json_string2, JSON_PRETTY_PRINT);
         }
-        $data = array('firstname' => $firstName,
-            'lastname' => $lastName,
-            'postcode' => $postcode,
-            'town' => $town,
-            'country' => $country,
-            'street1' => $street1,
-            'status' => $status,
-            'request_id' => $requestId,
+        $data = array('firstname' => (string)$firstName,
+            'lastname' => (string)$lastName,
+            'postcode' => (string)$postcode,
+            'town' => (string)$town,
+            'country' => (string)$country,
+            'street1' => (string)$street1,
+            'status' => (string)$status,
+            'request_id' => (string)$requestId,
             'error' => '',
-            'request' => $json_string11,
-            'response' => $json_string22,
-            'type' => $type,
-            'order_id' => $orderId,
-            'transaction_id' => $transactionId,
+            'request' => (string)$json_string11,
+            'response' => (string)$json_string22,
+            'type' => (string)$type,
+            'order_id' => (string)$orderId,
+            'transaction_id' => (string)$transactionId,
             'ip' => $this->getClientIp());
 
         $this->_byjunoLogger->log($data);
