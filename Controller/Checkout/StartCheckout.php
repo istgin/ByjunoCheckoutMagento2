@@ -10,6 +10,7 @@ use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface as MessageManagerInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\ScopeInterface;
 
 
@@ -92,7 +93,7 @@ class StartCheckout implements ActionInterface
                 $payment->setTransactionId($byjunoTrx);
                 $payment->setParentTransactionId($payment->getTransactionId());
                 // $payment->setIsTransactionPending(true);
-                $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true);
+                $transaction = $payment->addTransaction(Transaction::TYPE_AUTH, null, true);
                 $transaction->setIsClosed(false);
                 $payment->setAdditionalInformation("chk_executed_ok", 'true');
                 $this->_dataHelper->saveStatusToOrder($order);

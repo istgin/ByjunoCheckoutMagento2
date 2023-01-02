@@ -445,11 +445,10 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     }
                 }
             } catch (\Exception $e) {
-                var_dump($e);
-                exit('error');
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public function isTheSame(ByjunoCheckoutAutRequest $request) {
@@ -1672,7 +1671,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
     */
 
-    function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId = '', $webshopProfile, $tx)
+    function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId, $webshopProfile, $tx)
     {
 
 
@@ -1726,7 +1725,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         */
     }
 
-    function CreateMagentoShopRequestS5Paid(Order $order, $amount, $transactionType, $invoiceId = '', $webshopProfile, $tx)
+    function CreateMagentoShopRequestS5Paid(Order $order, $amount, $transactionType, $invoiceId, $webshopProfile, $tx)
     {
 
 
