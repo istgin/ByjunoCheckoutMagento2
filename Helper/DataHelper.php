@@ -90,13 +90,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public function getMethodsMapping()
     {
         $methods = Array(
-            self::$SINGLEINVOICE => Array(
-                "value" => self::$SINGLEINVOICE,
+            self::$BYJUNOINVOICE => Array(
+                "value" => self::$BYJUNOINVOICE,
                 "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", ScopeInterface::SCOPE_STORE),
                 "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/link", ScopeInterface::SCOPE_STORE)
             ),
-            self::$BYJUNOINVOICE => Array(
-                "value" => self::$BYJUNOINVOICE,
+            self::$SINGLEINVOICE => Array(
+                "value" => self::$SINGLEINVOICE,
                 "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", ScopeInterface::SCOPE_STORE),
                 "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/link", ScopeInterface::SCOPE_STORE)
             ),
@@ -1435,8 +1435,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         $request->customerConsents = Array($customerConsents);
 
-        $request->merchantDetails->returnUrlError = "https://www.ss.com";
-        $request->merchantDetails->returnUrlSuccess = "https://www.google.com";
+        $request->merchantDetails->returnUrlError = $this->_urlBuilder->getUrl('byjunocheckoutcore/checkout/cancel');
+        $request->merchantDetails->returnUrlSuccess = $this->_urlBuilder->getUrl('checkout/onepage/success');
         $request->merchantDetails->transactionChannel = "WEB";
         $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
 
@@ -1468,6 +1468,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $result->processingStatus = $responseObject->processingStatus;
             if ($responseObject->processingStatus == self::$CHK_OK) {
                 $result->transactionId = $responseObject->transactionId;
+                $result->redirectUrlCheckout = $responseObject->redirectUrlCheckout;
             }
         }
         return $result;

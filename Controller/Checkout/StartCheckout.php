@@ -3,6 +3,7 @@
 namespace ByjunoCheckout\ByjunoCheckoutCore\Controller\Checkout;
 
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
+use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutChkResponse;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
 use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
 use Magento\Framework\App\Action\Context;
@@ -69,7 +70,7 @@ class StartCheckout implements ActionInterface
             } else {
                 $byjunoCommunicator->setServer('test');
             }
-            $response = $byjunoCommunicator->sendAuthRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+            $response = $byjunoCommunicator->sendCheckoutRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
                 ScopeInterface::SCOPE_STORE),
                 $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunologin', ScopeInterface::SCOPE_STORE),
                 $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunopassword', ScopeInterface::SCOPE_STORE));
@@ -77,7 +78,6 @@ class StartCheckout implements ActionInterface
             $status = "";
             $responseRes = null;
             if ($response) {
-                /* @var $responseRes ByjunoCheckoutAuthorizationResponse */
                 $responseRes = $this->_dataHelper->checkoutResponse($response);
                 $status = $responseRes->processingStatus;
                 $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
@@ -90,6 +90,7 @@ class StartCheckout implements ActionInterface
             }
             if ($status == DataHelper::$CHK_OK) {
                 $byjunoTrx = $responseRes->transactionId;
+                $redirectUrl = $responseRes->redirectUrlCheckout;
                 $payment->setTransactionId($byjunoTrx);
                 $payment->setParentTransactionId($payment->getTransactionId());
                 // $payment->setIsTransactionPending(true);
@@ -97,7 +98,7 @@ class StartCheckout implements ActionInterface
                 $transaction->setIsClosed(false);
                 $payment->setAdditionalInformation("chk_executed_ok", 'true');
                 $this->_dataHelper->saveStatusToOrder($order);
-                $resultRedirect->setUrl('https://www.google.com?aaa=' . $order->getIncrementId());
+                $resultRedirect->setUrl($redirectUrl);
             } else {
                 $error = $this->_dataHelper->getByjunoErrorMessage();
                 $order->registerCancellation($error)->save();

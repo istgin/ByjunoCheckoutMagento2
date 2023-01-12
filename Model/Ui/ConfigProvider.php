@@ -132,14 +132,6 @@ class ConfigProvider implements ConfigProviderInterface
         $methodsAvailableInvoice = Array();
         $availableMethods = $this->dataHelper->getMethodsMapping();
         $byjunocheckout_single_invoice_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/byjunocheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-        && (($byjunocheckout_single_invoice_allow == '0' && $this->isAllowedByScreening($status, DataHelper::$SINGLEINVOICE)) || $byjunocheckout_single_invoice_allow == '1')) {
-            $methodsAvailableInvoice[] = Array(
-                "value" => $availableMethods[DataHelper::$SINGLEINVOICE]["value"],
-                "name" => $availableMethods[DataHelper::$SINGLEINVOICE]["name"],
-                "link" => $availableMethods[DataHelper::$SINGLEINVOICE]["link"]
-            );
-        }
 
         $byjunocheckout_invoice_partial_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/byjunocheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
@@ -150,6 +142,16 @@ class ConfigProvider implements ConfigProviderInterface
                 "link" => $availableMethods[DataHelper::$BYJUNOINVOICE]["link"]
             );
         }
+
+        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && (($byjunocheckout_single_invoice_allow == '0' && $this->isAllowedByScreening($status, DataHelper::$SINGLEINVOICE)) || $byjunocheckout_single_invoice_allow == '1')) {
+            $methodsAvailableInvoice[] = Array(
+                "value" => $availableMethods[DataHelper::$SINGLEINVOICE]["value"],
+                "name" => $availableMethods[DataHelper::$SINGLEINVOICE]["name"],
+                "link" => $availableMethods[DataHelper::$SINGLEINVOICE]["link"]
+            );
+        }
+
         $defaultInvoicePlan = DataHelper::$BYJUNOINVOICE;
         if (count($methodsAvailableInvoice) > 0) {
             $defaultInvoicePlan = $methodsAvailableInvoice[0]["value"];

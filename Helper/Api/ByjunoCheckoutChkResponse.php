@@ -44,4 +44,5 @@ class ByjunoCheckoutChkResponse {
     public $merchantOrderRef; //String
     public $processingStatus; //String
     public $authorization; //Authorization
+    public $redirectUrlCheckout;
 }
