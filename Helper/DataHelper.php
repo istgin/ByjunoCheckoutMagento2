@@ -434,8 +434,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     $this->_checkoutSession->setIsTheSame($this->_savedUser);
                     $this->_checkoutSession->setScreeningStatus($status);
                 }
-                //REMOVE ID
-                $status = Array("BYJUNO-INVOICE");
                 DataHelper::$screeningStatus = $status;
                 foreach ($methods as $method) {
                     foreach ($status as $st) {
@@ -444,6 +442,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                         }
                     }
                 }
+                return false;
             } catch (\Exception $e) {
                 return false;
             }
