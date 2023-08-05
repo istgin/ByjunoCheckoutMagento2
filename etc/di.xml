@@ -8,166 +8,166 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- Payment Method Facade configuration -->
-    <virtualType name="InvoiceByjunoCheckoutCoreFacade" type="ByjunoCheckout\ByjunoCheckoutCore\Model\Invoice">
+    <virtualType name="InvoiceCembraPayCheckoutCoreFacade" type="CembraPayCheckout\CembraPayCheckoutCore\Model\Invoice">
         <arguments>
-            <argument name="code" xsi:type="const">ByjunoCheckout\ByjunoCheckoutCore\Model\Ui\ConfigProvider::CODE_INVOICE</argument>
+            <argument name="code" xsi:type="const">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider::CODE_INVOICE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">ByjunoCheckout\ByjunoCheckoutCore\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">InvoiceByjunoCheckoutCoreValueHandlerPool</argument>
-            <argument name="commandPool" xsi:type="object">InvoiceByjunoCheckoutCoreCommandPool</argument>
+            <argument name="infoBlockType" xsi:type="string">CembraPayCheckout\CembraPayCheckoutCore\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">InvoiceCembraPayCheckoutCoreValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">InvoiceCembraPayCheckoutCoreCommandPool</argument>
         </arguments>
     </virtualType>
 
     <!-- Configuration reader -->
-    <virtualType name="InvoiceByjunoCheckoutCoreConfig" type="Magento\Payment\Gateway\Config\Config">
+    <virtualType name="InvoiceCembraPayCheckoutCoreConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">ByjunoCheckout\ByjunoCheckoutCore\Model\Ui\ConfigProvider::CODE_INVOICE</argument>
+            <argument name="methodCode" xsi:type="const">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider::CODE_INVOICE</argument>
         </arguments>
     </virtualType>
 
     <!-- Commands infrastructure -->
-    <virtualType name="InvoiceByjunoCheckoutCoreCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="InvoiceCembraPayCheckoutCoreCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">InvoiceByjunoCheckoutCoreAuthorizeCommand</item>
-                <item name="capture" xsi:type="string">InvoiceByjunoCheckoutCoreCaptureCommand</item>
-                <item name="void" xsi:type="string">InvoiceByjunoCheckoutCoreVoidCommand</item>
+                <item name="authorize" xsi:type="string">InvoiceCembraPayCheckoutCoreAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">InvoiceCembraPayCheckoutCoreCaptureCommand</item>
+                <item name="void" xsi:type="string">InvoiceCembraPayCheckoutCoreVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
 
     <!-- Authorize command -->
-    <virtualType name="InvoiceByjunoCheckoutCoreAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
+    <virtualType name="InvoiceCembraPayCheckoutCoreAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Gateway\Request\AuthorizationRequest">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\AuthorizationRequest">
         <arguments>
-            <argument name="config" xsi:type="object">InvoiceByjunoCheckoutCoreConfig</argument>
+            <argument name="config" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 
     <!-- Capture command -->
-    <virtualType name="InvoiceByjunoCheckoutCoreCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
+    <virtualType name="InvoiceCembraPayCheckoutCoreCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Capture Request -->
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Gateway\Request\CaptureRequest">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\CaptureRequest">
         <arguments>
-            <argument name="config" xsi:type="object">InvoiceByjunoCheckoutCoreConfig</argument>
+            <argument name="config" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 
     <!-- Void command -->
-    <virtualType name="InvoiceByjunoCheckoutCoreVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
+    <virtualType name="InvoiceCembraPayCheckoutCoreVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Void Request -->
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Gateway\Request\VoidRequest">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\VoidRequest">
         <arguments>
-            <argument name="config" xsi:type="object">InvoiceByjunoCheckoutCoreConfig</argument>
+            <argument name="config" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 
     <!-- Value handlers infrastructure -->
-    <virtualType name="InvoiceByjunoCheckoutCoreValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="InvoiceCembraPayCheckoutCoreValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">InvoiceByjunoCheckoutCoreConfigValueHandler</item>
+                <item name="default" xsi:type="string">InvoiceCembraPayCheckoutCoreConfigValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="InvoiceByjunoCheckoutCoreConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="InvoiceCembraPayCheckoutCoreConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">InvoiceByjunoCheckoutCoreConfig</argument>
+            <argument name="configInterface" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </virtualType>
 
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Block\Info">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Block\Info">
         <arguments>
-            <argument name="config" xsi:type="object">InvoiceByjunoCheckoutCoreConfig</argument>
+            <argument name="config" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 
-    <virtualType name="InstallmentByjunoCheckoutCoreFacade" type="ByjunoCheckout\ByjunoCheckoutCore\Model\Installment">
+    <virtualType name="InstallmentCembraPayCheckoutCoreFacade" type="CembraPayCheckout\CembraPayCheckoutCore\Model\Installment">
         <arguments>
-            <argument name="code" xsi:type="const">ByjunoCheckout\ByjunoCheckoutCore\Model\Ui\ConfigProvider::CODE_INSTALLMENT</argument>
+            <argument name="code" xsi:type="const">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider::CODE_INSTALLMENT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">ByjunoCheckout\ByjunoCheckoutCore\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">InstallmentByjunoCheckoutCoreValueHandlerPool</argument>
-            <argument name="commandPool" xsi:type="object">InstallmentByjunoCheckoutCoreCommandPool</argument>
+            <argument name="infoBlockType" xsi:type="string">CembraPayCheckout\CembraPayCheckoutCore\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">InstallmentCembraPayCheckoutCoreValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">InstallmentCembraPayCheckoutCoreCommandPool</argument>
         </arguments>
     </virtualType>
 
     <!-- Configuration reader -->
-    <virtualType name="InstallmentByjunoCheckoutCoreConfig" type="Magento\Payment\Gateway\Config\Config">
+    <virtualType name="InstallmentCembraPayCheckoutCoreConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">ByjunoCheckout\ByjunoCheckoutCore\Model\Ui\ConfigProvider::CODE_INSTALLMENT</argument>
+            <argument name="methodCode" xsi:type="const">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider::CODE_INSTALLMENT</argument>
         </arguments>
     </virtualType>
 
     <!-- Commands infrastructure -->
-    <virtualType name="InstallmentByjunoCheckoutCoreCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="InstallmentCembraPayCheckoutCoreCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">InstallmentByjunoCheckoutCoreAuthorizeCommand</item>
-                <item name="capture" xsi:type="string">InstallmentByjunoCheckoutCoreCaptureCommand</item>
-                <item name="void" xsi:type="string">InstallmentByjunoCheckoutCoreVoidCommand</item>
+                <item name="authorize" xsi:type="string">InstallmentCembraPayCheckoutCoreAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">InstallmentCembraPayCheckoutCoreCaptureCommand</item>
+                <item name="void" xsi:type="string">InstallmentCembraPayCheckoutCoreVoidCommand</item>
             </argument>
         </arguments>
     </virtualType>
 
     <!-- Authorize command -->
-    <virtualType name="InstallmentByjunoCheckoutCoreAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
+    <virtualType name="InstallmentCembraPayCheckoutCoreAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Authorization Request -->
-    <virtualType name="InstallmentByjunoCheckoutCoreAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+    <virtualType name="InstallmentCembraPayCheckoutCoreAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
-                <item name="transaction" xsi:type="string">ByjunoCheckout\ByjunoCheckoutCore\Gateway\Request\AuthorizationRequest</item>
-                <item name="mockData" xsi:type="string">ByjunoCheckout\ByjunoCheckoutCore\Gateway\Request\MockDataRequest</item>
+                <item name="transaction" xsi:type="string">CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\AuthorizationRequest</item>
+                <item name="mockData" xsi:type="string">CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\MockDataRequest</item>
             </argument>
         </arguments>
     </virtualType>
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Gateway\Request\AuthorizationRequest">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\AuthorizationRequest">
         <arguments>
-            <argument name="config" xsi:type="object">InstallmentByjunoCheckoutCoreConfig</argument>
+            <argument name="config" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 
     <!-- Capture command -->
-    <virtualType name="InstallmentByjunoCheckoutCoreCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
+    <virtualType name="InstallmentCembraPayCheckoutCoreCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Capture Request -->
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Gateway\Request\CaptureRequest">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\CaptureRequest">
         <arguments>
-            <argument name="config" xsi:type="object">InstallmentByjunoCheckoutCoreConfig</argument>
+            <argument name="config" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 
     <!-- Void command -->
-    <virtualType name="InstallmentByjunoCheckoutCoreVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
+    <virtualType name="InstallmentCembraPayCheckoutCoreVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Void Request -->
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Gateway\Request\VoidRequest">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\VoidRequest">
         <arguments>
-            <argument name="config" xsi:type="object">InstallmentByjunoCheckoutCoreConfig</argument>
+            <argument name="config" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 
     <!-- Value handlers infrastructure -->
-    <virtualType name="InstallmentByjunoCheckoutCoreValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="InstallmentCembraPayCheckoutCoreValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">InstallmentByjunoCheckoutCoreConfigValueHandler</item>
+                <item name="default" xsi:type="string">InstallmentCembraPayCheckoutCoreConfigValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="InstallmentByjunoCheckoutCoreConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="InstallmentCembraPayCheckoutCoreConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">InstallmentByjunoCheckoutCoreConfig</argument>
+            <argument name="configInterface" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </virtualType>
 
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Block\Info">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Block\Info">
         <arguments>
-            <argument name="config" xsi:type="object">InstallmentByjunoCheckoutCoreConfig</argument>
+            <argument name="config" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 

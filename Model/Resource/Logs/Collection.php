@@ -1,6 +1,6 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Model\Resource\Logs;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Resource\Logs;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
@@ -12,8 +12,8 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            'ByjunoCheckout\ByjunoCheckoutCore\Model\Logs',
-            'ByjunoCheckout\ByjunoCheckoutCore\Model\Resource\Logs'
+            'CembraPayCheckout\CembraPayCheckoutCore\Model\Logs',
+            'CembraPayCheckout\CembraPayCheckoutCore\Model\Resource\Logs'
         );
     }
 }

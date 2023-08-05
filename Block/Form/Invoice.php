@@ -3,9 +3,9 @@
  * Copyright � Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Block\Form;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Block\Form;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
 
 /**
  * @api
@@ -16,7 +16,7 @@ class Invoice extends \Magento\Payment\Block\Form
     /**
      * @var string
      */
-    protected $_template = 'ByjunoCheckout_ByjunoCheckoutCore::form/invoice-child.phtml';
+    protected $_template = 'CembraPayCheckout_CembraPayCheckoutCore::form/invoice-child.phtml';
 
     /**
      * Payment config model
@@ -46,7 +46,7 @@ class Invoice extends \Magento\Payment\Block\Form
 
     public function getGenders()
     {
-        $gender_prefix = trim($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_prefix", \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $gender_prefix = trim($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_prefix", \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $gendersArray = explode(";", $gender_prefix);
         $genders = Array();
         foreach($gendersArray as $g) {
@@ -63,7 +63,7 @@ class Invoice extends \Magento\Payment\Block\Form
     public function getGendersEnable()
     {
         $gender_enable = false;
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_enable",
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_enable",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $gender_enable = true;
         }
@@ -74,13 +74,13 @@ class Invoice extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
         }
         $birthday_enable = false;
-        if (!$isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/birthday_enable",
+        if (!$isCompany && $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/birthday_enable",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $birthday_enable = true;
         }
@@ -91,13 +91,13 @@ class Invoice extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
         }
         $b2b_uid = false;
-        if ($isCompany && $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/b2b_uid",
+        if ($isCompany && $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/b2b_uid",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $b2b_uid = true;
         }
@@ -108,7 +108,7 @@ class Invoice extends \Magento\Payment\Block\Form
     {
         $isCompany = false;
         if (!empty($this->_adminSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
         )
         {
             $isCompany = true;
@@ -116,24 +116,24 @@ class Invoice extends \Magento\Payment\Block\Form
 
         $methodsAvailableInvoice = Array();
 
-        $byjunocheckout_single_invoice_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/byjunocheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($byjunocheckout_single_invoice_allow == '0' || ($byjunocheckout_single_invoice_allow == '1' && !$isCompany) || ($byjunocheckout_single_invoice_allow == '2' && $isCompany))
+        $cembrapaycheckout_single_invoice_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/cembrapaycheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($cembrapaycheckout_single_invoice_allow == '0' || ($cembrapaycheckout_single_invoice_allow == '1' && !$isCompany) || ($cembrapaycheckout_single_invoice_allow == '2' && $isCompany))
         ) {
             $methodsAvailableInvoice[] = Array(
                 "value" => DataHelper::$SINGLEINVOICE,
-                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
-        $byjunocheckout_invoice_partial_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/byjunocheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($byjunocheckout_invoice_partial_allow == '0' || ($byjunocheckout_invoice_partial_allow == '1' && !$isCompany) || ($byjunocheckout_invoice_partial_allow == '2' && $isCompany))) {
+        $cembrapaycheckout_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($cembrapaycheckout_invoice_partial_allow == '0' || ($cembrapaycheckout_invoice_partial_allow == '1' && !$isCompany) || ($cembrapaycheckout_invoice_partial_allow == '2' && $isCompany))) {
             $methodsAvailableInvoice[] = Array(
-                "value" => DataHelper::$BYJUNOINVOICE,
-                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "value" => DataHelper::$CEMBRAPAYINVOICE,
+                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -145,13 +145,13 @@ class Invoice extends \Magento\Payment\Block\Form
         $invoiceDelivery = Array();
         $invoiceDelivery[] = Array(
             "value" => "email",
-            "text" => __($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_localization/byjunocheckout_invoice_email_text",
+            "text" => __($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_localization/cembrapaycheckout_invoice_email_text",
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE))
         );
 
         $invoiceDelivery[] = Array(
             "value" => "postal",
-            "text" => __($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_localization/byjunocheckout_invoice_postal_text",
+            "text" => __($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_localization/cembrapaycheckout_invoice_postal_text",
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE))
         );
 

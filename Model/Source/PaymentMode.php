@@ -6,7 +6,7 @@
  * Time: 15:43
  */
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Model\Source;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Source;
 
 use Magento\Framework\Option\ArrayInterface;
 
@@ -50,8 +50,8 @@ class PaymentMode implements ArrayInterface
     public function toArray()
     {
         $catagoryList = array();
-        $catagoryList["0"] = 'Byjuno api with no redirect';
-        $catagoryList["1"] = 'Byjuno checkout redirect';
+        $catagoryList["0"] = 'CembraPay api with no redirect';
+        $catagoryList["1"] = 'CembraPay checkout redirect';
         return $catagoryList;
     }
 

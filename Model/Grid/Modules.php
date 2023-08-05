@@ -1,9 +1,9 @@
 <?php
 
 /**
- *  Byjuno Checkout Pyamnet Core - Block modules grid
+ *  CembraPay Checkout Pyamnet Core - Block modules grid
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Model\Grid;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Grid;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class Modules extends \Magento\Backend\Block\Widget implements \Magento\Framework\Data\Form\Element\Renderer\RendererInterface
@@ -15,7 +15,7 @@ class Modules extends \Magento\Backend\Block\Widget implements \Magento\Framewor
 
     protected $_element = null;
 
-    protected $_template = 'ByjunoCheckout_ByjunoCheckoutCore::renderer/grid_modules.phtml';
+    protected $_template = 'CembraPayCheckout_CembraPayCheckoutCore::renderer/grid_modules.phtml';
     /**
      * Core registry
      *
@@ -68,7 +68,7 @@ class Modules extends \Magento\Backend\Block\Widget implements \Magento\Framewor
     public function getPaymentmethods()
     {
         return Array();
-       // $core_sql = Mage::getSingleton('ByjunoCheckoutCore/mysql4_iceCore');
+       // $core_sql = Mage::getSingleton('CembraPayCheckoutCore/mysql4_iceCore');
        // return $core_sql->getModulesConfiguration();
     }
 

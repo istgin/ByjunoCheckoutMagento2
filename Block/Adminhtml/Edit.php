@@ -1,6 +1,6 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Block\Adminhtml;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml;
 
 
 class Edit extends \Magento\Backend\Block\Widget\Container
@@ -13,7 +13,7 @@ class Edit extends \Magento\Backend\Block\Widget\Container
     protected function _construct()
     {
         $this->_controller = 'adminhtml_edit';
-        $this->_blockGroup = 'ByjunoCheckout_ByjunoCheckoutCore';
+        $this->_blockGroup = 'CembraPayCheckout_CembraPayCheckoutCore';
         parent::_construct();
     }
 
@@ -21,7 +21,7 @@ class Edit extends \Magento\Backend\Block\Widget\Container
     {
         try {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $logger = $objectManager->get('\ByjunoCheckout\ByjunoCheckoutCore\Model\Logs');
+            $logger = $objectManager->get('\CembraPayCheckout\CembraPayCheckoutCore\Model\Logs');
             $logview = $logger->load($this->getRequest()->getParam('id'));
                 $html = '
             <a href="javascript:history.go(-1)">Back to log</a>

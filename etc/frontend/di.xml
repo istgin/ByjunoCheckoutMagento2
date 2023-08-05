@@ -9,11 +9,11 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="byjunocheckout_invoice_config_provider" xsi:type="object">ByjunoCheckout\ByjunoCheckoutCore\Model\Ui\ConfigProvider</item>
+                <item name="cembrapaycheckout_invoice_config_provider" xsi:type="object">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider</item>
             </argument>
         </arguments>
     </type>
-    <type name="ByjunoCheckout\ByjunoCheckoutCore\Block\Info">
+    <type name="CembraPayCheckout\CembraPayCheckoutCore\Block\Info">
         <arguments>
             <argument name="data" xsi:type="array">
                 <item xsi:type="string" name="is_secure_mode">1</item>

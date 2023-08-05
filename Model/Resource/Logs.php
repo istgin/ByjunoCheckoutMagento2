@@ -6,7 +6,7 @@
  * Time: 20:09
  */
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Model\Resource;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Resource;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
@@ -17,6 +17,6 @@ class Logs extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('byjunocheckout_log', 'id');
+        $this->_init('cembrapaycheckout_log', 'id');
     }
 }

@@ -6,13 +6,13 @@
  * Time: 19:31
  */
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Model;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAutRequest;
-use ByjunoCheckout\ByjunoCheckoutCore\Observer\InvoiceObserver;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutScreeningResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Observer\InvoiceObserver;
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
@@ -30,13 +30,13 @@ use Magento\Sales\Model\Order;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Ui\Config\Data;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
 
 
 /**
  * Pay In Store payment method model
  */
-class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
+class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
 {
     /* @var $_scopeConfig \Magento\Framework\App\Config\ScopeConfigInterface */
     protected $_scopeConfig;
@@ -72,7 +72,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
 
     public function isInitializeNeeded()
     {
-       if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+       if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
             return false;
         } else {
             return true;
@@ -85,8 +85,8 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         if ($quote != null) {
             $total = $quote->getGrandTotal();
             $active = true;
-            if ($total < $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/minamount', ScopeInterface::SCOPE_STORE) ||
-                $total > $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/maxamount', ScopeInterface::SCOPE_STORE)) {
+            if ($total < $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/minamount', ScopeInterface::SCOPE_STORE) ||
+                $total > $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/maxamount', ScopeInterface::SCOPE_STORE)) {
                 $active = false;
             }
             return parent::isAvailable($quote) && $active;
@@ -101,35 +101,35 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         /* @var $order \Magento\Sales\Model\Order */
         $order = $payment->getOrder();
         $webshopProfileId = $payment->getAdditionalInformation("webshop_profile_id");
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunos5transacton', ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapays5transacton', ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
 
         $request = $this->_dataHelper->CreateMagentoShopRequestS5Paid($order, $order->getTotalDue(), "EXPIRED", '', $webshopProfileId);
-        $ByjunoRequestName = 'Byjuno Checkout S5 Cancel';
+        $CembraPayRequestName = 'CembraPay Checkout S5 Cancel';
         $xml = $request->createRequest();
-        $byjunoCommunicator = new ByjunoCommunicator();
-        $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE, $webshopProfileId);
+        $cembrapayCommunicator = new CembraPayCommunicator();
+        $mode = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE, $webshopProfileId);
         if ($mode == 'live') {
-            $byjunoCommunicator->setServer('live');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $cembrapayCommunicator->setServer('live');
+            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_prod_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else {
-            $byjunoCommunicator->setServer('test');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $cembrapayCommunicator->setServer('test');
+            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
-        $response = $byjunoCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout', ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        $response = $cembrapayCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout', ScopeInterface::SCOPE_STORE, $webshopProfileId));
         if ($response) {
             $this->_dataHelper->_responseS4->setRawResponse($response);
             $this->_dataHelper->_responseS4->processResponse();
             $status = $this->_dataHelper->_responseS4->getProcessingInfoClassification();
-            $this->_dataHelper->saveS5Log($order, $request, $xml, $response, $status, $ByjunoRequestName);
+            $this->_dataHelper->saveS5Log($order, $request, $xml, $response, $status, $CembraPayRequestName);
         } else {
             $status = "ERR";
-            $this->_dataHelper->saveS5Log($order, $request, $xml, "empty response", $status, $ByjunoRequestName);
+            $this->_dataHelper->saveS5Log($order, $request, $xml, "empty response", $status, $CembraPayRequestName);
         }
         if ($status == 'ERR') {
             throw new LocalizedException(
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s5_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_s5_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
             );
         }
 
@@ -150,11 +150,11 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
      * @var $infoInterface InfoInterface
      * @var $isCompany bool
      */
-    public function validateCustomByjunoFields(InfoInterface $infoInterface, $isCompany)
+    public function validateCustomCembraPayFields(InfoInterface $infoInterface, $isCompany)
     {
         /** @var $payment Payment */
         $payment = $infoInterface;
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/gender_enable",
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_enable",
                 ScopeInterface::SCOPE_STORE) == 1) {
             if ($payment->getAdditionalInformation('customer_gender') == null || $payment->getAdditionalInformation('customer_gender') == '') {
                 throw new LocalizedException(
@@ -175,7 +175,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             }
         }
         if (!$isCompany) {
-            if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/birthday_enable",
+            if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/birthday_enable",
                     ScopeInterface::SCOPE_STORE) == 1 && !$birthday_provided) {
                 if ($payment->getAdditionalInformation('customer_dob') == null || $payment->getAdditionalInformation('customer_dob') == '') {
                     throw new LocalizedException(
@@ -197,7 +197,7 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 }
             }
         } else {
-            if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/b2b_uid",
+            if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/b2b_uid",
                     ScopeInterface::SCOPE_STORE) == 1) {
                 if ($payment->getAdditionalInformation('customer_b2b_uid') == null || $payment->getAdditionalInformation('customer_b2b_uid') == '') {
                     throw new LocalizedException(
@@ -207,19 +207,19 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
             }
         }
 
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/country_phone_validation",
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/country_phone_validation",
                 ScopeInterface::SCOPE_STORE) == 1 && $payment->getQuote() != null) {
 
             $pattern = "/^[0-9]{4}$/";
             if (strtolower($payment->getQuote()->getBillingAddress()->getCountryId()) == 'ch' && !preg_match($pattern, $payment->getQuote()->getBillingAddress()->getPostcode())) {
                 throw new LocalizedException(
-                    __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/postal_code_wrong', ScopeInterface::SCOPE_STORE).
+                    __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/postal_code_wrong', ScopeInterface::SCOPE_STORE).
                         ": " . $payment->getQuote()->getBillingAddress()->getPostcode())
                 );
             }
             if (!preg_match("/^[0-9\+\(\)\s]+$/", $payment->getQuote()->getBillingAddress()->getTelephone())) {
                 throw new LocalizedException(
-                    __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/telephone_code_wrong', ScopeInterface::SCOPE_STORE).
+                    __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/telephone_code_wrong', ScopeInterface::SCOPE_STORE).
                         ": " . $payment->getQuote()->getBillingAddress()->getTelephone())
                 );
             }
@@ -236,52 +236,52 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         $memo = $payment->getCreditmemo();
         $incoiceId = $memo->getInvoice()->getIncrementId();
         $webshopProfileId = $payment->getAdditionalInformation("webshop_profile_id");
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunos5transacton', ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapays5transacton', ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
 
         $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
         if ($tx == null || !$tx || empty($tx["transaction_id"])) {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
             );
         }
         $request = $this->_dataHelper->CreateMagentoShopRequestCredit($order, $amount, $incoiceId, $webshopProfileId, $tx["transaction_id"]);
-        $ByjunoRequestName = $request->requestMsgType;
+        $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
-        $byjunoCommunicator = new ByjunoCommunicator();
-        $mode = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+        $cembrapayCommunicator = new CembraPayCommunicator();
+        $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
         if ($mode == 'live') {
-            $byjunoCommunicator->setServer('live');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $cembrapayCommunicator->setServer('live');
+            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_prod_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
 
         } else {
-            $byjunoCommunicator->setServer('test');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $cembrapayCommunicator->setServer('test');
+            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
 
         }
         $status = "";
-        $response = $byjunoCommunicator->sendCreditRequest($json, (int)$this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+        $response = $cembrapayCommunicator->sendCreditRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
             ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunologin', ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunopassword', ScopeInterface::SCOPE_STORE, $webshopProfileId));
-        if ($response) { /* @var $responseRes ByjunoCheckoutAuthorizationResponse */
+            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE, $webshopProfileId),
+            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        if ($response) { /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
             $responseRes = $this->_dataHelper->creditResponse($response);
             $status = $responseRes->processingStatus;
-            $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
+            $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
                 "-","-", $request->requestMsgId,
                 "-", "-", "-","-", $responseRes->transactionId, $order->getRealOrderId());
         } else {
-            $this->_dataHelper->saveLog($json, $response, "Query error", $ByjunoRequestName,
+            $this->_dataHelper->saveLog($json, $response, "Query error", $CembraPayRequestName,
                 "-","-", $request->requestMsgId,
                 "-", "-", "-","-", "-", "-");
         }
         if ($status != DataHelper::$CREDIT_OK) {
             throw new LocalizedException(
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_s5_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_s5_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
             );
         } else {
-            $this->_dataHelper->_byjunoCreditmemoSender->sendCreditMemo($memo, $email);
+            $this->_dataHelper->_cembrapayCreditmemoSender->sendCreditMemo($memo, $email);
         }
 
         $payment->setTransactionId($payment->getParentTransactionId().'-refund');
@@ -305,12 +305,12 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
                 __("Internal invoice (InvoiceObserver) error")
             );
         }
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/byjunosettletransacton", ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaysettletransacton", ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
         if ($payment->getAdditionalInformation("auth_executed_ok") == null || $payment->getAdditionalInformation("auth_executed_ok") == 'false') {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
             );
         }
         $incrementValue =  $this->_eavConfig->getEntityType($invoice->getEntityType())->fetchNewIncrementId($invoice->getStoreId());
@@ -320,45 +320,45 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
         $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
         if ($tx == null || !$tx || empty($tx["transaction_id"])) {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
             );
         }
         $request = $this->_dataHelper->CreateMagentoShopRequestSettlePaid($order, $invoice, $payment, $webshopProfileId, $tx["transaction_id"]);
 
-        $ByjunoRequestName = $request->requestMsgType;
+        $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
-        $byjunoCommunicator = new ByjunoCommunicator();
-        $mode = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+        $cembrapayCommunicator = new CembraPayCommunicator();
+        $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
         if ($mode == 'live') {
-            $byjunoCommunicator->setServer('live');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $cembrapayCommunicator->setServer('live');
+            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_prod_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
 
         } else {
-            $byjunoCommunicator->setServer('test');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $cembrapayCommunicator->setServer('test');
+            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
 
         }
-        $response = $byjunoCommunicator->sendSettleRequest($json, (int)$this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+        $response = $cembrapayCommunicator->sendSettleRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
             ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunologin', ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunopassword', ScopeInterface::SCOPE_STORE, $webshopProfileId));
+            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE, $webshopProfileId),
+            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE, $webshopProfileId));
 
         $status = "";
         $responseRes = null;
         if ($response) {
-            /* @var $responseRes ByjunoCheckoutAuthorizationResponse */
+            /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
             $responseRes = $this->_dataHelper->settleResponse($response);
             $status = $responseRes->processingStatus;
-            $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
+            $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
                "-","-", $request->requestMsgId,
                 "-", "-", "-","-", $responseRes->transactionId, $order->getRealOrderId());
         } else {
-            $this->_dataHelper->saveLog($json, $response, "Query error", $ByjunoRequestName,
+            $this->_dataHelper->saveLog($json, $response, "Query error", $CembraPayRequestName,
                 "-","-", $request->requestMsgId,
                 "-", "-", "-","-", "-", "-");
         }
         if ($status == DataHelper::$SETTLE_OK) {
-            $this->_dataHelper->_byjunoInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
+            $this->_dataHelper->_cembrapayInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
             $authTransaction = $payment->getAuthorizationTransaction();
             if ($authTransaction && !$authTransaction->getIsClosed()) {
                 $authTransaction->setIsClosed($payment->isCaptureFinal($amount));
@@ -375,38 +375,38 @@ class Byjunopayment extends \Magento\Payment\Model\Method\Adapter
 
         } else {
             throw new LocalizedException(
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId))
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId))
             );
         }
 
 /*
-        $ByjunoRequestName = 'Byjuno Checkout S4';
+        $CembraPayRequestName = 'CembraPay Checkout S4';
         $xml = $request->createRequest();
-        $byjunoCommunicator = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator();
-        $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+        $cembrapayCommunicator = new \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator();
+        $mode = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         if ($mode == 'live') {
-            $byjunoCommunicator->setServer('live');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $cembrapayCommunicator->setServer('live');
+            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else {
-            $byjunoCommunicator->setServer('test');
-            $email = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $cembrapayCommunicator->setServer('test');
+            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
-        $response = $byjunoCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        $response = $cembrapayCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
         if ($response) {
             $this->_dataHelper->_responseS4->setRawResponse($response);
             $this->_dataHelper->_responseS4->processResponse();
             $status = $this->_dataHelper->_responseS4->getProcessingInfoClassification();
-            $this->_dataHelper->saveS4Log($order, $request, $xml, $response, $status, $ByjunoRequestName);
+            $this->_dataHelper->saveS4Log($order, $request, $xml, $response, $status, $CembraPayRequestName);
         } else {
             $status = "ERR";
-            $this->_dataHelper->saveS4Log($order, $request, $xml, "empty response", $status, $ByjunoRequestName);
+            $this->_dataHelper->saveS4Log($order, $request, $xml, "empty response", $status, $CembraPayRequestName);
         }
         if ($status == 'ERR') {
             throw new LocalizedException(
-                __($this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
             );
         } else {
-            $this->_dataHelper->_byjunoInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
+            $this->_dataHelper->_cembrapayInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
         }
 
         $authTransaction = $payment->getAuthorizationTransaction();

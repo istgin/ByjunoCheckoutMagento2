@@ -5,31 +5,36 @@
  * Date: 09.11.2016
  * Time: 15:48
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
 
-use Magento\Sales\Model\Order\Email\Sender\CreditmemoSender;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender;
+use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
 /**
  * Class OrderSender
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ByjunoCreditmemoSender extends CreditmemoSender
+class CembraPayInvoiceSender extends InvoiceSender
 {
     private $email;
-    protected function checkAndSend(\Magento\Sales\Model\Order $order)
+    protected function checkAndSend(Order $order)
     {
         $this->identityContainer->setStore($order->getStore());
         if (!$this->identityContainer->isEnabled()) {
             return false;
         }
         $this->prepareTemplate($order);
-
         /** @var \Magento\Sales\Model\Order\Email\SenderBuilder $sender */
-        $this->identityContainer->setCustomerName("Byjuno");
+        $this->identityContainer->setCustomerName("CembraPay");
         $this->identityContainer->setCustomerEmail($this->email);
+
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $objectManagerInterface = $objectManager->get('\Magento\Framework\ObjectManagerInterface');
+        $this->senderBuilderFactory = new \Magento\Sales\Model\Order\Email\SenderBuilderFactory($objectManagerInterface, '\\CembraPayCheckout\\CembraPayCheckoutCore\\Helper\\CembraPayInvoiceSenderBuilder');
+
         $sender = $this->getSender();
 
         try {
@@ -40,26 +45,30 @@ class ByjunoCreditmemoSender extends CreditmemoSender
         return true;
     }
 
-    public function sendCreditMemo(\Magento\Sales\Model\Order\Creditmemo $creditmemo, $email, $forceSyncMode = false)
+    public function sendInvoice(Invoice $invoice, $email, DataHelper $helper)
     {
         $this->email = $email;
-        $order = $creditmemo->getOrder();
+        $pdfcls = $helper->_objectManager->create(Order\Pdf\Invoice::class)->getPdf([$invoice]);
+        $pdf = $pdfcls->render();
+        $order = $invoice->getOrder();
         $transport = [
             'order' => $order,
-            'creditmemo' => $creditmemo,
-            'comment' => $creditmemo->getCustomerNoteNotify() ? $creditmemo->getCustomerNote() : '',
+            'invoice' => $invoice,
+            'comment' => $invoice->getCustomerNoteNotify() ? $invoice->getCustomerNote() : '',
             'billing' => $order->getBillingAddress(),
             'payment_html' => $this->getPaymentHtml($order),
             'store' => $order->getStore(),
             'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
-            'formattedBillingAddress' => $this->getFormattedBillingAddress($order),
+            'formattedBillingAddress' => $this->getFormattedBillingAddress($order)
         ];
+        CembraPayInvoiceSenderBuilder::$pdf = $pdf;
+        CembraPayInvoiceSenderBuilder::$pdf_id = $invoice->getIncrementId();
 
         $this->templateContainer->setTemplateVars($transport);
+
         if ($this->checkAndSend($order)) {
             return true;
         }
-
         return false;
     }
 }

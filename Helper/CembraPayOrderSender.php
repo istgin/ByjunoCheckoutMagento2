@@ -5,7 +5,7 @@
  * Date: 09.11.2016
  * Time: 15:48
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
 
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order;
@@ -16,7 +16,7 @@ use Magento\Sales\Model\ResourceModel\Order as OrderResource;
  * Class OrderSender
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ByjunoOrderSender extends OrderSender
+class CembraPayOrderSender extends OrderSender
 {
     private $email;
     protected function checkAndSend(Order $order)
@@ -28,11 +28,11 @@ class ByjunoOrderSender extends OrderSender
         $this->prepareTemplate($order);
 
         /** @var \Magento\Sales\Model\Order\Email\SenderBuilder $sender */
-        $this->identityContainer->setCustomerName("Byjuno");
+        $this->identityContainer->setCustomerName("CembraPay");
         $this->identityContainer->setCustomerEmail($this->email);
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $objectManagerInterface = $objectManager->get('\Magento\Framework\ObjectManagerInterface');
-        $this->senderBuilderFactory = new \Magento\Sales\Model\Order\Email\SenderBuilderFactory($objectManagerInterface, '\\ByjunoCheckout\\ByjunoCheckoutCore\\Helper\\ByjunoSenderBuilder');
+        $this->senderBuilderFactory = new \Magento\Sales\Model\Order\Email\SenderBuilderFactory($objectManagerInterface, '\\CembraPayCheckout\\CembraPayCheckoutCore\\Helper\\CembraPaySenderBuilder');
         $sender = $this->getSender();
         try {
             $sender->send();
@@ -45,7 +45,7 @@ class ByjunoOrderSender extends OrderSender
 
     public function sendOrder(Order $order, $email)
     {
-        ByjunoSenderBuilder::$orderId = $order->getIncrementId();
+        CembraPaySenderBuilder::$orderId = $order->getIncrementId();
         $this->email = $email;
         if ($this->checkAndSend($order)) {
                 return true;

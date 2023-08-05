@@ -3,13 +3,13 @@
         <referenceBlock name="order_create_billing_form">
             <action method="setMethodFormTemplate">
                 <!-- your method code and template -->
-                <argument name="method" xsi:type="string">byjunocheckout_invoice</argument>
-                <argument name="template" xsi:type="string">ByjunoCheckout_ByjunoCheckoutCore::form/invoice.phtml</argument>
+                <argument name="method" xsi:type="string">cembrapaycheckout_invoice</argument>
+                <argument name="template" xsi:type="string">CembraPayCheckout_CembraPayCheckoutCore::form/invoice.phtml</argument>
             </action>
             <action method="setMethodFormTemplate">
                 <!-- your method code and template -->
-                <argument name="method" xsi:type="string">byjunocheckout_installment</argument>
-                <argument name="template" xsi:type="string">ByjunoCheckout_ByjunoCheckoutCore::form/installment.phtml</argument>
+                <argument name="method" xsi:type="string">cembrapaycheckout_installment</argument>
+                <argument name="template" xsi:type="string">CembraPayCheckout_CembraPayCheckoutCore::form/installment.phtml</argument>
             </action>
         </referenceBlock>
     </body>

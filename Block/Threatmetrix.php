@@ -1,12 +1,12 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Block;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Block;
 
 
 class Threatmetrix extends \Magento\Framework\View\Element\Template
 {
 
-    /* @var $_helper \ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper */
+    /* @var $_helper \CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper */
     private $_helper;
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
@@ -17,7 +17,7 @@ class Threatmetrix extends \Magento\Framework\View\Element\Template
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $salesOrderCollection,
-        \ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper $helper,
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper $helper,
         array $data = []
     ) {
         $this->_helper = $helper;
@@ -31,8 +31,8 @@ class Threatmetrix extends \Magento\Framework\View\Element\Template
         if (empty($tmxSession)) {
             $this->_helper->_checkoutSession->setTmxSession($this->_helper->_checkoutSession->getSessionId());
         }
-        if ($this->_helper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1 &&
-            $this->_helper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxkey', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) != '' &&
+        if ($this->_helper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1 &&
+            $this->_helper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxkey', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) != '' &&
             empty($tmxSession)) {
 
             return true;
@@ -42,7 +42,7 @@ class Threatmetrix extends \Magento\Framework\View\Element\Template
 
     public function getOrgId()
     {
-        return $this->_helper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxkey', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->_helper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxkey', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     public function getSessionId()

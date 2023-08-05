@@ -1,6 +1,6 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
 /*
  * {
@@ -22,7 +22,7 @@ namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
 }
  */
 
-class ByjunoCheckoutSettleRequest extends ByjunoCheckoutAutRequest
+class CembraPayCheckoutSettleRequest extends CembraPayCheckoutAutRequest
 {
     public $merchantId; //String
     public $requestMsgType; //String

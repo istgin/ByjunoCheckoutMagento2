@@ -2,4 +2,4 @@
 
 use \Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(ComponentRegistrar::MODULE, 'ByjunoCheckout_ByjunoCheckoutCore', __DIR__);
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'CembraPayCheckout_CembraPayCheckoutCore', __DIR__);

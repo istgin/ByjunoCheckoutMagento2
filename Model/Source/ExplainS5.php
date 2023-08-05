@@ -5,7 +5,7 @@
  * Date: 15.10.2016
  * Time: 18:38
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Model\Source;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Source;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
@@ -21,11 +21,11 @@ class ExplainS5 extends Field
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $byjunocheckout_s5_explain = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunos5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $message = 'S5 Transactions (Cancel and/or Refund) must be delivered to Byjuno Checkout manually or from ERP System';
+        $cembrapaycheckout_s5_explain = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapays5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $message = 'S5 Transactions (Cancel and/or Refund) must be delivered to CembraPay Checkout manually or from ERP System';
         $color = 'FFE5E6';
-        if ($byjunocheckout_s5_explain == 1) {
-            $message = 'S5 Transactions will be sent to Byjuno:<br/>
+        if ($cembrapaycheckout_s5_explain == 1) {
+            $message = 'S5 Transactions will be sent to CembraPay:<br/>
 Cancel - for not invoiced amount<br/>
 Refund - per Credit Memo';
             $color = 'ddffdf';

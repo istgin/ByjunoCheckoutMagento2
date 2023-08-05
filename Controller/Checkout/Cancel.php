@@ -1,11 +1,11 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Controller\Checkout;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Controller\Checkout;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutChkResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutChkResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
@@ -51,7 +51,7 @@ class Cancel implements ActionInterface
     public function execute()
     {
         $order = $this->_dataHelper->_checkoutSession->getLastRealOrder();
-        $error = $this->_dataHelper->getByjunoErrorMessage();
+        $error = $this->_dataHelper->getCembraPayErrorMessage();
         if ($order != null) {
             $order->registerCancellation($error)->save();
             $this->restoreQuote();

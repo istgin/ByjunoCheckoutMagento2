@@ -1,6 +1,6 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
 class CustDetails
 {
@@ -78,7 +78,7 @@ class SessionInfo
 
 }
 
-class ByjunoDetails
+class CembraPayDetails
 {
     public $byjunoPaymentMethod; //String
     public $invoiceDeliveryType; //String
@@ -92,7 +92,7 @@ class MerchantDetails
 
 }
 
-class ByjunoCheckoutAutRequest
+class CembraPayCheckoutAutRequest
 {
     public $merchantId; //String
     public $requestMsgType; //String
@@ -108,7 +108,7 @@ class ByjunoCheckoutAutRequest
     public $deliveryDetails; //DeliveryDetails
     public $order; //Order
     public $sessionInfo; //SessionInfo
-    public $byjunoDetails; //ByjunoDetails
+    public $byjunoDetails; //CembraPayDetails
     public $merchantDetails; //MerchantDetails
 
     public function __construct()
@@ -119,7 +119,7 @@ class ByjunoCheckoutAutRequest
         $this->deliveryDetails = new DeliveryDetails();
         $this->order = new Order();
         $this->sessionInfo = new SessionInfo();
-        $this->byjunoDetails = new ByjunoDetails();
+        $this->byjunoDetails = new CembraPayDetails();
         $this->merchantDetails = new MerchantDetails();
     }
 

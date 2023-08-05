@@ -1,6 +1,6 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Block\Adminhtml;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml;
 
 use Magento\Backend\Block\Widget\Grid\Container;
 
@@ -14,7 +14,7 @@ class Logs extends Container
     protected function _construct()
     {
         $this->_controller = 'adminhtml_logs';
-        $this->_blockGroup = 'ByjunoCheckout_ByjunoCheckoutCore';
+        $this->_blockGroup = 'CembraPayCheckout_CembraPayCheckoutCore';
         parent::_construct();
         $this->removeButton('add');
     }

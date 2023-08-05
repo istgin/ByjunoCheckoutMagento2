@@ -6,8 +6,8 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
-        <route id="byjunocheckoutcore" frontName="byjunocheckoutcore">
-            <module name="ByjunoCheckout_ByjunoCheckoutCore" />
+        <route id="cembrapaycheckoutcore" frontName="cembrapaycheckoutcore">
+            <module name="CembraPayCheckout_CembraPayCheckoutCore" />
         </route>
     </router>
 </config>

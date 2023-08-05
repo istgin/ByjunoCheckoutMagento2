@@ -3,11 +3,11 @@
  * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Block;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Block;
 
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;
-use ByjunoCheckout\ByjunoCheckoutCore\Gateway\Response\FraudHandler;
+use CembraPayCheckout\CembraPayCheckoutCore\Gateway\Response\FraudHandler;
 
 class Info extends ConfigurableInfo
 {

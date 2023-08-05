@@ -1,16 +1,16 @@
 <?php
 /**
- * Created by Byjuno.
+ * Created by CembraPay.
  * User: i.sutugins
  * Date: 14.2.9
  * Time: 10:28
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
 use Magento\Framework\Exception\LocalizedException;
 
-class ByjunoLogger
+class CembraPayLogger
 {
     public function log($array) {
 
@@ -18,7 +18,7 @@ class ByjunoLogger
         $connection = $objectManager->create('\Magento\Framework\App\ResourceConnection');
 
         $conn = $connection->getConnection();
-        $conn->insert('byjunocheckout_log',
+        $conn->insert('cembrapaycheckout_log',
             array(
                 'firstname' => $array['firstname'],
                 'lastname' => $array['lastname'],
@@ -44,7 +44,7 @@ class ByjunoLogger
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $connection = $objectManager->create('\Magento\Framework\App\ResourceConnection');
-        $tableName = $connection->getTableName("byjunocheckout_log");
+        $tableName = $connection->getTableName("cembrapaycheckout_log");
         $conn = $connection->getConnection();
 
         $select = $conn->select()->from($tableName)

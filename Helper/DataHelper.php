@@ -1,18 +1,18 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutChkRequest;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutChkResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutCreditRequest;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutCreditResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAutRequest;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutScreeningResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleRequest;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutSettleResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\CustomerConsents;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutChkRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutChkResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCreditRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCreditResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutScreeningResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CustomerConsents;
 use Magento\Framework\App\ObjectManager;
 use Magento\Quote\Model\Quote\Payment;
 use Magento\Sales\Model\Order;
@@ -23,7 +23,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
 
     public static $SINGLEINVOICE = 'SINGLE-INVOICE';
-    public static $BYJUNOINVOICE = 'BYJUNO-INVOICE';
+    public static $CEMBRAPAYINVOICE = 'BYJUNO-INVOICE';
 
     public static $MESSAGE_SCREENING = 'SCR';
     public static $MESSAGE_AUTH = 'AUT';
@@ -69,10 +69,10 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     protected $_countryHelper;
     protected $_resolver;
     public $_originalOrderSender;
-    public $_byjunoOrderSender;
-    public $_byjunoCreditmemoSender;
-    public $_byjunoInvoiceSender;
-    public $_byjunoLogger;
+    public $_cembrapayOrderSender;
+    public $_cembrapayCreditmemoSender;
+    public $_cembrapayInvoiceSender;
+    public $_cembrapayLogger;
     public $_objectManager;
     public $_configLoader;
     public $_customerMetadata;
@@ -83,22 +83,22 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public $_loggerPsr;
 
     /**
-     * @var \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator
+     * @var \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator
      */
     public $_communicator;
 
     public function getMethodsMapping()
     {
         $methods = Array(
-            self::$BYJUNOINVOICE => Array(
-                "value" => self::$BYJUNOINVOICE,
-                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/link", ScopeInterface::SCOPE_STORE)
+            self::$CEMBRAPAYINVOICE => Array(
+                "value" => self::$CEMBRAPAYINVOICE,
+                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/link", ScopeInterface::SCOPE_STORE)
             ),
             self::$SINGLEINVOICE => Array(
                 "value" => self::$SINGLEINVOICE,
-                "name" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/link", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/link", ScopeInterface::SCOPE_STORE)
             ),
         );
         return $methods;
@@ -136,15 +136,15 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             'transaction_id' => (string)$transactionId,
             'ip' => $this->getClientIp());
 
-        $this->_byjunoLogger->log($data);
+        $this->_cembrapayLogger->log($data);
     }
 
     function getTransactionForOrder($orderId)
     {
-        return $this->_byjunoLogger->getAuthTransaction($orderId);
+        return $this->_cembrapayLogger->getAuthTransaction($orderId);
     }
 
-    function saveS4Log(Order $order, ByjunoS4Request $request, $xml_request, $xml_response, $status, $type)
+    function saveS4Log(Order $order, CembraPayS4Request $request, $xml_request, $xml_response, $status, $type)
     {
 
         $data = array('firstname' => $order->getBillingAddress()->getFirstname(),
@@ -161,10 +161,10 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             'type' => $type,
             'ip' => $this->getClientIp());
 
-        $this->_byjunoLogger->log($data);
+        $this->_cembrapayLogger->log($data);
     }
 
-    function saveS5Log(Order $order, ByjunoS5Request $request, $xml_request, $xml_response, $status, $type)
+    function saveS5Log(Order $order, CembraPayS5Request $request, $xml_request, $xml_response, $status, $type)
     {
 
         $data = array('firstname' => $order->getBillingAddress()->getFirstname(),
@@ -181,7 +181,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             'type' => $type,
             'ip' => $this->getClientIp());
 
-        $this->_byjunoLogger->log($data);
+        $this->_cembrapayLogger->log($data);
     }
 
     public function valueToStatus($val)
@@ -226,22 +226,22 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $ipaddress = 'UNKNOWN';
         }
-        $addrMethod = $this->_scopeConfig->getValue('byjunocheckoutsettings/advanced/ip_detect_string', ScopeInterface::SCOPE_STORE);
+        $addrMethod = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/advanced/ip_detect_string', ScopeInterface::SCOPE_STORE);
         if (!empty($addrMethod) && !empty($_SERVER[$addrMethod])) {
             $ipaddress = $_SERVER[$addrMethod];
         }
         return $ipaddress;
     }
 
-    function getByjunoErrorMessage()
+    function getCembraPayErrorMessage()
     {
-        $message = $this->_scopeConfig->getValue('byjunocheckoutsettings/localization/byjunocheckout_fail_message', ScopeInterface::SCOPE_STORE);
+        $message = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_fail_message', ScopeInterface::SCOPE_STORE);
         return $message;
     }
 
     public function saveStatusToOrder(Order $order)
     {
-        $order->addStatusHistoryComment('<b>Byjuno Checkout status: OK</b>');
+        $order->addStatusHistoryComment('<b>CembraPay Checkout status: OK</b>');
         $order->save();
     }
 
@@ -254,12 +254,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Directory\Model\Config\Source\Country $countryHelper,
         \Magento\Framework\Locale\Resolver $resolver,
-        \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator $communicator,
-        \ByjunoCheckout\ByjunoCheckoutCore\Helper\ByjunoOrderSender $byjunoOrderSender,
-        \ByjunoCheckout\ByjunoCheckoutCore\Helper\ByjunoCreditmemoSender $byjunoCreditmemoSender,
-        \ByjunoCheckout\ByjunoCheckoutCore\Helper\ByjunoInvoiceSender $byjunoInvoiceSender,
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator $communicator,
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\CembraPayOrderSender $cembrapayOrderSender,
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\CembraPayCreditmemoSender $cembrapayCreditmemoSender,
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\CembraPayInvoiceSender $cembrapayInvoiceSender,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $originalOrderSender,
-        \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoLogger $byjunoLogger,
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayLogger $cembrapayLogger,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\ObjectManager\ConfigLoaderInterface $configLoader,
         \Magento\Customer\Api\CustomerMetadataInterface $customerMetadata,
@@ -271,11 +271,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_customerMetadata = $customerMetadata;
         $this->_configLoader = $configLoader;
         $this->_objectManager = $objectManager;
-        $this->_byjunoLogger = $byjunoLogger;
-        $this->_byjunoOrderSender = $byjunoOrderSender;
+        $this->_cembrapayLogger = $cembrapayLogger;
+        $this->_cembrapayOrderSender = $cembrapayOrderSender;
         $this->_originalOrderSender = $originalOrderSender;
-        $this->_byjunoCreditmemoSender = $byjunoCreditmemoSender;
-        $this->_byjunoInvoiceSender = $byjunoInvoiceSender;
+        $this->_cembrapayCreditmemoSender = $cembrapayCreditmemoSender;
+        $this->_cembrapayInvoiceSender = $cembrapayInvoiceSender;
         $this->_communicator = $communicator;
         $this->_resolver = $resolver;
         $this->_countryHelper = $countryHelper;
@@ -288,7 +288,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->quoteRepository = $quoteRepository;
     }
 
-    function byjunoIsStatusOk($status, $position)
+    function cembrapayIsStatusOk($status, $position)
     {
         try {
             $config = trim($this->_scopeConfig->getValue($position, ScopeInterface::SCOPE_STORE));
@@ -329,12 +329,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public function getInvoiceEnabledMethods()
     {
         $methodsAvailableInvoice = Array();
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)) {
+        if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)) {
             $methodsAvailableInvoice[] = DataHelper::$SINGLEINVOICE;
         }
 
-        if ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)) {
-            $methodsAvailableInvoice[] = DataHelper::$BYJUNOINVOICE;
+        if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailableInvoice[] = DataHelper::$CEMBRAPAYINVOICE;
         }
         return $methodsAvailableInvoice;
     }
@@ -350,7 +350,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             //skip credit check for backend
             return true;
         }
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/screeningbeforeshow', ScopeInterface::SCOPE_STORE) == '1'
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/screeningbeforeshow', ScopeInterface::SCOPE_STORE) == '1'
             && $quote != null
             && $quote->getBillingAddress() != null) {
             $theSame = $this->_checkoutSession->getIsTheSame();
@@ -375,37 +375,37 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     }
                 }
                 if (!$this->isTheSame($request) || empty($status)) {
-                    $ByjunoRequestName = $request->requestMsgType;
+                    $CembraPayRequestName = $request->requestMsgType;
                     //  $json = "{}";
-                    //   if ($request->custDetails->custType == 'C' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness',
+                    //   if ($request->custDetails->custType == 'C' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness',
                     //           \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
-                    //       $ByjunoRequestName = "Screening request for company";
+                    //       $CembraPayRequestName = "Screening request for company";
                     //       $json = $request->createRequest();
                     //   } else {
                     //       $json = $request->createRequest();
                     //   }
                     $json = $request->createRequest();
-                    $byjunoCommunicator = new ByjunoCommunicator();
-                    $mode = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+                    $cembrapayCommunicator = new CembraPayCommunicator();
+                    $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
                     if ($mode == 'live') {
-                        $byjunoCommunicator->setServer('live');
+                        $cembrapayCommunicator->setServer('live');
                     } else {
-                        $byjunoCommunicator->setServer('test');
+                        $cembrapayCommunicator->setServer('test');
                     }
-                    $response = $byjunoCommunicator->sendScreeningRequest($json, (int)$this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+                    $response = $cembrapayCommunicator->sendScreeningRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
                         ScopeInterface::SCOPE_STORE),
-                        $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunologin', ScopeInterface::SCOPE_STORE),
-                        $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunopassword', ScopeInterface::SCOPE_STORE));
+                        $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE),
+                        $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE));
 
                     if ($response) {
-                        /* @var $responseRes ByjunoCheckoutScreeningResponse */
+                        /* @var $responseRes CembraPayCheckoutScreeningResponse */
                         $responseRes = $this->screeningResponse($response);
-                        $status = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
-                        $this->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
+                        $status = $responseRes->screeningDetails->allowedCembraPayPaymentMethods;
+                        $this->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                             $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId, "-");
                     } else {
-                        $this->saveLog($json, $response, "Query error", $ByjunoRequestName,
+                        $this->saveLog($json, $response, "Query error", $CembraPayRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                             $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-", "-");
                     }
@@ -450,7 +450,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return true;
     }
 
-    public function isTheSame(ByjunoCheckoutAutRequest $request) {
+    public function isTheSame(CembraPayCheckoutAutRequest $request) {
 
         if ($request->custDetails->firstName != $this->_savedUser["FirstName"]
             || $request->custDetails->lastName != $this->_savedUser["LastName"]
@@ -482,13 +482,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                                                 $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webshopProfile)
     {
         /*
-                $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest();
-                $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
-                $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
-                $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+                $request = new \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayRequest();
+                $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+                $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+                $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
                 $request->setVersion("1.00");
                 try {
-                    $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
+                    $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfile));
                 } catch (\Exception $e) {
 
                 }
@@ -514,9 +514,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
                     }
                 }
-                $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+                $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_male_possible_prefix',
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-                $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+                $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
                 $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
@@ -602,7 +602,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 }
 
                 $sedId = $this->_checkoutSession->getTmxSession();
-                if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+                if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
                     $extraInfo["Name"] = 'DEVICE_FINGERPRINT_ID';
                     $extraInfo["Value"] = $sedId;
                     $request->setExtraInfo($extraInfo);
@@ -638,7 +638,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     $extraInfo["Value"] = $quote->getShippingAddress()->getCity();
                     $request->setExtraInfo($extraInfo);
 
-                    if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+                    if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
 
                         $extraInfo["Name"] = 'DELIVERY_COMPANYNAME';
                         $extraInfo["Value"] = $quote->getShippingAddress()->getCompany();
@@ -681,7 +681,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 $request->setExtraInfo($extraInfo);
 
                 $extraInfo["Name"] = 'CONNECTIVTY_MODULE';
-                $extraInfo["Value"] = 'Byjuno Checkout Magento 2 module 1.7.4';
+                $extraInfo["Value"] = 'CembraPay Checkout Magento 2 module 1.7.4';
                 $request->setExtraInfo($extraInfo);
                 return $request;
         */
@@ -693,13 +693,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                                           $gender_custom, $dob_custom, $transaction, $riskOwner, $pref_lang, $b2b_uid, $webshopProfile)
     {
 
-        $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest();
-        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request = new \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayRequest();
+        $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setVersion("1.00");
         try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
+            $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
         } catch (\Exception $e) {
 
         }
@@ -726,9 +726,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
 
-        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_male_possible_prefix',
             ScopeInterface::SCOPE_STORE);
-        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
             ScopeInterface::SCOPE_STORE);
 
         $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
@@ -797,7 +797,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $extraInfo["Value"] = $transaction;
             $request->setExtraInfo($extraInfo);
         }
-        $txid_extrainfo = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/txid_extrainfo',
+        $txid_extrainfo = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/txid_extrainfo',
             ScopeInterface::SCOPE_STORE);
 
         if (!empty($transaction) && $txid_extrainfo == 1) {
@@ -829,7 +829,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         $sedId = $this->_checkoutSession->getTmxSession();
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $extraInfo["Name"] = 'DEVICE_FINGERPRINT_ID';
             $extraInfo["Value"] = $sedId;
             $request->setExtraInfo($extraInfo);
@@ -866,7 +866,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $extraInfo["Value"] = $order->getShippingAddress()->getCity();
             $request->setExtraInfo($extraInfo);
 
-            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
+            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
 
                 $extraInfo["Name"] = 'DELIVERY_COMPANYNAME';
                 $extraInfo["Value"] = $order->getShippingAddress()->getCompany();
@@ -911,7 +911,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->setExtraInfo($extraInfo);
         }
         $extraInfo["Name"] = 'CONNECTIVTY_MODULE';
-        $extraInfo["Value"] = 'Byjuno Checkout Magento 2 module 1.7.4';
+        $extraInfo["Value"] = 'CembraPay Checkout Magento 2 module 1.7.4';
         $request->setExtraInfo($extraInfo);
 
         return $request;
@@ -920,11 +920,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     function CreateMagentoShopRequestSettlePaid(Order $order, Invoice $invoice, Order\Payment $payment, $webshopProfile, $tx)
     {
-        $request = new ByjunoCheckoutSettleRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
+        $request = new CembraPayCheckoutSettleRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_SET;
-        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
+        $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
         $request->transactionId = $tx;
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
@@ -934,13 +934,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $request;
         /*
 
-        $request = new ByjunoS4Request();
-        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request = new CembraPayS4Request();
+        $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setVersion("1.00");
         try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
+            $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
         } catch (\Exception $e) {
 
         }
@@ -982,11 +982,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function CreateMagentoShopRequestScreening(\Magento\Quote\Model\Quote $quote)
     {
 
-        $request = new ByjunoCheckoutAutRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE);
+        $request = new CembraPayCheckoutAutRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE);
         $request->requestMsgType = self::$MESSAGE_SCREENING;
-        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
+        $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
         $request->merchantOrderRef = null;
         $request->amount = number_format($quote->getGrandTotal(), 2, '.', '') * 100;
         $request->currency = $quote->getQuoteCurrencyCode();
@@ -1000,7 +1000,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->loggedIn = true;
         }
         if ($quote->getBillingAddress()->getCompany()
-            && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
+            && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
             $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
         } else {
             $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
@@ -1036,9 +1036,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
 
-        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_male_possible_prefix',
             ScopeInterface::SCOPE_STORE);
-        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
             ScopeInterface::SCOPE_STORE);
         $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
         $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
@@ -1068,7 +1068,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($quote->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($quote->getShippingAddress()->getLastname());
-            if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
+            if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
                 $request->deliveryDetails->deliveryCompanyName = $this->nullToString($quote->getShippingAddress()->getCompany());
             }
             $request->deliveryDetails->deliverySalutation = null;
@@ -1090,7 +1090,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         //$request->order->basketItemsPrices = null;
 
         $sedId = $this->_checkoutSession->getTmxSession();
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $request->sessionInfo->fingerPrint = $sedId;
         }
 
@@ -1099,7 +1099,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         //$request->byjunoDetails->invoiceDeliveryType = "EMAIL";
 
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
+        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 0.0.1";
 
         return $request;
     }
@@ -1108,7 +1108,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
 
         $responseObject = json_decode($response);
-        $result = new ByjunoCheckoutScreeningResponse();
+        $result = new CembraPayCheckoutScreeningResponse();
         if (empty($responseObject->processingStatus)) {
             $result->processingStatus = self::$REQUEST_ERROR;
         } else {
@@ -1120,8 +1120,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
                 $result->requestMsgId = $responseObject->requestMsgId;
                 $result->transactionId = $responseObject->transactionId;
-                if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoPaymentMethods))) {
-                    $result->screeningDetails->allowedByjunoPaymentMethods = $responseObject->screeningDetails->allowedByjunoPaymentMethods;
+                if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedCembraPayPaymentMethods))) {
+                    $result->screeningDetails->allowedCembraPayPaymentMethods = $responseObject->screeningDetails->allowedCembraPayPaymentMethods;
                 }
             } else {
                 $result->processingStatus = $responseObject->processingStatus;
@@ -1135,11 +1135,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                                                           $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webShopProfile)
     {
 
-        $request = new ByjunoCheckoutAutRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $request = new CembraPayCheckoutAutRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
         $request->requestMsgType = self::$MESSAGE_AUTH;
-        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
+        $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
         $request->currency = $order->getOrderCurrencyCode();
@@ -1152,7 +1152,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->merchantCustRef = (String)$order->getCustomerId();
             $request->custDetails->loggedIn = true;
         }
-        if ($order->getBillingAddress()->getCompany() && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
+        if ($order->getBillingAddress()->getCompany() && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
             $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
         } else {
             $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
@@ -1211,9 +1211,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
 
-        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_male_possible_prefix',
             ScopeInterface::SCOPE_STORE, $webShopProfile);
-        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
             ScopeInterface::SCOPE_STORE, $webShopProfile);
         $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
         $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
@@ -1251,7 +1251,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($order->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($order->getShippingAddress()->getLastname());
-            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
+            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
                 $request->deliveryDetails->deliveryCompanyName = $this->nullToString($order->getShippingAddress()->getCompany());
             }
             $request->deliveryDetails->deliverySalutation = null;
@@ -1273,7 +1273,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->order->basketItemsPrices = Array();
 
         $sedId = $this->_checkoutSession->getTmxSession();
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $request->sessionInfo->fingerPrint = $sedId;
         }
 
@@ -1287,14 +1287,14 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $customerConsents = new CustomerConsents();
         $customerConsents->consentType = "BYJUNO-TC";
         $customerConsents->consentProvidedAt = "MERCHANT";
-        $customerConsents->consentDate = ByjunoCheckoutAutRequest::Date();
+        $customerConsents->consentDate = CembraPayCheckoutAutRequest::Date();
         $methods = $this->getMethodsMapping();
         $customerConsents->consentReference = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
 
         $request->customerConsents = Array($customerConsents);
 
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
+        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 0.0.1";
 
         return $request;
     }
@@ -1303,11 +1303,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                                                           Order\Payment $paymentMethod, $webShopProfile)
     {
 
-        $request = new ByjunoCheckoutChkRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $request = new CembraPayCheckoutChkRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
         $request->requestMsgType = self::$MESSAGE_CHK;
-        $request->requestMsgId = ByjunoCheckoutChkRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutChkRequest::Date();
+        $request->requestMsgId = CembraPayCheckoutChkRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutChkRequest::Date();
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
         $request->currency = $order->getOrderCurrencyCode();
@@ -1320,7 +1320,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->merchantCustRef = (String)$order->getCustomerId();
             $request->custDetails->loggedIn = true;
         }
-        if ($order->getBillingAddress()->getCompany() && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
+        if ($order->getBillingAddress()->getCompany() && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
             $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
         } else {
             $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
@@ -1360,9 +1360,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
 
-        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_male_possible_prefix',
             ScopeInterface::SCOPE_STORE, $webShopProfile);
-        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
             ScopeInterface::SCOPE_STORE, $webShopProfile);
         $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
         $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
@@ -1392,7 +1392,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($order->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($order->getShippingAddress()->getLastname());
-            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
+            if ($order->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
                 $request->deliveryDetails->deliveryCompanyName = $this->nullToString($order->getShippingAddress()->getCompany());
             }
             $request->deliveryDetails->deliverySalutation = null;
@@ -1414,7 +1414,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->order->basketItemsPrices = Array();
 
         $sedId = $this->_checkoutSession->getTmxSession();
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $request->sessionInfo->fingerPrint = $sedId;
         }
 
@@ -1428,16 +1428,16 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $customerConsents = new CustomerConsents();
         $customerConsents->consentType = "BYJUNO-TC";
         $customerConsents->consentProvidedAt = "MERCHANT";
-        $customerConsents->consentDate = ByjunoCheckoutChkRequest::Date();
+        $customerConsents->consentDate = CembraPayCheckoutChkRequest::Date();
         $methods = $this->getMethodsMapping();
         $customerConsents->consentReference = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
 
         $request->customerConsents = Array($customerConsents);
 
-        $request->merchantDetails->returnUrlError = $this->_urlBuilder->getUrl('byjunocheckoutcore/checkout/cancel');
+        $request->merchantDetails->returnUrlError = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel');
         $request->merchantDetails->returnUrlSuccess = $this->_urlBuilder->getUrl('checkout/onepage/success');
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "Byjuno Checkout Magento 2 module 0.0.1";
+        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 0.0.1";
 
         return $request;
     }
@@ -1445,7 +1445,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function authorizationResponse($response)
     {
         $responseObject = json_decode($response);
-        $result = new ByjunoCheckoutAuthorizationResponse();
+        $result = new CembraPayCheckoutAuthorizationResponse();
         if (empty($responseObject->processingStatus)) {
             $result->processingStatus = self::$REQUEST_ERROR;
         } else {
@@ -1460,7 +1460,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function checkoutResponse($response)
     {
         $responseObject = json_decode($response);
-        $result = new ByjunoCheckoutChkResponse();
+        $result = new CembraPayCheckoutChkResponse();
         if (empty($responseObject->processingStatus)) {
             $result->processingStatus = self::$REQUEST_ERROR;
         } else {
@@ -1476,7 +1476,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function settleResponse($response)
     {
         $responseObject = json_decode($response);
-        $result = new ByjunoCheckoutSettleResponse();
+        $result = new CembraPayCheckoutSettleResponse();
         if (empty($responseObject->processingStatus)) {
             $result->processingStatus = self::$REQUEST_ERROR;
         } else {
@@ -1494,7 +1494,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function creditResponse($response)
     {
         $responseObject = json_decode($response);
-        $result = new ByjunoCheckoutCreditResponse();
+        $result = new CembraPayCheckoutCreditResponse();
         if (empty($responseObject->processingStatus)) {
             $result->processingStatus = self::$REQUEST_ERROR;
         } else {
@@ -1511,13 +1511,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     /*function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote)
     {
-        $request = new \ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoRequest();
-        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $request = new \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayRequest();
+        $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $request->setVersion("1.00");
         try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+            $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         } catch (\Exception $e) {
 
         }
@@ -1533,9 +1533,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
             }
         }
-        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_male_possible_prefix',
+        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_male_possible_prefix',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/gender_female_possible_prefix',
+        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
         $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
@@ -1604,7 +1604,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->setExtraInfo($extraInfo);
 
         $sedId = $this->_checkoutSession->getTmxSession();
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $extraInfo["Name"] = 'DEVICE_FINGERPRINT_ID';
             $extraInfo["Value"] = $sedId;
             $request->setExtraInfo($extraInfo);
@@ -1634,7 +1634,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $extraInfo["Value"] = $this->nullToString($quote->getShippingAddress()->getCity());
             $request->setExtraInfo($extraInfo);
 
-            if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
+            if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
 
                 $extraInfo["Name"] = 'DELIVERY_COMPANYNAME';
                 $extraInfo["Value"] = $this->nullToString($quote->getShippingAddress()->getCompany());
@@ -1665,7 +1665,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->setExtraInfo($extraInfo);
 
         $extraInfo["Name"] = 'CONNECTIVTY_MODULE';
-        $extraInfo["Value"] = 'Byjuno Checkout Magento 2 module 1.7.4';
+        $extraInfo["Value"] = 'CembraPay Checkout Magento 2 module 1.7.4';
         $request->setExtraInfo($extraInfo);
         return $request;
     }
@@ -1675,11 +1675,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
 
 
-        $request = new ByjunoCheckoutCreditRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
+        $request = new CembraPayCheckoutCreditRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_CNL;
-        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
+        $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
         $request->transactionId = $tx;
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($amount, 2, '.', '') * 100;
@@ -1687,13 +1687,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->settlementDetails->merchantInvoiceRef = $invoiceId;
         return $request;
         /*
-        $request = new ByjunoS5Request();
-        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request = new CembraPayS5Request();
+        $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setVersion("1.00");
         try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
+            $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
         } catch (\Exception $e) {
 
         }
@@ -1729,11 +1729,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
 
 
-        $request = new ByjunoCheckoutSettleRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
+        $request = new CembraPayCheckoutSettleRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_SET;
-        $request->requestMsgId = ByjunoCheckoutAutRequest::GUID();
-        $request->requestMsgDateTime = ByjunoCheckoutAutRequest::Date();
+        $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
         $request->transactionId = $tx;
         $request->merchantOrderRef = $order->getRealOrderId();
         $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
@@ -1741,13 +1741,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->settlementDetails->merchantInvoiceRef = $invoiceId;
         return $request;
         /*
-        $request = new ByjunoS5Request();
-        $request->setClientId($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request = new CembraPayS5Request();
+        $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
+        $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
         $request->setVersion("1.00");
         try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
+            $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
         } catch (\Exception $e) {
 
         }

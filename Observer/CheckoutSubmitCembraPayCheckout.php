@@ -1,15 +1,15 @@
 <?php
-namespace ByjunoCheckout\ByjunoCheckoutCore\Observer;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use PHPUnit\Framework\Exception;
 
-class CheckoutSubmitByjunoCheckout implements ObserverInterface {
+class CheckoutSubmitCembraPayCheckout implements ObserverInterface {
     protected $helper;
     protected $categoryRepository;
     /**
-     * @param \ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper $helper
+     * @param \CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper $helper
      */
-    public function __construct( \ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper $helper ) {
+    public function __construct( \CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper $helper ) {
         $this->helper = $helper;
     }
     public function execute( \Magento\Framework\Event\Observer $observer ) {
@@ -23,7 +23,7 @@ class CheckoutSubmitByjunoCheckout implements ObserverInterface {
          * @var \Magento\Catalog\Model\Product  $product
          */
         $method = $order->getPayment()->getMethod();
-        if ($method != "byjunocheckout_invoice" && $method != "byjunocheckout_installment")
+        if ($method != "cembrapaycheckout_invoice" && $method != "cembrapaycheckout_installment")
         {
             return;
         }
@@ -33,7 +33,7 @@ class CheckoutSubmitByjunoCheckout implements ObserverInterface {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $state =  $objectManager->get('Magento\Framework\App\State');
         if ($state->getAreaCode() == "adminhtml") {
-            \ByjunoCheckout\ByjunoCheckoutCore\Controller\Checkout\Startpayment::executeBackendOrder($this->helper, $order);
+            \CembraPayCheckout\CembraPayCheckoutCore\Controller\Checkout\Startpayment::executeBackendOrder($this->helper, $order);
         }
 
     }

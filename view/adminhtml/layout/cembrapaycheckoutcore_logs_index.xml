@@ -2,11 +2,11 @@
 
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="formkey"/>
-    <update handle="byjunocheckoutcore_logs_grid_block"/>
+    <update handle="cembrapaycheckoutcore_logs_grid_block"/>
     <body>
         <referenceContainer name="content">
-            <block class="ByjunoCheckout\ByjunoCheckoutCore\Block\Adminhtml\Logs"
-                   name="byjunocheckout_byjunocheckoutcore_logs.grid.container"/>
+            <block class="CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Logs"
+                   name="cembrapaycheckout_cembrapaycheckoutcore_logs.grid.container"/>
         </referenceContainer>
     </body>
 </page>

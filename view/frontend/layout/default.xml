@@ -2,7 +2,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="after.body.start">
-            <block class="ByjunoCheckout\ByjunoCheckoutCore\Block\Threatmetrix" name="byjunocheckout_threatmetrix" as="byjunocheckout_threatmetrix" template="ByjunoCheckout_ByjunoCheckoutCore::byjunocheckout_threatmetrix.phtml"/>
+            <block class="CembraPayCheckout\CembraPayCheckoutCore\Block\Threatmetrix" name="cembrapaycheckout_threatmetrix" as="cembrapaycheckout_threatmetrix" template="CembraPayCheckout_CembraPayCheckoutCore::cembrapaycheckout_threatmetrix.phtml"/>
         </referenceContainer>
     </body>
 </page>

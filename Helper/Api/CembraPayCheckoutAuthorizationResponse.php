@@ -1,8 +1,8 @@
 <?php
 /**
- * Created by Byjuno.
+ * Created by CembraPay.
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
 /*
  * {
@@ -31,7 +31,7 @@ class Authorization {
     public $authorizationCurrency; //String
 
 }
-class ByjunoCheckoutAuthorizationResponse {
+class CembraPayCheckoutAuthorizationResponse {
     public $requestMsgType; //String
     public $requestMsgId; //String
     public $requestMsgDateTime; //Date

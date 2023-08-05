@@ -1,13 +1,13 @@
 <?php
 /**
- * Created by Byjuno.
+ * Created by CembraPay.
  * User: i.sutugins
  * Date: 14.4.9
  * Time: 16:42
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
-class ByjunoCommunicator
+class CembraPayCommunicator
 {
     private $server;
 

@@ -1,17 +1,17 @@
 <?php
 /**
- * Created by Byjuno.
+ * Created by CembraPay.
  */
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
-class ByjunoCheckoutScreeningDetails {
-    public $allowedByjunoPaymentMethods;  //array( String )
+class CembraPayCheckoutScreeningDetails {
+    public $allowedCembraPayPaymentMethods;  //array( String )
     public function __construct() {
-        $this->allowedByjunoPaymentMethods = Array();
+        $this->allowedCembraPayPaymentMethods = Array();
     }
 
 }
-class ByjunoCheckoutScreeningResponse {
+class CembraPayCheckoutScreeningResponse {
     public $requestMsgId; //String
     public $requestMsgDateTime; //Date
     public $replyMsgId; //String
@@ -22,7 +22,7 @@ class ByjunoCheckoutScreeningResponse {
     public $screeningDetails; //ScreeningDetails
 
     public function __construct() {
-        $this->screeningDetails = new ByjunoCheckoutScreeningDetails();
+        $this->screeningDetails = new CembraPayCheckoutScreeningDetails();
     }
 
 }

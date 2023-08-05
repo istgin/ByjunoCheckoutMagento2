@@ -1,6 +1,6 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Controller\Adminhtml\Logs;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Controller\Adminhtml\Logs;
 use Magento\Backend\App\Action;
 
 class Edit extends Action
@@ -16,15 +16,15 @@ class Edit extends Action
 
     protected function _isAllowed()
     {
-        return $this->_authorization->isAllowed('ByjunoCheckout_ByjunoCheckoutCore::manage_logs');
+        return $this->_authorization->isAllowed('CembraPayCheckout_CembraPayCheckoutCore::manage_logs');
     }
 
     public function execute()
     {
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->setActiveMenu('ByjunoCheckout_ByjunoCheckoutCore::main_menu');
-        $resultPage->getConfig()->getTitle()->prepend(__('Byjuno Checkout request view'));
+        $resultPage->setActiveMenu('CembraPayCheckout_CembraPayCheckoutCore::main_menu');
+        $resultPage->getConfig()->getTitle()->prepend(__('CembraPay Checkout request view'));
         return $resultPage;
     }
 

@@ -1,10 +1,10 @@
 <?php
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
 
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Sales\Model\Order\Email\SenderBuilder;
 
-class ByjunoInvoiceSenderBuilder extends SenderBuilder
+class CembraPayInvoiceSenderBuilder extends SenderBuilder
 {
     public static $pdf = "";
     public static $pdf_id = "";
@@ -12,8 +12,8 @@ class ByjunoInvoiceSenderBuilder extends SenderBuilder
     public function send()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        /* @var $transportBuilder \ByjunoCheckout\ByjunoCheckoutCore\Mail\Template\ByjunoTransportBuilder */
-        $transportBuilder = $objectManager->get('\ByjunoCheckout\ByjunoCheckoutCore\Mail\Template\ByjunoTransportBuilder');
+        /* @var $transportBuilder \CembraPayCheckout\CembraPayCheckoutCore\Mail\Template\CembraPayTransportBuilder */
+        $transportBuilder = $objectManager->get('\CembraPayCheckout\CembraPayCheckoutCore\Mail\Template\CembraPayTransportBuilder');
         $this->transportBuilder = $transportBuilder;
         $this->configureEmailTemplate();
         $this->transportBuilder->addTo(

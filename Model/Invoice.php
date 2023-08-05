@@ -7,11 +7,11 @@
  * Time: 15:44
  */
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Model;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Block\Adminhtml\Info\ByjunoInvoice;
-use ByjunoCheckout\ByjunoCheckoutCore\Controller\Checkout\Startpayment;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+use CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Info\CembraPayInvoice;
+use CembraPayCheckout\CembraPayCheckoutCore\Controller\Checkout\Startpayment;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface;
@@ -32,7 +32,7 @@ use Magento\Store\Model\ScopeInterface;
 /**
  * Pay In Store payment method model
  */
-class Invoice extends Byjunopayment
+class Invoice extends CembraPaypayment
 {
 
     protected $_executed;
@@ -91,47 +91,47 @@ class Invoice extends Byjunopayment
         }
         $this->_state = $state;
         $this->_eavConfig = $objectManager->get('\Magento\Eav\Model\Config');
-        $this->_dataHelper = $objectManager->get('\ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper');
+        $this->_dataHelper = $objectManager->get('\CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper');
         $this->_executed = false;
     }
 
     public function getInfoBlockType()
     {
-        return ByjunoInvoice::class;
+        return CembraPayInvoice::class;
     }
 
     public function getConfigData($field, $storeId = null)
     {
         // Checkout page active
         if ($field == 'order_place_redirect_url') {
-            if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
-                return 'byjunocheckoutcore/checkout/startpayment';
+            if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+                return 'cembrapaycheckoutcore/checkout/startpayment';
             } else {
-                return 'byjunocheckoutcore/checkout/startcheckout';
+                return 'cembrapaycheckoutcore/checkout/startcheckout';
             }
         }
         // No checkout page
         if ($field == 'order_status' && true) {
-            return 'byjunocheckout_processing';
+            return 'cembrapaycheckout_processing';
         }
         return parent::getConfigData($field, $storeId);
     }
 
     public function isAvailable(CartInterface $quote = null)
     {
-        $isAvaliable = $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/active", ScopeInterface::SCOPE_STORE);
+        $isAvaliable = $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/active", ScopeInterface::SCOPE_STORE);
         if (!$isAvaliable) {
             return false;
         }
-        $byjunocheckout_invoice_partial_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/byjunocheckout_invoice_partial_allow", ScopeInterface::SCOPE_STORE);
-        $byjunocheckout_single_invoice_allow = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/byjunocheckout_single_invoice_allow", ScopeInterface::SCOPE_STORE);
+        $cembrapaycheckout_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", ScopeInterface::SCOPE_STORE);
+        $cembrapaycheckout_single_invoice_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/cembrapaycheckout_single_invoice_allow", ScopeInterface::SCOPE_STORE);
 
         $methodsAvailable =
-            ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)
-                && ($byjunocheckout_invoice_partial_allow == '0' || $byjunocheckout_invoice_partial_allow == '1'))
+            ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)
+                && ($cembrapaycheckout_invoice_partial_allow == '0' || $cembrapaycheckout_invoice_partial_allow == '1'))
             ||
-            ($this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)
-                && ($byjunocheckout_single_invoice_allow == '0' || $byjunocheckout_single_invoice_allow == '1'));
+            ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)
+                && ($cembrapaycheckout_single_invoice_allow == '0' || $cembrapaycheckout_single_invoice_allow == '1'));
 
         if (!$isAvaliable || !$methodsAvailable) {
             return false;
@@ -147,7 +147,7 @@ class Invoice extends Byjunopayment
 
     public function getTitle()
     {
-        return $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_setup/title_invoice", ScopeInterface::SCOPE_STORE);
+        return $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_setup/title_invoice", ScopeInterface::SCOPE_STORE);
     }
 
     public function assignData(DataObject $data)
@@ -163,7 +163,7 @@ class Invoice extends Byjunopayment
             $payment->setAdditionalInformation('payment_plan', $dataKey['invoice_payment_plan']);
         }
         $paperInvoice = false;
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_invoice_paper",
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_invoice_paper",
                 ScopeInterface::SCOPE_STORE) == 1) {
             $paperInvoice = true;
         }
@@ -212,14 +212,14 @@ class Invoice extends Byjunopayment
         $payment = $this->getInfoInstance();
         $isCompany = false;
         if (!empty($this->_checkoutSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/businesstobusiness", ScopeInterface::SCOPE_STORE) == '1'
+            $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness", ScopeInterface::SCOPE_STORE) == '1'
         ) {
             $isCompany = true;
         }
-        $this->validateCustomByjunoFields($payment, $isCompany);
+        $this->validateCustomCembraPayFields($payment, $isCompany);
         if ($payment->getAdditionalInformation('payment_plan') == null ||
             ($payment->getAdditionalInformation('payment_plan') != DataHelper::$SINGLEINVOICE &&
-                $payment->getAdditionalInformation('payment_plan') != DataHelper::$BYJUNOINVOICE)) {
+                $payment->getAdditionalInformation('payment_plan') != DataHelper::$CEMBRAPAYINVOICE)) {
             throw new LocalizedException(
                 __("Invalid payment plan")
             );
@@ -249,15 +249,15 @@ class Invoice extends Byjunopayment
             }
             list($statusS2, $requestTypeS2, $responseS2) = Startpayment::executeS2Quote($quote, $payment, $this->_dataHelper, $prefix);
             $accept = "";
-            if ($this->_dataHelper->byjunoIsStatusOk($statusS2, "byjunocheckoutsettings/byjunocheckout_setup/merchant_risk")) {
+            if ($this->_dataHelper->cembrapayIsStatusOk($statusS2, "cembrapaycheckoutsettings/cembrapaycheckout_setup/merchant_risk")) {
                 $accept = "CLIENT";
             }
-            if ($this->_dataHelper->byjunoIsStatusOk($statusS2, "byjunocheckoutsettings/byjunocheckout_setup/byjunocheckout_risk")) {
+            if ($this->_dataHelper->cembrapayIsStatusOk($statusS2, "cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_risk")) {
                 $accept = "IJ";
             }
             if ($accept == "") {
                 throw new LocalizedException(
-                    __($this->_dataHelper->getByjunoErrorMessage($statusS2, $requestTypeS2))
+                    __($this->_dataHelper->getCembraPayErrorMessage($statusS2, $requestTypeS2))
                 );
             } else {
                 $payment->setAdditionalInformation('accept', $accept);
@@ -284,7 +284,7 @@ class Invoice extends Byjunopayment
     {
         /* @var $order Order */
         /* @var $p Payment*/
-        if ($this->_scopeConfig->getValue("byjunocheckoutsettings/byjunocheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
 
             $p = $payment;
             $order = $p->getOrder();

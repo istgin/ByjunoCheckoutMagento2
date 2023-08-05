@@ -6,7 +6,7 @@
  * Time: 19:59
 */
 
-namespace  ByjunoCheckout\ByjunoCheckoutCore\Setup;
+namespace  CembraPayCheckout\CembraPayCheckoutCore\Setup;
 
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
@@ -53,12 +53,12 @@ class InstallData implements InstallDataInterface
          */
         $eavSetup->addAttribute(
             \Magento\Sales\Model\Order::ENTITY,
-            'byjunocheckout_status',
+            'cembrapaycheckout_status',
             [
                 'type' => 'string',
                 'backend' => '',
                 'frontend' => '',
-                'label' => 'Byjuno Checkout status',
+                'label' => 'CembraPay Checkout status',
                 'input' => '',
                 'class' => '',
                 'source' => '',
@@ -78,12 +78,12 @@ class InstallData implements InstallDataInterface
 
         $eavSetup->addAttribute(
             \Magento\Sales\Model\Order::ENTITY,
-            'byjunocheckout_credit_rating',
+            'cembrapaycheckout_credit_rating',
             [
                 'type' => 'string',
                 'backend' => '',
                 'frontend' => '',
-                'label' => 'Byjuno Checkout credit rating',
+                'label' => 'CembraPay Checkout credit rating',
                 'input' => '',
                 'class' => '',
                 'source' => '',
@@ -103,12 +103,12 @@ class InstallData implements InstallDataInterface
 
         $eavSetup->addAttribute(
             \Magento\Sales\Model\Order::ENTITY,
-            'byjunocheckout_credit_level',
+            'cembrapaycheckout_credit_level',
             [
                 'type' => 'string',
                 'backend' => '',
                 'frontend' => '',
-                'label' => 'Byjuno Checkout credit level',
+                'label' => 'CembraPay Checkout credit level',
                 'input' => '',
                 'class' => '',
                 'source' => '',
@@ -127,12 +127,12 @@ class InstallData implements InstallDataInterface
         );
         $eavSetup->addAttribute(
             \Magento\Sales\Model\Order::ENTITY,
-            'byjunocheckout_payment_method',
+            'cembrapaycheckout_payment_method',
             [
                 'type' => 'string',
                 'backend' => '',
                 'frontend' => '',
-                'label' => 'Byjuno Checkout payment method',
+                'label' => 'CembraPay Checkout payment method',
                 'input' => '',
                 'class' => '',
                 'source' => '',
@@ -153,10 +153,10 @@ class InstallData implements InstallDataInterface
         $data = [];
         $dataSate = [];
         $statuses = [
-            'byjunocheckout_new' => Array( "name" => __('Byjuno Checkout new payment generated'), 'is_default' => 0, "visible_on_front" => 1, "state" => "new"),
-            'byjunocheckout_pending' => Array( "name" => __('Byjuno Checkout wait for payment'), 'is_default' => 0, "visible_on_front" => 1, "state" => "pending_payment"),
-            'byjunocheckout_review' => Array( "name" =>__('Byjuno Checkout confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "payment_review"),
-            'byjunocheckout_processing'  => Array( "name" =>__('Byjuno Checkout processing'), 'is_default' => 0, "visible_on_front" => 1, "state" => "processing"),
+            'cembrapaycheckout_new' => Array( "name" => __('CembraPay Checkout new payment generated'), 'is_default' => 0, "visible_on_front" => 1, "state" => "new"),
+            'cembrapaycheckout_pending' => Array( "name" => __('CembraPay Checkout wait for payment'), 'is_default' => 0, "visible_on_front" => 1, "state" => "pending_payment"),
+            'cembrapaycheckout_review' => Array( "name" =>__('CembraPay Checkout confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "payment_review"),
+            'cembrapaycheckout_processing'  => Array( "name" =>__('CembraPay Checkout processing'), 'is_default' => 0, "visible_on_front" => 1, "state" => "processing"),
         ];
         foreach ($statuses as $code => $info) {
             $data[] = ['status' => $code, 'label' => $info["name"]];

@@ -4,8 +4,8 @@
     <update handle="formkey"/>
     <body>
         <referenceContainer name="content">
-            <block class="ByjunoCheckout\ByjunoCheckoutCore\Block\Adminhtml\Edit"
-                   name="byjunocheckout_byjunocheckoutcore_logs_edit.grid.container"/>
+            <block class="CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Edit"
+                   name="cembrapaycheckout_cembrapaycheckoutcore_logs_edit.grid.container"/>
         </referenceContainer>
     </body>
 </page>

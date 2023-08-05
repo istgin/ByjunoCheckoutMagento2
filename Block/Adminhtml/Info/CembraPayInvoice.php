@@ -1,9 +1,9 @@
 <?php
-namespace ByjunoCheckout\ByjunoCheckoutCore\Block\Adminhtml\Info;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Info;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
 
-class ByjunoInvoice extends \Magento\Payment\Block\Info
+class CembraPayInvoice extends \Magento\Payment\Block\Info
 {
     /**
      * @var string
@@ -15,9 +15,9 @@ class ByjunoInvoice extends \Magento\Payment\Block\Info
         $repayment = "";
         $webshopProfileId = $this->getInfo()->getAdditionalInformation("webshop_profile_id");
         if ($plId == DataHelper::$SINGLEINVOICE) {
-            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        } else if ($plId == DataHelper::$BYJUNOINVOICE) {
-            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+        } else if ($plId == DataHelper::$CEMBRAPAYINVOICE) {
+            $repayment = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
         $paymentSend = $this->getInfo()->getAdditionalInformation("payment_send");
         $htmlAdd = '';
@@ -47,9 +47,9 @@ class ByjunoInvoice extends \Magento\Payment\Block\Info
         $repayment = "";
         $webshopProfileId = $this->getInfo()->getAdditionalInformation("webshop_profile_id");
         if ($plId == DataHelper::$SINGLEINVOICE) {
-            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        } else if ($plId == DataHelper::$BYJUNOINVOICE) {
-            $repayment = $this->_scopeConfig->getValue("byjunoinvoicesettings/byjunocheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+            $repayment = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
+        } else if ($plId == DataHelper::$CEMBRAPAYINVOICE) {
+            $repayment = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         }
         $paymentSend = $this->getInfo()->getAdditionalInformation("payment_send");
         $htmlAdd = '';

@@ -1,12 +1,12 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Helper\Api;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAutRequest;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\DeliveryDetails;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\SettlementDetails;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\DeliveryDetails;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\SettlementDetails;
 
-class ByjunoCheckoutCreditRequest extends ByjunoCheckoutAutRequest
+class CembraPayCheckoutCreditRequest extends CembraPayCheckoutAutRequest
 {
     public $merchantId; //String
     public $requestMsgType; //String

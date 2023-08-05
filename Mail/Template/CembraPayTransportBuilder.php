@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Mail\Template;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Mail\Template;
 
 use Magento\Framework\App\TemplateTypesInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -33,7 +33,7 @@ use Zend\Mime\Part as ZendMimePart;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @since 100.0.2
  */
-class ByjunoTransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
+class CembraPayTransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
 {
     /**
      * Template Identifier

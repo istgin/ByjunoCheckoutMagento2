@@ -1,11 +1,11 @@
 <?php
 
-namespace ByjunoCheckout\ByjunoCheckoutCore\Controller\Checkout;
+namespace CembraPayCheckout\CembraPayCheckoutCore\Controller\Checkout;
 
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutAuthorizationResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCheckoutChkResponse;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\Api\ByjunoCommunicator;
-use ByjunoCheckout\ByjunoCheckoutCore\Helper\DataHelper;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutChkResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
@@ -61,37 +61,37 @@ class StartCheckout implements ActionInterface
                 $order,
                 $payment,
                 $payment->getAdditionalInformation('webshop_profile_id'));
-            $ByjunoRequestName = $request->requestMsgType;
+            $CembraPayRequestName = $request->requestMsgType;
             $json = $request->createRequest();
-            $byjunoCommunicator = new ByjunoCommunicator();
-            $mode = $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+            $cembrapayCommunicator = new CembraPayCommunicator();
+            $mode = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
             if ($mode == 'live') {
-                $byjunoCommunicator->setServer('live');
+                $cembrapayCommunicator->setServer('live');
             } else {
-                $byjunoCommunicator->setServer('test');
+                $cembrapayCommunicator->setServer('test');
             }
-            $response = $byjunoCommunicator->sendCheckoutRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/timeout',
+            $response = $cembrapayCommunicator->sendCheckoutRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
                 ScopeInterface::SCOPE_STORE),
-                $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunologin', ScopeInterface::SCOPE_STORE),
-                $this->_dataHelper->_scopeConfig->getValue('byjunocheckoutsettings/byjunocheckout_setup/byjunopassword', ScopeInterface::SCOPE_STORE));
+                $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE),
+                $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE));
 
             $status = "";
             $responseRes = null;
             if ($response) {
                 $responseRes = $this->_dataHelper->checkoutResponse($response);
                 $status = $responseRes->processingStatus;
-                $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $ByjunoRequestName,
+                $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
                     $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                     $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId, $order->getRealOrderId());
             } else {
-                $this->_dataHelper->saveLog($json, $response, "Query error", $ByjunoRequestName,
+                $this->_dataHelper->saveLog($json, $response, "Query error", $CembraPayRequestName,
                     $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                     $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-", "-");
             }
             if ($status == DataHelper::$CHK_OK) {
-                $byjunoTrx = $responseRes->transactionId;
+                $cembrapayTrx = $responseRes->transactionId;
                 $redirectUrl = $responseRes->redirectUrlCheckout;
-                $payment->setTransactionId($byjunoTrx);
+                $payment->setTransactionId($cembrapayTrx);
                 $payment->setParentTransactionId($payment->getTransactionId());
                 // $payment->setIsTransactionPending(true);
                 $transaction = $payment->addTransaction(Transaction::TYPE_AUTH, null, true);
@@ -100,7 +100,7 @@ class StartCheckout implements ActionInterface
                 $this->_dataHelper->saveStatusToOrder($order);
                 $resultRedirect->setUrl($redirectUrl);
             } else {
-                $error = $this->_dataHelper->getByjunoErrorMessage();
+                $error = $this->_dataHelper->getCembraPayErrorMessage();
                 $order->registerCancellation($error)->save();
                 $this->restoreQuote();
                 $this->messageManager->addExceptionMessage(new \Exception("ex"), $error);

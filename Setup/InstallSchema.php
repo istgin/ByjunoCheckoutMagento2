@@ -6,7 +6,7 @@
  * Time: 19:49
  */
 
-namespace  ByjunoCheckout\ByjunoCheckoutCore\Setup;
+namespace  CembraPayCheckout\CembraPayCheckoutCore\Setup;
 
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -21,7 +21,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer->startSetup();
 
         // Get tutorial_simplenews table
-        $tableName = $installer->getTable('byjunocheckout_log');
+        $tableName = $installer->getTable('cembrapaycheckout_log');
         // Check if the table already exists
 
         if ($installer->getConnection()->isTableExists($tableName) != true) {
@@ -152,7 +152,7 @@ class InstallSchema implements InstallSchemaInterface
                     ['nullable' => false],
                     'Created At'
                 )
-                ->setComment('Byjuno Checkout request table')
+                ->setComment('CembraPay Checkout request table')
                 ->setOption('type', 'InnoDB')
                 ->setOption('charset', 'utf8');
             $installer->getConnection()->createTable($table);

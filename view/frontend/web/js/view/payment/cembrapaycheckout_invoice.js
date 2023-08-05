@@ -16,8 +16,8 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'byjunocheckout_installment',
-                component: 'ByjunoCheckout_ByjunoCheckoutCore/js/view/payment/method-renderer/byjunocheckout_installment_renderer'
+                type: 'cembrapaycheckout_invoice',
+                component: 'CembraPayCheckout_CembraPayCheckoutCore/js/view/payment/method-renderer/cembrapaycheckout_invoice_renderer'
             }
         );
         /** Add view logic here if needed */
