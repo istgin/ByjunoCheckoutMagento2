@@ -77,6 +77,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public $_configLoader;
     public $_customerMetadata;
 
+
+    /**
+     * @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory
+     */
+    public $orderCollectionFactory;
+
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -263,7 +269,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\ObjectManager\ConfigLoaderInterface $configLoader,
         \Magento\Customer\Api\CustomerMetadataInterface $customerMetadata,
-        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
     )
     {
 
@@ -286,6 +293,29 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_blockMenu = $blockMenu;
         $this->_url = $url;
         $this->quoteRepository = $quoteRepository;
+        $this->orderCollectionFactory = $orderCollectionFactory;
+    }
+
+    function getPendingOrders()
+    {
+        $methodInvoice = "cembrapaycheckout_invoice";
+        $methodInstallemnt = "cembrapaycheckout_installment";
+        $information = "%\"chk_executed_ok\":\"true\"%";
+        $subQuery = new \Zend_Db_Expr(sprintf("(SELECT parent_id FROM sales_order_payment WHERE (method = '%s' || method = '%s') AND additional_information like '%s')",
+            $methodInvoice,
+            $methodInstallemnt,
+            $information));
+
+        $orderCollection = $this->orderCollectionFactory
+            ->create()
+            ->addAttributeToSelect('*')
+            ->addAttributeToFilter('status', ['eq'=> "pending"])
+            ->addFieldToFilter('entity_id', [
+                'in' => $subQuery,
+            ]);
+
+
+        return $orderCollection;
     }
 
     function cembrapayIsStatusOk($status, $position)
@@ -1511,167 +1541,20 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $result;
     }
 
-    /*function CreateMagentoShopRequestCreditCheck(\Magento\Quote\Model\Quote $quote)
+    function CreateMagentoShopRequestGet(Order $order)
     {
-        $request = new \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayRequest();
-        $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        $request->setVersion("1.00");
-        try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-        } catch (\Exception $e) {
-
-        }
-
-        $b = $quote->getCustomerDob();
-        if (!empty($b)) {
-            try {
-                $dobObject = new \DateTime($b);
-                if ($dobObject != null) {
-                    $request->setDateOfBirth($dobObject->format('Y-m-d'));
-                }
-            } catch (\Exception $e) {
-
-            }
-        }
-        $gender_male_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_male_possible_prefix',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-
-        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
-        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
-
-        $g = $quote->getCustomerGender();
-        $request->setGender('0');
-        if ($this->_customerMetadata->getAttributeMetadata('gender')->isVisible()) {
-            if (!empty($g)) {
-                if ($g == '1') {
-                    $request->setGender('1');
-                } else if ($g == '2') {
-                    $request->setGender('2');
-                }
-            }
-        }
-        if ($this->_customerMetadata->getAttributeMetadata('prefix')->isVisible()) {
-            if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
-                $request->setGender('1');
-            } else if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
-                $request->setGender('2');
-            }
-        }
-
-        $billingStreet = $quote->getBillingAddress()->getStreet();
-        $billingStreet = implode("", $billingStreet);
-        $requestId = uniqid((String)$quote->getEntityId() . "_");
-        $request->setRequestId($requestId);
-        $reference = $quote->getCustomerId();
-        if (empty($reference)) {
-            $request->setCustomerReference("guest_" . $quote->getId());
-        } else {
-            $request->setCustomerReference($quote->getCustomerId());
-        }
-        $request->setFirstName((String)$quote->getBillingAddress()->getFirstname());
-        $request->setLastName((String)$quote->getBillingAddress()->getLastname());
-
-        $request->setFirstLine(trim((String)$billingStreet));
-        $request->setCountryCode(strtoupper($quote->getBillingAddress()->getCountryId()));
-        $request->setPostCode((String)$quote->getBillingAddress()->getPostcode());
-        $request->setTown((String)$quote->getBillingAddress()->getCity());
-        $request->setFax((String)trim($quote->getBillingAddress()->getFax(), '-'));
-        $request->setLanguage((String)substr($this->_resolver->getLocale(), 0, 2));
-
-        if ($quote->getBillingAddress()->getCompany()) {
-            $request->setCompanyName1($quote->getBillingAddress()->getCompany());
-        }
-
-        $request->setTelephonePrivate((String)trim($quote->getBillingAddress()->getTelephone(), '-'));
-        $request->setEmail((String)$quote->getBillingAddress()->getEmail());
-
-        $extraInfo["Name"] = 'ORDERCLOSED';
-        $extraInfo["Value"] = 'NO';
-        $request->setExtraInfo($extraInfo);
-
-        $extraInfo["Name"] = 'ORDERAMOUNT';
-        $extraInfo["Value"] = number_format($quote->getGrandTotal(), 2, '.', '');
-        $request->setExtraInfo($extraInfo);
-
-        $extraInfo["Name"] = 'ORDERCURRENCY';
-        $extraInfo["Value"] = $quote->getQuoteCurrencyCode();
-        $request->setExtraInfo($extraInfo);
-
-        $extraInfo["Name"] = 'IP';
-        $extraInfo["Value"] = $this->getClientIp();
-        $request->setExtraInfo($extraInfo);
-
-        $sedId = $this->_checkoutSession->getTmxSession();
-        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
-            $extraInfo["Name"] = 'DEVICE_FINGERPRINT_ID';
-            $extraInfo["Value"] = $sedId;
-            $request->setExtraInfo($extraInfo);
-        }
-
-        if (!$quote->isVirtual()) {
-            $shippingStreet = $quote->getShippingAddress()->getStreet();
-            $shippingStreet = implode("", $shippingStreet);
-
-            $extraInfo["Name"] = 'DELIVERY_FIRSTLINE';
-            $extraInfo["Value"] = trim((String)$shippingStreet);
-            $request->setExtraInfo($extraInfo);
-
-            $extraInfo["Name"] = 'DELIVERY_HOUSENUMBER';
-            $extraInfo["Value"] = '';
-            $request->setExtraInfo($extraInfo);
-
-            $extraInfo["Name"] = 'DELIVERY_COUNTRYCODE';
-            $extraInfo["Value"] = strtoupper($quote->getShippingAddress()->getCountryId());
-            $request->setExtraInfo($extraInfo);
-
-            $extraInfo["Name"] = 'DELIVERY_POSTCODE';
-            $extraInfo["Value"] = $this->nullToString($quote->getShippingAddress()->getPostcode());
-            $request->setExtraInfo($extraInfo);
-
-            $extraInfo["Name"] = 'DELIVERY_TOWN';
-            $extraInfo["Value"] = $this->nullToString($quote->getShippingAddress()->getCity());
-            $request->setExtraInfo($extraInfo);
-
-            if ($quote->getShippingAddress()->getCompany() != '' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
-
-                $extraInfo["Name"] = 'DELIVERY_COMPANYNAME';
-                $extraInfo["Value"] = $this->nullToString($quote->getShippingAddress()->getCompany());
-                $request->setExtraInfo($extraInfo);
-
-                $extraInfo["Name"] = 'DELIVERY_FIRSTNAME';
-                $extraInfo["Value"] = '';
-                $request->setExtraInfo($extraInfo);
-
-                $extraInfo["Name"] = 'DELIVERY_LASTNAME';
-                $extraInfo["Value"] = $this->nullToString($quote->getShippingAddress()->getCompany());
-                $request->setExtraInfo($extraInfo);
-
-            } else {
-
-                $extraInfo["Name"] = 'DELIVERY_FIRSTNAME';
-                $extraInfo["Value"] = $this->nullToString($quote->getShippingAddress()->getFirstname());
-                $request->setExtraInfo($extraInfo);
-
-                $extraInfo["Name"] = 'DELIVERY_LASTNAME';
-                $extraInfo["Value"] = $this->nullToString($quote->getShippingAddress()->getLastname());
-                $request->setExtraInfo($extraInfo);
-            }
-        }
-
-        $extraInfo["Name"] = 'RISKOWNER';
-        $extraInfo["Value"] = 'IJ';
-        $request->setExtraInfo($extraInfo);
-
-        $extraInfo["Name"] = 'CONNECTIVTY_MODULE';
-        $extraInfo["Value"] = 'CembraPay Checkout Magento 2 module 1.7.4';
-        $request->setExtraInfo($extraInfo);
+        $request = new CembraPayCheckoutCreditRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
+        $request->requestMsgType = self::$MESSAGE_CNL;
+        $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
+        $request->transactionId = $tx;
+        $request->merchantOrderRef = $order->getRealOrderId();
+        $request->amount = number_format($amount, 2, '.', '') * 100;
+        $request->currency = $order->getOrderCurrencyCode();
+        $request->settlementDetails->merchantInvoiceRef = $invoiceId;
         return $request;
     }
-    */
 
     function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId, $webshopProfile, $tx)
     {
@@ -1688,43 +1571,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->currency = $order->getOrderCurrencyCode();
         $request->settlementDetails->merchantInvoiceRef = $invoiceId;
         return $request;
-        /*
-        $request = new CembraPayS5Request();
-        $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setVersion("1.00");
-        try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        } catch (\Exception $e) {
-
-        }
-        $request->setRequestId(uniqid((String)$order->getIncrementId() . "_"));
-
-        $request->setOrderId($order->getIncrementId());
-        $reference = $order->getCustomerId();
-        if (empty($reference)) {
-            $request->setClientRef("guest_" . $order->getId());
-        } else {
-            $request->setClientRef($order->getCustomerId());
-        }
-        $orderDateString = \Zend_Locale_Format::getDate(
-            $order->getCreatedAt(),
-            array(
-                'date_format' => \Magento\Framework\Stdlib\DateTime::DATE_INTERNAL_FORMAT,
-            )
-        );
-        $request->setTransactionDate($orderDateString["year"] . "-" . $orderDateString["month"] . '-' . $orderDateString["day"]);
-        $request->setTransactionAmount(number_format($amount, 2, '.', ''));
-        $request->setTransactionCurrency($order->getOrderCurrencyCode());
-        $request->setTransactionType($transactionType);
-        $request->setAdditional2($invoiceId);
-        if ($transactionType == "EXPIRED") {
-            $request->setOpenBalance("0");
-        }
-
-        return $request;
-        */
     }
 
     function CreateMagentoShopRequestS5Paid(Order $order, $amount, $transactionType, $invoiceId, $webshopProfile, $tx)
@@ -1742,42 +1588,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->currency = $order->getOrderCurrencyCode();
         $request->settlementDetails->merchantInvoiceRef = $invoiceId;
         return $request;
-        /*
-        $request = new CembraPayS5Request();
-        $request->setClientId($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/clientid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setUserID($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/userid', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setPassword($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/password', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        $request->setVersion("1.00");
-        try {
-            $request->setRequestEmail($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/mail', ScopeInterface::SCOPE_STORE, $webshopProfile));
-        } catch (\Exception $e) {
 
-        }
-        $request->setRequestId(uniqid((String)$order->getIncrementId() . "_"));
-
-        $request->setOrderId($order->getIncrementId());
-        $reference = $order->getCustomerId();
-        if (empty($reference)) {
-            $request->setClientRef("guest_" . $order->getId());
-        } else {
-            $request->setClientRef($order->getCustomerId());
-        }
-        $orderDateString = \Zend_Locale_Format::getDate(
-            $order->getCreatedAt(),
-            array(
-                'date_format' => \Magento\Framework\Stdlib\DateTime::DATE_INTERNAL_FORMAT,
-            )
-        );
-        $request->setTransactionDate($orderDateString["year"] . "-" . $orderDateString["month"] . '-' . $orderDateString["day"]);
-        $request->setTransactionAmount(number_format($amount, 2, '.', ''));
-        $request->setTransactionCurrency($order->getOrderCurrencyCode());
-        $request->setTransactionType($transactionType);
-        $request->setAdditional2($invoiceId);
-        if ($transactionType == "EXPIRED") {
-            $request->setOpenBalance("0");
-        }
-
-        return $request;
-        */
     }
 }

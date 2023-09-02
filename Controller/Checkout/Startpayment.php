@@ -76,61 +76,6 @@ class Startpayment extends Action
         return array($status, $requestType);
     }
 
-    /* public static function executeS2Quote(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Payment $payment, DataHelper $_internalDataHelper, $savePrefix = "")
-     {
-         $request = $_internalDataHelper->CreateMagentoShopRequestOrderQuote($quote,
-             $payment,
-             $payment->getAdditionalInformation('customer_gender'),
-             $payment->getAdditionalInformation('customer_dob'),
-             $payment->getAdditionalInformation('pref_lang'),
-             $payment->getAdditionalInformation('customer_b2b_uid'), $payment->getAdditionalInformation('webshop_profile_id'));
-
-         $CembraPayRequestName = "Order request" . $savePrefix;
-         $requestType = 'b2c';
-         if ($request->getCompanyName1() != '' && $_internalDataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
-             $CembraPayRequestName = "Order request for Company" . $savePrefix;
-             $requestType = 'b2b';
-             $xml = $request->createRequestCompany();
-             $payment->setAdditionalInformation("is_b2b", true);
-         } else {
-             $xml = $request->createRequest();
-             $payment->setAdditionalInformation("is_b2b", false);
-         }
-         $mode = $_internalDataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-         if ($mode == 'live') {
-             $_internalDataHelper->_communicator->setServer('live');
-         } else {
-             $_internalDataHelper->_communicator->setServer('test');
-         }
-
-         $response = $_internalDataHelper->_communicator->sendRequest($xml, (int)$_internalDataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-         $status = 0;
-         if ($response) {
-             $_internalDataHelper->_response->setRawResponse($response);
-             $_internalDataHelper->_response->processResponse();
-             $status = (int)$_internalDataHelper->_response->getCustomerRequestStatus();
-             if ($_internalDataHelper->_checkoutSession != null) {
-                 $_internalDataHelper->_checkoutSession->setCembraPayTransaction($_internalDataHelper->_response->getTransactionNumber());
-                 $_internalDataHelper->_checkoutSession->setS2Response($response);
-             }
-             $_internalDataHelper->saveLog($request, $xml, $response, $status, $CembraPayRequestName);
-             if (intval($status) > 15) {
-                 $status = 0;
-             }
-         } else {
-             $_internalDataHelper->saveLog($request, $xml, "empty response", "0", $CembraPayRequestName);
-             if ($_internalDataHelper->_checkoutSession != null) {
-                 $_internalDataHelper->_checkoutSession->setS2Response("");
-             }
-         }
-         if ($_internalDataHelper->_checkoutSession != null) {
-             $_internalDataHelper->_checkoutSession->setIntrumStatus($status);
-             $_internalDataHelper->_checkoutSession->setIntrumRequestType($requestType);
-         }
-         return array($status, $requestType, $_internalDataHelper->_response);
-
-     }
- */
     public static function executeBackendOrder(DataHelper $helper, Order $order)
     {
         self::$_dataHelper = $helper;
