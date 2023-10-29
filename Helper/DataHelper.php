@@ -12,6 +12,8 @@ use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutScreenin
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleRequest;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleResponse;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayGetStatusRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayGetStatusResponse;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CustomerConsents;
 use Magento\Framework\App\ObjectManager;
 use Magento\Quote\Model\Quote\Payment;
@@ -30,6 +32,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $MESSAGE_SET = 'SET';
     public static $MESSAGE_CNL = 'CNT';
     public static $MESSAGE_CHK = 'CHK';
+    public static $MESSAGE_STATUS = 'TST';
 
     public static $CUSTOMER_PRIVATE = 'P';
     public static $CUSTOMER_BUSINESS = 'C';
@@ -48,6 +51,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $AUTH_OK = 'AUTHORIZED';
     public static $CREDIT_OK = 'SUCCESS';
     public static $CHK_OK = 'SUCCESS';
+    public static $GET_OK = 'SUCCESS';
+    public static $GET_OK_TRANSACTION = 'SUCCESS';
 
 
     public static $REQUEST_ERROR = 'REQUEST_ERROR';
@@ -1474,6 +1479,18 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $request;
     }
 
+    public function createMagentoShopRequestGetTransaction($transactionId, $webShopProfile)
+    {
+        $request = new CembraPayGetStatusRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
+        $request->requestMsgType = self::$MESSAGE_STATUS;
+        $request->requestMsgId = CembraPayCheckoutChkRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutChkRequest::Date();
+        $request->transactionId = $transactionId;
+
+        return $request;
+    }
+
     function authorizationResponse($response)
     {
         $responseObject = json_decode($response);
@@ -1484,6 +1501,36 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $result->processingStatus = $responseObject->processingStatus;
             if ($responseObject->processingStatus == self::$AUTH_OK) {
                 $result->transactionId = $responseObject->transactionId;
+            }
+        }
+        return $result;
+    }
+
+    function getTransactionResponse($response)
+    {
+        $responseObject = json_decode($response);
+        $result = new CembraPayGetStatusResponse();
+        if (empty($responseObject->processingStatus)) {
+            $result->processingStatus = self::$REQUEST_ERROR;
+        } else {
+            $result->processingStatus = $responseObject->processingStatus;
+            if ($responseObject->processingStatus == self::$GET_OK) {
+                $result->requestMerchantId = $responseObject->requestMerchantId;
+                $result->requestMsgType = $responseObject->transactionId;
+                $result->requestMsgId = $responseObject->requestMsgType;
+                $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
+                $result->replyMsgId = $responseObject->replyMsgId;
+                $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
+                $result->merchantCustRef = $responseObject->merchantCustRef;
+                $result->token = $responseObject->token;
+                $result->isTokenDeleted = $responseObject->isTokenDeleted;
+                $result->merchantOrderRef = $responseObject->merchantOrderRef;
+                $result->processingStatus = $responseObject->processingStatus;
+                $result->authorization->authorizationCurrency = $responseObject->processingStatus;
+                $result->authorization->authorizationValidTill = $responseObject->authorizationValidTill;
+                $result->authorization->authorizedRemainingAmount = $responseObject->authorizedRemainingAmount;
+                $result->transactionStatus->transactionId = $responseObject->transactionStatus->transactionId;
+                $result->transactionStatus->transactionStatus = $responseObject->transactionStatus->transactionStatus;
             }
         }
         return $result;
@@ -1541,20 +1588,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $result;
     }
 
-    function CreateMagentoShopRequestGet(Order $order)
-    {
-        $request = new CembraPayCheckoutCreditRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
-        $request->requestMsgType = self::$MESSAGE_CNL;
-        $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
-        $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
-        $request->transactionId = $tx;
-        $request->merchantOrderRef = $order->getRealOrderId();
-        $request->amount = number_format($amount, 2, '.', '') * 100;
-        $request->currency = $order->getOrderCurrencyCode();
-        $request->settlementDetails->merchantInvoiceRef = $invoiceId;
-        return $request;
-    }
 
     function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId, $webshopProfile, $tx)
     {

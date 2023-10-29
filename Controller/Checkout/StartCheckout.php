@@ -50,17 +50,6 @@ class StartCheckout implements ActionInterface
 
     public function execute()
     {
-        /* @var $orders \Magento\Sales\Model\ResourceModel\Order\Collection */
-        $orders = $this->_dataHelper->getPendingOrders();
-        /* @var $order \Magento\Sales\Model\Order */
-        foreach ($orders as $order) {
-            $method = $order->getPayment()->getMethod();
-            $is_processed = $order->getPayment()->getAdditionalInformation("chk_processed_ok");
-            if ($is_processed == "false" && $method == ("cembrapaycheckout_invoice" || $method == "cembrapaycheckout_installment")) {
-                echo var_dump(get_class($order));
-            }
-        }
-        exit('aaa');
         $order = $this->_dataHelper->_checkoutSession->getLastRealOrder();
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($order != null) {
@@ -103,6 +92,7 @@ class StartCheckout implements ActionInterface
                 $cembrapayTrx = $responseRes->transactionId;
                 $redirectUrl = $responseRes->redirectUrlCheckout;
                 $payment->setTransactionId($cembrapayTrx);
+                $payment->setAdditionalInformation("cembrapay_transaction_id", $cembrapayTrx);
                 $payment->setParentTransactionId($payment->getTransactionId());
                 // $payment->setIsTransactionPending(true);
                 $transaction = $payment->addTransaction(Transaction::TYPE_AUTH, null, true);

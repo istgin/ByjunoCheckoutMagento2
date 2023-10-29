@@ -119,7 +119,7 @@ class Startpayment extends Action
                         $order->setStatus("pending");
                     }
 
-                    self::$_dataHelper->saveStatusToOrder($order, $responseS2);
+                    self::$_dataHelper->saveStatusToOrder($order);
                     try {
                         $mode = self::$_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
                         if ($mode == 'live') {
