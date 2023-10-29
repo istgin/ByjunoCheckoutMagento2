@@ -53,8 +53,8 @@ class Success implements ActionInterface
         $order = $this->_dataHelper->_checkoutSession->getLastRealOrder();
         /* @var $payment \Magento\Sales\Model\Order\Payment */
         $payment = $order->getPayment();
-        $transactionId = $payment->getTransactionId();
-
+        $transaction = $payment->getAuthorizationTransaction();
+        $transactionId = $transaction->getTxnId();
         $request = $this->_dataHelper->createMagentoShopRequestGetTransaction(
             $transactionId,
             $payment->getAdditionalInformation('webshop_profile_id'));
@@ -80,20 +80,12 @@ class Success implements ActionInterface
             $status = $responseRes->processingStatus;
             $transactionStatus = $responseRes->transactionStatus->transactionStatus;
             $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
-                $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
-                $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId, $order->getRealOrderId());
+                "-","-","-","-","-","-","-",$transactionId, $order->getRealOrderId());
         } else {
             $this->_dataHelper->saveLog($json, $response, "Query error", $CembraPayRequestName,
-                $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
-                $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-", "-");
+                "-","-","-","-","-","-","-",$transactionId,"-");
         }
-
         if ($status == DataHelper::$GET_OK && $transactionStatus == DataHelper::$GET_OK_TRANSACTION) {
-
-            $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true);
-            $transaction->setIsClosed(false);
-            $transaction->save();
-
             $payment->setAdditionalInformation("chk_processed_ok", 'true');
             $payment->save();
 

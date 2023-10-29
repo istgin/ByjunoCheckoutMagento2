@@ -16,4 +16,8 @@ class CembraPayGetStatusRequest
     public $requestMsgId; //String
     public $requestMsgDateTime; //String
     public $transactionId; //String
+
+    public function createRequest() {
+        return json_encode($this);
+    }
 }
