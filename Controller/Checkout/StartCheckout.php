@@ -94,7 +94,6 @@ class StartCheckout implements ActionInterface
                 $payment->setTransactionId($cembrapayTrx);
                 $payment->setAdditionalInformation("cembrapay_transaction_id", $cembrapayTrx);
                 $payment->setParentTransactionId($payment->getTransactionId());
-                // $payment->setIsTransactionPending(true);
                 $transaction = $payment->addTransaction(Transaction::TYPE_AUTH, null, true);
                 $transaction->setIsClosed(false);
                 $payment->setAdditionalInformation("chk_executed_ok", 'true');
@@ -111,6 +110,7 @@ class StartCheckout implements ActionInterface
             }
             return $resultRedirect;
         }
+        return false;
     }
     private function restoreQuote()
     {

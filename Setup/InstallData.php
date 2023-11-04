@@ -150,24 +150,6 @@ class InstallData implements InstallDataInterface
             ]
         );
 
-        $data = [];
-        $dataSate = [];
-        $statuses = [
-            'cembrapaycheckout_new' => Array( "name" => __('CembraPay Checkout new payment generated'), 'is_default' => 0, "visible_on_front" => 1, "state" => "new"),
-            'cembrapaycheckout_pending' => Array( "name" => __('CembraPay Checkout wait for payment'), 'is_default' => 0, "visible_on_front" => 1, "state" => "pending_payment"),
-            'cembrapaycheckout_review' => Array( "name" =>__('CembraPay Checkout confirmed'), 'is_default' => 0, "visible_on_front" => 1, "state" => "payment_review"),
-            'cembrapaycheckout_processing'  => Array( "name" =>__('CembraPay Checkout processing'), 'is_default' => 0, "visible_on_front" => 1, "state" => "processing"),
-        ];
-        foreach ($statuses as $code => $info) {
-            $data[] = ['status' => $code, 'label' => $info["name"]];
-            $dataSate[] = ['status' => $code, 'state' => $info["state"], 'is_default' => $info["is_default"], 'visible_on_front' => $info["visible_on_front"]];
-        }
-        $setup->getConnection()
-            ->insertArray($setup->getTable('sales_order_status'), ['status', 'label'], $data);
-
-        $setup->getConnection()
-            ->insertArray($setup->getTable('sales_order_status_state'), ['status', 'state', 'is_default', 'visible_on_front'], $dataSate);
-
         $setup->endSetup();
     }
 }

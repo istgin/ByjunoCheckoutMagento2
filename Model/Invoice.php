@@ -102,17 +102,15 @@ class Invoice extends CembraPaypayment
 
     public function getConfigData($field, $storeId = null)
     {
-        // Checkout page active
         if ($field == 'order_place_redirect_url') {
             if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+                // Checkout page active
                 return 'cembrapaycheckoutcore/checkout/startpayment';
             } else {
+                var_dump("XXX");
+                exit();
                 return 'cembrapaycheckoutcore/checkout/startcheckout';
             }
-        }
-        // No checkout page
-        if ($field == 'order_status' && true) {
-            return 'cembrapaycheckout_processing';
         }
         return parent::getConfigData($field, $storeId);
     }
@@ -238,35 +236,6 @@ class Invoice extends CembraPaypayment
                 __("Invalid invoice send way")
             );
         }
-        /*
-        if ($payment instanceof \Magento\Quote\Model\Quote\Payment && !$this->_executed) {
-            $this->_executed  = true;
-            /* @var $payment \Magento\Quote\Model\Quote\Payment * /
-            $quote = $this->_checkoutSession->getQuote();
-            $prefix = "";
-            if ($this->_state->getAreaCode() == "adminhtml") {
-                $prefix = " (Backend)";
-            }
-            list($statusS2, $requestTypeS2, $responseS2) = Startpayment::executeS2Quote($quote, $payment, $this->_dataHelper, $prefix);
-            $accept = "";
-            if ($this->_dataHelper->cembrapayIsStatusOk($statusS2, "cembrapaycheckoutsettings/cembrapaycheckout_setup/merchant_risk")) {
-                $accept = "CLIENT";
-            }
-            if ($this->_dataHelper->cembrapayIsStatusOk($statusS2, "cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_risk")) {
-                $accept = "IJ";
-            }
-            if ($accept == "") {
-                throw new LocalizedException(
-                    __($this->_dataHelper->getCembraPayErrorMessage($statusS2, $requestTypeS2))
-                );
-            } else {
-                $payment->setAdditionalInformation('accept', $accept);
-            }
-        } else {
-            //skip
-        }
-        */
-
         return $this;
     }
 

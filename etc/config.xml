@@ -430,10 +430,6 @@
                 <country_phone_validation>1</country_phone_validation>
                 <ip_detect_string />
                 <cembrapaycheckout_invoice_paper>0</cembrapaycheckout_invoice_paper>
-                <cembrapaycheckout_risk>2</cembrapaycheckout_risk>
-                <merchant_risk></merchant_risk>
-                <accepted_s3>2</accepted_s3>
-                <success_state>processing</success_state>
                 <force_send_email>1</force_send_email>
                 <b2b_uid>0</b2b_uid>
                 <txid_extrainfo>0</txid_extrainfo>

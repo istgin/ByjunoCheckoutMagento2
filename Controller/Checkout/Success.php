@@ -89,15 +89,8 @@ class Success implements ActionInterface
             $payment->setAdditionalInformation("chk_processed_ok", 'true');
             $payment->save();
 
-            if ($this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'completed') {
-                $order->setState(Order::STATE_COMPLETE);
-                $order->setStatus("complete");
-            } else if ($this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'processing') {
-                $order->setState(Order::STATE_PROCESSING);
-                $order->setStatus("processing");
-            } else {
-                $order->setStatus("pending");
-            }
+            $order->setState(Order::STATE_PROCESSING);
+            $order->setStatus("processing");
 
             $this->_dataHelper->saveStatusToOrder($order);
             try {
@@ -107,10 +100,14 @@ class Success implements ActionInterface
                 } else {
                     $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', ScopeInterface::SCOPE_STORE);
                 }
+                if ($this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/force_send_email', ScopeInterface::SCOPE_STORE) == '1') {
+                    $this->_dataHelper->_originalOrderSender->send($order);
+                }
                 $this->_dataHelper->_cembrapayOrderSender->sendOrder($order, $email);
             } catch (\Exception $e) {
                 $this->_dataHelper->_loggerPsr->critical($e);
             }
+
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('checkout/success');
             return $resultRedirect;

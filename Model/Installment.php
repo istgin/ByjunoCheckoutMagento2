@@ -183,35 +183,6 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
                 __("Invalid installment send way")
             );
         }
-
-        /*
-        if ($payment instanceof \Magento\Quote\Model\Quote\Payment && !$this->_executed) {
-            $this->_executed  = true;
-            /* @var $payment \Magento\Quote\Model\Quote\Payment * /
-            $quote = $this->_checkoutSession->getQuote();
-            $prefix = "";
-            if ($this->_state->getAreaCode() == "adminhtml") {
-                $prefix = " (Backend)";
-            }
-            list($statusS2, $requestTypeS2, $responseS2) = Startpayment::executeS2Quote($quote, $payment, $this->_dataHelper, $prefix);
-            $accept = "";
-            if ($this->_dataHelper->cembrapayIsStatusOk($statusS2, "cembrapaycheckoutsettings/cembrapaycheckout_setup/merchant_risk")) {
-                $accept = "CLIENT";
-            }
-            if ($this->_dataHelper->cembrapayIsStatusOk($statusS2, "cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_risk")) {
-                $accept = "IJ";
-            }
-            if ($accept == "") {
-                throw new LocalizedException(
-                    __($this->_dataHelper->getCembraPayErrorMessage($statusS2, $requestTypeS2))
-                );
-            } else {
-                $payment->setAdditionalInformation('accept', $accept);
-            }
-        } else {
-            //skip
-        }*/
-
         return $this;
     }
 
@@ -225,10 +196,9 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
 
     public function isAvailable(CartInterface $quote = null)
     {
-        return false;
         $isAvaliable =  $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if (!$isAvaliable) {
-            return;
+            return false;
         }
         $isCompany = false;
         if (!empty($this->_checkoutSession->getQuote()->getBillingAddress()->getCompany()) &&

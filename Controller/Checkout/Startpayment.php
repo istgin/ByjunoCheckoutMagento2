@@ -31,7 +31,7 @@ class Startpayment extends Action
         self::$_dataHelper = $helper;
         parent::__construct($context);
     }
-
+    /*
     public static function executeS3($order, \Magento\Sales\Model\Order\Payment $payment, $transaction, $accept, $savePrefix, DataHelper $dataHelper)
     {
         $request = $dataHelper->CreateMagentoShopRequestPaid($order,
@@ -75,11 +75,16 @@ class Startpayment extends Action
         }
         return array($status, $requestType);
     }
-
+*/
     public static function executeBackendOrder(DataHelper $helper, Order $order)
     {
+        //TODO: backend order
+        $error = self::$_dataHelper->getCembraPayErrorMessage();
+        $order->registerCancellation($error)->save();
+        throw new \Exception($error);
+        /*
         self::$_dataHelper = $helper;
-        /* @var $payment \Magento\Sales\Model\Order\Payment */
+        /* @var $payment \Magento\Sales\Model\Order\Payment * /
         $payment = $order->getPayment();
         try {
             $statusS2 = self::$_dataHelper->_checkoutSession->getIntrumStatus();
@@ -133,15 +138,12 @@ class Startpayment extends Action
                     }
                     // ALL OK
                 } else {
-                    $error = self::$_dataHelper->getCembraPayErrorMessage($statusS3, $requestTypeS3) . "(S3)";
+                    $error = self::$_dataHelper->getCembraPayErrorMessage() . "(S3)";
                     $order->registerCancellation($error)->save();
                     throw new \Exception($error);
                 }
             } else {
-                $error = self::$_dataHelper->getCembraPayErrorMessage(
-                    $statusS2,
-                    $typeS2
-                );
+                $error = self::$_dataHelper->getCembraPayErrorMessage();
                 $order->registerCancellation($error)->save();
                 throw new \Exception($error);
             }
@@ -150,6 +152,7 @@ class Startpayment extends Action
             $error = __($e->getMessage());
             throw new \Exception($e->getMessage());
         }
+        */
     }
 
     public function execute()
@@ -176,8 +179,6 @@ class Startpayment extends Action
         $payment = $order->getPayment();
 
         try {
-            //      $cembrapayTrx = $_internalDataHelper->_checkoutSession->getCembraPayTransaction();
-            //      list($statusS3, $requestTypeS3) = self::executeS3($order, $payment, $cembrapayTrx, $payment->getAdditionalInformation('accept'), "", $_internalDataHelper);
             $request = $_internalDataHelper->createMagentoShopRequestAuthorization(
                 $order,
                 $payment,
@@ -188,11 +189,6 @@ class Startpayment extends Action
                 $payment->getAdditionalInformation('webshop_profile_id')
             );
             $CembraPayRequestName = $request->requestMsgType;
-           // $json = "{}";
-           // if ($request->custDetails->custType == 'C' && $_internalDataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness',
-           //         ScopeInterface::SCOPE_STORE) == '1') {
-           //     $CembraPayRequestName = "Authorization request for company";
-           // }
             $json = $request->createRequest();
             $cembrapayCommunicator = new CembraPayCommunicator();
             $mode = $_internalDataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
@@ -224,22 +220,11 @@ class Startpayment extends Action
                 $cembrapayTrx = $responseRes->transactionId;
                 $payment->setTransactionId($cembrapayTrx);
                 $payment->setParentTransactionId($payment->getTransactionId());
-                // $payment->setIsTransactionPending(true);
                 $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true);
                 $transaction->setIsClosed(false);
                 $order->setState(Order::STATE_PROCESSING);
-                $order->setStatus("cembrapaycheckout_processing");
+                $order->setStatus("processing");
                 $payment->setAdditionalInformation("auth_executed_ok", 'true');
-                /*
-                if ($_internalDataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'completed') {
-                    $order->setState(Order::STATE_COMPLETE);
-                    $order->setStatus("complete");
-                } else if ($_internalDataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/success_state', ScopeInterface::SCOPE_STORE) == 'processing') {
-                    $order->setState(Order::STATE_PROCESSING);
-                    $order->setStatus("processing");
-                } else {
-                    $order->setStatus("pending");
-                }*/
 
                 $_internalDataHelper->saveStatusToOrder($order);
 
