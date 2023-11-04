@@ -522,12 +522,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             ScopeInterface::SCOPE_STORE);
         $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
             ScopeInterface::SCOPE_STORE);
-        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
-        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
+        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array ?? ""));
+        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array ?? ""));
         if ($genderEntity != null && $genderEntity->isVisible()) {
-            if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
+            if (in_array(strtolower($quote->getBillingAddress()->getPrefix() ?? ""), $gender_male_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_MALE;
-            } else if (in_array(strtolower($quote->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
+            } else if (in_array(strtolower($quote->getBillingAddress()->getPrefix() ?? ""), $gender_female_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_FEMALE;
             }
         }
@@ -538,7 +538,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->addrFirstLine = (string)$billingStreet;
         $request->billingAddr->postalCode = (string)$quote->getBillingAddress()->getPostcode();
         $request->billingAddr->town = (string)$quote->getBillingAddress()->getCity();
-        $request->billingAddr->country = strtoupper($quote->getBillingAddress()->getCountryId());
+        $request->billingAddr->country = strtoupper($quote->getBillingAddress()->getCountryId() ?? "");
 
         $request->custContacts->phoneMobile = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phoneBusiness = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
@@ -561,7 +561,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->deliveryDetails->deliveryAddrFirstLine = trim((string)$shippingStreet);
             $request->deliveryDetails->deliveryAddrPostalCode = $this->nullToString($quote->getShippingAddress()->getPostcode());
             $request->deliveryDetails->deliveryAddrTown = $this->nullToString($quote->getShippingAddress()->getCity());
-            $request->deliveryDetails->deliveryAddrCountry = strtoupper($quote->getShippingAddress()->getCountryId());
+            $request->deliveryDetails->deliveryAddrCountry = strtoupper($quote->getShippingAddress()->getCountryId() ?? "");
 
         } else {
             $request->deliveryDetails->deliveryDetailsDifferent = false;
@@ -690,20 +690,20 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             ScopeInterface::SCOPE_STORE, $webShopProfile);
         $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
             ScopeInterface::SCOPE_STORE, $webShopProfile);
-        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
-        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
+        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array ?? ""));
+        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array ?? ""));
         if ($genderEntity != null && $genderEntity->isVisible()) {
-            if (in_array(strtolower($order->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
+            if (in_array(strtolower($order->getBillingAddress()->getPrefix() ?? ""), $gender_male_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_MALE;
-            } else if (in_array(strtolower($order->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
+            } else if (in_array(strtolower($order->getBillingAddress()->getPrefix() ?? ""), $gender_female_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_FEMALE;
             }
         }
 
         if (!empty($gender_custom)) {
-            if (in_array(strtolower($gender_custom), $gender_male_possible_prefix)) {
+            if (in_array(strtolower($gender_custom ?? ""), $gender_male_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_MALE;
-            } else if (in_array(strtolower($gender_custom), $gender_female_possible_prefix)) {
+            } else if (in_array(strtolower($gender_custom ?? ""), $gender_female_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_FEMALE;
             }
         }
@@ -714,7 +714,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->addrFirstLine = (string)$billingStreet;
         $request->billingAddr->postalCode = (string)$order->getBillingAddress()->getPostcode();
         $request->billingAddr->town = (string)$order->getBillingAddress()->getCity();
-        $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId());
+        $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId() ?? "");
 
         $request->custContacts->phoneMobile = (string)trim($order->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phonePrivate = (string)trim($order->getBillingAddress()->getTelephone(), '-');
@@ -737,7 +737,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->deliveryDetails->deliveryAddrFirstLine = trim((string)$shippingStreet);
             $request->deliveryDetails->deliveryAddrPostalCode = $this->nullToString($order->getShippingAddress()->getPostcode());
             $request->deliveryDetails->deliveryAddrTown = $this->nullToString($order->getShippingAddress()->getCity());
-            $request->deliveryDetails->deliveryAddrCountry = strtoupper($order->getShippingAddress()->getCountryId());
+            $request->deliveryDetails->deliveryAddrCountry = strtoupper($order->getShippingAddress()->getCountryId() ?? "");
 
         } else {
             $request->deliveryDetails->deliveryDetailsDifferent = false;
@@ -839,12 +839,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             ScopeInterface::SCOPE_STORE, $webShopProfile);
         $gender_female_possible_prefix_array = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/gender_female_possible_prefix',
             ScopeInterface::SCOPE_STORE, $webShopProfile);
-        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array));
-        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array));
+        $gender_male_possible_prefix = explode(";", strtolower($gender_male_possible_prefix_array ?? ""));
+        $gender_female_possible_prefix = explode(";", strtolower($gender_female_possible_prefix_array ?? ""));
         if ($genderEntity != null && $genderEntity->isVisible()) {
-            if (in_array(strtolower($order->getBillingAddress()->getPrefix()), $gender_male_possible_prefix)) {
+            if (in_array(strtolower($order->getBillingAddress()->getPrefix() ?? ""), $gender_male_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_MALE;
-            } else if (in_array(strtolower($order->getBillingAddress()->getPrefix()), $gender_female_possible_prefix)) {
+            } else if (in_array(strtolower($order->getBillingAddress()->getPrefix() ?? ""), $gender_female_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_FEMALE;
             }
         }
@@ -855,7 +855,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->addrFirstLine = (string)$billingStreet;
         $request->billingAddr->postalCode = (string)$order->getBillingAddress()->getPostcode();
         $request->billingAddr->town = (string)$order->getBillingAddress()->getCity();
-        $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId());
+        $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId() ?? "");
 
         $request->custContacts->phoneMobile = (string)trim($order->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phonePrivate = (string)trim($order->getBillingAddress()->getTelephone(), '-');
@@ -878,7 +878,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->deliveryDetails->deliveryAddrFirstLine = trim((string)$shippingStreet);
             $request->deliveryDetails->deliveryAddrPostalCode = $this->nullToString($order->getShippingAddress()->getPostcode());
             $request->deliveryDetails->deliveryAddrTown = $this->nullToString($order->getShippingAddress()->getCity());
-            $request->deliveryDetails->deliveryAddrCountry = strtoupper($order->getShippingAddress()->getCountryId());
+            $request->deliveryDetails->deliveryAddrCountry = strtoupper($order->getShippingAddress()->getCountryId() ?? "");
 
         } else {
             $request->deliveryDetails->deliveryDetailsDifferent = false;

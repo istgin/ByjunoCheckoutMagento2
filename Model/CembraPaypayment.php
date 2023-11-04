@@ -218,7 +218,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
                 ScopeInterface::SCOPE_STORE) == 1 && $payment->getQuote() != null) {
 
             $pattern = "/^[0-9]{4}$/";
-            if (strtolower($payment->getQuote()->getBillingAddress()->getCountryId()) == 'ch' && !preg_match($pattern, $payment->getQuote()->getBillingAddress()->getPostcode())) {
+            if (strtolower($payment->getQuote()->getBillingAddress()->getCountryId() ?? "") == 'ch' && !preg_match($pattern, $payment->getQuote()->getBillingAddress()->getPostcode())) {
                 throw new LocalizedException(
                     __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/postal_code_wrong', ScopeInterface::SCOPE_STORE).
                         ": " . $payment->getQuote()->getBillingAddress()->getPostcode())
