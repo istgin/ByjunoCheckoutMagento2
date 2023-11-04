@@ -4,6 +4,8 @@ namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
 
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCancelRequest;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCancelResponse;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutChkRequest;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutChkResponse;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCreditRequest;
@@ -30,6 +32,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $MESSAGE_AUTH = 'AUT';
     public static $MESSAGE_SET = 'SET';
     public static $MESSAGE_CNL = 'CNT';
+    public static $MESSAGE_CAN = 'CAN';
     public static $MESSAGE_CHK = 'CHK';
     public static $MESSAGE_STATUS = 'TST';
 
@@ -49,6 +52,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $SETTLE_OK = 'SETTLED';
     public static $AUTH_OK = 'AUTHORIZED';
     public static $CREDIT_OK = 'SUCCESS';
+    public static $CANCEL_OK = 'SUCCESS';
     public static $CHK_OK = 'SUCCESS';
     public static $GET_OK = 'SUCCESS';
     public static $GET_OK_TRANSACTION = 'SUCCESS';
@@ -1024,6 +1028,24 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $result;
     }
 
+    function cancelResponse($response)
+    {
+        $responseObject = json_decode($response);
+        $result = new CembraPayCheckoutCancelResponse();
+        if (empty($responseObject->processingStatus)) {
+            $result->processingStatus = self::$REQUEST_ERROR;
+        } else {
+            if ($responseObject->processingStatus == self::$CANCEL_OK) {
+                // TODO if need
+                $result->processingStatus = $responseObject->processingStatus;
+                $result->transactionId = $responseObject->transactionId;
+            } else {
+                $result->processingStatus = $responseObject->processingStatus;
+            }
+        }
+        return $result;
+    }
+
     function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId, $webshopProfile, $tx)
     {
         $request = new CembraPayCheckoutCreditRequest();
@@ -1036,6 +1058,20 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->amount = number_format($amount, 2, '.', '') * 100;
         $request->currency = $order->getOrderCurrencyCode();
         $request->settlementDetails->merchantInvoiceRef = $invoiceId;
+        return $request;
+    }
+
+    function CreateMagentoShopRequestCancel(Order $order, $amount, $webshopProfile, $tx)
+    {
+        $request = new CembraPayCheckoutCancelRequest();
+        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
+        $request->requestMsgType = self::$MESSAGE_CAN;
+        $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
+        $request->transactionId = $tx;
+        $request->merchantOrderRef = $order->getRealOrderId();
+        $request->amount = number_format($amount, 2, '.', '') * 100;
+        $request->currency = $order->getOrderCurrencyCode();
         return $request;
     }
 

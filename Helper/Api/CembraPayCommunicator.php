@@ -46,6 +46,11 @@ class CembraPayCommunicator
     public function sendCreditRequest($xmlRequest, $timeout, $username, $password) {
         return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/credit', $timeout, $username, $password);
     }
+
+    public function sendCancelRequest($xmlRequest, $timeout, $username, $password) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/cancel', $timeout, $username, $password);
+    }
+
     public function sendGetTransactionRequest($xmlRequest, $timeout, $username, $password) {
         return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/status', $timeout, $username, $password);
     }
@@ -55,13 +60,12 @@ class CembraPayCommunicator
         if (intval($timeout) < 0) {
             $timeout = 30;
         }
-        $url = 'https://transactions-gateway.sit.byjunoag.ch/'.$endpoint;
-       /* if ($this->server == 'test') {
-            $url .= 'services/creditCheckDACH_01_41_TEST/response.cfm';
+        if ($this->server == 'test') {
+            $url = 'https://transactions-gateway.sit.byjunoag.ch/'.$endpoint;
         } else {
-            $url .= 'services/creditCheckDACH_01_41/response.cfm';
+            //TODO: live server
+            $url = 'https://transactions-gateway.sit.byjunoag.ch/'.$endpoint;
         }
-*/
         $request_data = $xmlRequest;
 
         $headers = [

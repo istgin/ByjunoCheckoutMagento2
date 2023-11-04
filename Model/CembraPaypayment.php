@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Igor
- * Date: 08.12.2016
- * Time: 19:31
+ * Created by CembraPay.
  */
 
 namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
@@ -96,7 +93,63 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
 
     /* @var $payment \Magento\Sales\Model\Order\Payment */
     public function cancel(InfoInterface $payment)
-    {
+    { /* @var $order \Magento\Sales\Model\Order */
+        $order = $payment->getOrder();
+        $webshopProfileId = $payment->getAdditionalInformation("webshop_profile_id");
+        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjuno_setup/cembrapays5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+            return $this;
+        }
+
+        $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
+        if ($tx == null || !$tx || empty($tx["transaction_id"])) {
+            throw new LocalizedException (
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
+            );
+        }
+
+        $request = $this->_dataHelper->CreateMagentoShopRequestCancel($order, $order->getTotalDue(), $webshopProfileId, $tx["transaction_id"]);
+        $CembraPayRequestName = $request->requestMsgType;
+        $json = $request->createRequest();
+        $cembrapayCommunicator = new CembraPayCommunicator();
+        $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+        if ($mode == 'live') {
+            $cembrapayCommunicator->setServer('live');
+
+        } else {
+            $cembrapayCommunicator->setServer('test');
+        }
+        $status = "";
+        $response = $cembrapayCommunicator->sendCancelRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
+            ScopeInterface::SCOPE_STORE, $webshopProfileId),
+            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE, $webshopProfileId),
+            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        if ($response) { /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
+            $responseRes = $this->_dataHelper->cancelResponse($response);
+            $status = $responseRes->processingStatus;
+            $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
+                "-","-", $request->requestMsgId,
+                "-", "-", "-","-", $responseRes->transactionId, $order->getRealOrderId());
+        } else {
+            $this->_dataHelper->saveLog($json, $response, "Query error", $CembraPayRequestName,
+                "-","-", $request->requestMsgId,
+                "-", "-", "-","-", "-", "-");
+        }
+        if ($status != DataHelper::$CANCEL_OK) {
+            throw new LocalizedException(
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_s5_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
+            );
+        }
+
+        $authTransaction = $payment->getAuthorizationTransaction();
+        if ($authTransaction && !$authTransaction->getIsClosed()) {
+            $authTransaction->setIsClosed(true);
+            $authTransaction->save();
+        }
+        $payment->setTransactionId($payment->getParentTransactionId().'-void');
+        $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_VOID, null, true);
+        $transaction->setIsClosed(true);
+        $payment->save();
+        $transaction->save();
         return $this;
     }
 
@@ -332,52 +385,5 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
                 __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId))
             );
         }
-
-/*
-        $CembraPayRequestName = 'CembraPay Checkout S4';
-        $xml = $request->createRequest();
-        $cembrapayCommunicator = new \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator();
-        $mode = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        if ($mode == 'live') {
-            $cembrapayCommunicator->setServer('live');
-            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_prod_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        } else {
-            $cembrapayCommunicator->setServer('test');
-            $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        }
-        $response = $cembrapayCommunicator->sendS4Request($xml, (int)$this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId));
-        if ($response) {
-            $this->_dataHelper->_responseS4->setRawResponse($response);
-            $this->_dataHelper->_responseS4->processResponse();
-            $status = $this->_dataHelper->_responseS4->getProcessingInfoClassification();
-            $this->_dataHelper->saveS4Log($order, $request, $xml, $response, $status, $CembraPayRequestName);
-        } else {
-            $status = "ERR";
-            $this->_dataHelper->saveS4Log($order, $request, $xml, "empty response", $status, $CembraPayRequestName);
-        }
-        if ($status == 'ERR') {
-            throw new LocalizedException(
-                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: CDP_FAIL)")
-            );
-        } else {
-            $this->_dataHelper->_cembrapayInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
-        }
-
-        $authTransaction = $payment->getAuthorizationTransaction();
-        if ($authTransaction && !$authTransaction->getIsClosed()) {
-            $authTransaction->setIsClosed($payment->isCaptureFinal($amount));
-            $authTransaction->save();
-        }
-
-        $payment->setTransactionId($incrementValue.'-invoice');
-        $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE, null, true);
-        $transaction->setIsClosed(true);
-        $payment->save();
-
-        $transaction->save();
-        return $this;
-*/
     }
-
-
 }
