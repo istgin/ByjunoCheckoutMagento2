@@ -1469,8 +1469,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         $request->customerConsents = Array($customerConsents);
 
-        $request->merchantDetails->returnUrlError = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/success');
-        $request->merchantDetails->ReturnUrlCancel = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/success');
+        $request->merchantDetails->returnUrlError = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel');
+        $request->merchantDetails->ReturnUrlCancel = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel');
         $request->merchantDetails->returnUrlSuccess = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/success');
 
         $request->merchantDetails->transactionChannel = "WEB";
