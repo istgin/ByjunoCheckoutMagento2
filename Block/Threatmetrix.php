@@ -3,21 +3,26 @@
 namespace CembraPayCheckout\CembraPayCheckoutCore\Block;
 
 
-class Threatmetrix extends \Magento\Framework\View\Element\Template
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+
+class Threatmetrix extends Template
 {
 
-    /* @var $_helper \CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper */
+    /* @var $_helper DataHelper */
     private $_helper;
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $salesOrderCollection
+     * @param Context $context
+     * @param CollectionFactory $salesOrderCollection
      * @param \Magento\GoogleAnalytics\Helper\Data $googleAnalyticsData
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $salesOrderCollection,
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper $helper,
+        Context $context,
+        CollectionFactory $salesOrderCollection,
+        DataHelper $helper,
         array $data = []
     ) {
         $this->_helper = $helper;

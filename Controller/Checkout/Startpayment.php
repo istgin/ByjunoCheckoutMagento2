@@ -20,7 +20,6 @@ class Startpayment extends Action
     /**
      * Index constructor.
      * @param \Magento\Framework\App\Action\Context $context
-     * @param Session $checkoutSession
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(

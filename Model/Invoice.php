@@ -107,8 +107,6 @@ class Invoice extends CembraPaypayment
                 // Checkout page active
                 return 'cembrapaycheckoutcore/checkout/startpayment';
             } else {
-                var_dump("XXX");
-                exit();
                 return 'cembrapaycheckoutcore/checkout/startcheckout';
             }
         }

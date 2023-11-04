@@ -7,7 +7,6 @@ namespace CembraPayCheckout\CembraPayCheckoutCore\Block;
 
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;
-use CembraPayCheckout\CembraPayCheckoutCore\Gateway\Response\FraudHandler;
 
 class Info extends ConfigurableInfo
 {
@@ -31,10 +30,6 @@ class Info extends ConfigurableInfo
      */
     protected function getValueView($field, $value)
     {
-        switch ($field) {
-            case FraudHandler::FRAUD_MSG_LIST:
-                return implode('; ', $value);
-        }
         return parent::getValueView($field, $value);
     }
 }
