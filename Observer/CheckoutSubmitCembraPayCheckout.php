@@ -6,6 +6,8 @@ use PHPUnit\Framework\Exception;
 class CheckoutSubmitCembraPayCheckout implements ObserverInterface {
     protected $helper;
     protected $categoryRepository;
+    /* @var $_scopeConfig \Magento\Framework\App\Config\ScopeConfigInterface */
+    protected $_scopeConfig;
     /**
      * @param \CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper $helper
      */
