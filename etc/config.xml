@@ -62,7 +62,6 @@
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
                     <title_installment>CembraPay Checkout Ratenzahlung</title_installment>
-                    <sort_order_installment>2</sort_order_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
                     <name>3 Raten</name>
@@ -154,7 +153,6 @@
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
                     <title_installment>CembraPay Checkout Paiement échelonné</title_installment>
-                    <sort_order_installment>2</sort_order_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
                     <name>3 tranches</name>
@@ -249,7 +247,6 @@
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
                     <title_installment>CembraPay Checkout Pagamento rateale</title_installment>
-                    <sort_order_installment>2</sort_order_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
                     <name>3 Raten</name>
@@ -340,7 +337,6 @@
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
                     <title_installment>CembraPay Checkout installment</title_installment>
-                    <sort_order_installment>2</sort_order_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
                     <name>3 installments</name>
@@ -466,7 +462,6 @@
         <cembrapayinvoicesettings>
             <cembrapaycheckout_invoice_setup>
                 <title_invoice>CembraPay Checkout Rechnung</title_invoice>
-                <sort_order_invoice>2</sort_order_invoice>
             </cembrapaycheckout_invoice_setup>
             <cembrapaycheckout_invoice_partial>
                 <active>0</active>
@@ -490,7 +485,6 @@
         <cembrapayinstallmentsettings>
             <cembrapaycheckout_installment_setup>
                 <title_installment>CembraPay Checkout Ratenzahlung</title_installment>
-                <sort_order_installment>2</sort_order_installment>
             </cembrapaycheckout_installment_setup>
             <cembrapaycheckout_installment_3installment>
                 <active>0</active>
