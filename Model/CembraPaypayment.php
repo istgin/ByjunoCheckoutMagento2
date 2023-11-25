@@ -110,7 +110,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         $request = $this->_dataHelper->CreateMagentoShopRequestCancel($order, $order->getTotalDue(), $webshopProfileId, $tx["transaction_id"]);
         $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
-        $cembrapayCommunicator = new CembraPayCommunicator();
+        $cembrapayCommunicator = new CembraPayCommunicator($this->_dataHelper->cembraPayAzure);
         $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
         if ($mode == 'live') {
             $cembrapayCommunicator->setServer('live');
@@ -256,7 +256,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         $request = $this->_dataHelper->CreateMagentoShopRequestCredit($order, $amount, $incoiceId, $webshopProfileId, $tx["transaction_id"]);
         $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
-        $cembrapayCommunicator = new CembraPayCommunicator();
+        $cembrapayCommunicator = new CembraPayCommunicator($this->_dataHelper->cembraPayAzure);
         $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
         if ($mode == 'live') {
             $cembrapayCommunicator->setServer('live');
@@ -334,7 +334,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
 
         $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
-        $cembrapayCommunicator = new CembraPayCommunicator();
+        $cembrapayCommunicator = new CembraPayCommunicator($this->_dataHelper->cembraPayAzure);
         $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
         if ($mode == 'live') {
             $cembrapayCommunicator->setServer('live');

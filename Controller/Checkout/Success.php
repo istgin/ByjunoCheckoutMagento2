@@ -60,7 +60,7 @@ class Success implements ActionInterface
             $payment->getAdditionalInformation('webshop_profile_id'));
         $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
-        $cembrapayCommunicator = new CembraPayCommunicator();
+        $cembrapayCommunicator = new CembraPayCommunicator($this->_dataHelper->cembraPayAzure);
         $mode = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
         if ($mode == 'live') {
             $cembrapayCommunicator->setServer('live');

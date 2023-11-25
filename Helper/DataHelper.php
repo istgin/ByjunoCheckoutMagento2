@@ -2,6 +2,7 @@
 
 namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
 
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCancelRequest;
@@ -90,6 +91,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory
      */
     public $orderCollectionFactory;
+
+    /**
+     * @var \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure
+     */
+    public $cembraPayAzure;
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -215,6 +221,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Customer\Api\CustomerMetadataInterface $customerMetadata,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure $cembraPayAzure
     )
     {
 
@@ -238,6 +245,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_url = $url;
         $this->quoteRepository = $quoteRepository;
         $this->orderCollectionFactory = $orderCollectionFactory;
+        $this->cembraPayAzure = $cembraPayAzure;
     }
 
     function getPendingOrders()
@@ -343,7 +351,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     //       $json = $request->createRequest();
                     //   }
                     $json = $request->createRequest();
-                    $cembrapayCommunicator = new CembraPayCommunicator();
+                    $cembrapayCommunicator = new CembraPayCommunicator($this->cembraPayAzure);
                     $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
                     if ($mode == 'live') {
                         $cembrapayCommunicator->setServer('live');

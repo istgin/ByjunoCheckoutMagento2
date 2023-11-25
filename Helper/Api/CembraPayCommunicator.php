@@ -9,6 +9,18 @@ namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
 class CembraPayCommunicator
 {
+
+    /**
+     * @var \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure
+     */
+    public $cembraPayAzure;
+
+    public function __construct(
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure $cembraPayAzure
+    )
+    {
+        $this->cembraPayAzure = $cembraPayAzure;
+    }
     private $server;
 
     /**
@@ -56,6 +68,10 @@ class CembraPayCommunicator
     }
 
     private function sendRequest($xmlRequest, $endpoint, $timeout, $username, $password) {
+        $token = $this->cembraPayAzure->getToken($timeout, $username, $password);
+        if (empty($token["access_token"])) {
+            return "";
+        }
         $response = "";
         if (intval($timeout) < 0) {
             $timeout = 30;
@@ -70,14 +86,12 @@ class CembraPayCommunicator
 
         $headers = [
             "Content-type: application/json",
-            "accept: text/plain"
+            "accept: text/plain",
+            "Authorization: Bearer ".$token["access_token"]
         ];
-
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-
-        curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $password);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
