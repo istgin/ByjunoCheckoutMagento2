@@ -19,16 +19,18 @@ class CembraPayAzure
         --data client_secret=<> \
         --data scope=<>
      */
-    public function getToken($timeout, $username, $password, $audience) {
-        if (intval($timeout) < 0) {
+    public function getToken(CembraPayLoginDto $accessData) {
+        if (intval($accessData->timeout) < 0) {
             $timeout = 30;
+        } else {
+            $timeout = intval($accessData->timeout);
         }
         $url = 'https://login.microsoftonline.com/4c6a6b34-0bcf-4dff-b3a7-949dcb43a07e/oauth2/v2.0/token';
         $request_data = [
             "grant_type" => "client_credentials",
-            "client_id" => $username,
-            "client_secret" => $password,
-            "scope" => $audience
+            "client_id" => $accessData->username,
+            "client_secret" => $accessData->password,
+            "scope" => $accessData->audience
         ];
 
         $headers = [
@@ -54,21 +56,29 @@ class CembraPayAzure
         return $response;
     }
 
+    public function validToken($token, $timeoutSec = 120)
+    {
+        var_dump($token);
+        $tokenExp = explode('.', $token ?? "");
+        if (!empty($tokenExp[1])) {
+            $jsonToken = base64_decode($tokenExp[1]);
+            $arrayToken = json_decode($jsonToken, true);
+            if ($arrayToken["exp"] - time() >= $timeoutSec) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private function decodeJson($json)
     {
-        $result = Array("access_token" => "", "exp" => 0);
+        $result = "";
         $reponse = json_decode($json);
-        if (!empty($reponse->token_type) && $reponse->token_type == "Bearer") {
-            if (!empty($reponse->access_token)) {
-                list($header, $payload, $signature) = explode('.', $reponse->access_token);
-                $jsonToken = base64_decode($payload);
-                $arrayToken = json_decode($jsonToken, true);
-                if ($arrayToken["exp"] - time() > 0) {
-                    $result["access_token"] = $reponse->access_token;
-                    $result["exp"] = $arrayToken["exp"];
-                    return $result;
-                }
-            }
+        if (!empty($reponse->token_type)
+            && $reponse->token_type == "Bearer"
+            && !empty($reponse->access_token)
+            && $this->validToken($reponse->access_token)) {
+                return $reponse->access_token;
         }
         return $result;
     }

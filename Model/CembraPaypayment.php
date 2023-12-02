@@ -119,11 +119,11 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
             $cembrapayCommunicator->setServer('test');
         }
         $status = "";
-        $response = $cembrapayCommunicator->sendCancelRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
-            ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        $response = $cembrapayCommunicator->sendCancelRequest($json,
+            $this->_dataHelper->getAccessDataWebshop($webshopProfileId),
+            function ($object, $token) {
+                $object->saveToken($token);
+            });
         if ($response) { /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
             $responseRes = $this->_dataHelper->cancelResponse($response);
             $status = $responseRes->processingStatus;
@@ -269,11 +269,11 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
 
         }
         $status = "";
-        $response = $cembrapayCommunicator->sendCreditRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
-            ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        $response = $cembrapayCommunicator->sendCreditRequest($json,
+            $this->_dataHelper->getAccessDataWebshop($webshopProfileId),
+            function ($object, $token) {
+                $object->saveToken($token);
+            });
         if ($response) { /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
             $responseRes = $this->_dataHelper->creditResponse($response);
             $status = $responseRes->processingStatus;
@@ -347,11 +347,11 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
             $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', ScopeInterface::SCOPE_STORE, $webshopProfileId);
 
         }
-        $response = $cembrapayCommunicator->sendSettleRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
-            ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE, $webshopProfileId),
-            $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE, $webshopProfileId));
+        $response = $cembrapayCommunicator->sendSettleRequest($json,
+            $this->_dataHelper->getAccessDataWebshop($webshopProfileId),
+            function ($object, $token) {
+                $object->saveToken($token);
+            });
 
         $status = "";
         $responseRes = null;

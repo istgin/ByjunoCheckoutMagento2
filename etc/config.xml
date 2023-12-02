@@ -413,6 +413,7 @@
                 <tmxenabled>0</tmxenabled>
                 <tmxkey>lq866c5i</tmxkey>
                 <audience>api://fb6abffc-f90d-4c10-aca5-6c59533c76c2/.default</audience>
+                <access_token/>
                 <businesstobusiness>0</businesstobusiness>
                 <cembrapaycheckout_prod_email>invoices@byjuno.ch</cembrapaycheckout_prod_email>
                 <cembrapaycheckout_test_email>test-invoices@byjuno.ch</cembrapaycheckout_test_email>

@@ -66,6 +66,9 @@
                 <field id="audience" translate="label" type="text" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Audience</label>
                 </field>
+                <field id="access_token" translate="label" type="text" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>access_token</label>
+                </field>
                 <field id="minamount" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Mininmal amount for checkout</label>
                 </field>

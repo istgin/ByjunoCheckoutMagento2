@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by CembraPay.
- * User: i.sutugins
- * Date: 14.4.9
- * Time: 16:42
- */
+
 namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
 class CembraPayCommunicator
@@ -39,42 +34,47 @@ class CembraPayCommunicator
         return $this->server;
     }
 
-    public function sendScreeningRequest($xmlRequest, $timeout, $username, $password, $audience) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Screening', $timeout, $username, $password, $audience);
+    public function sendScreeningRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Screening', $accessData, $cb);
     }
 
-    public function sendAuthRequest($xmlRequest, $timeout, $username, $password, $audience) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout, $username, $password, $audience);
+    public function sendAuthRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $accessData, $cb);
     }
 
-    public function sendCheckoutRequest($xmlRequest, $timeout, $username, $password, $audience) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Checkout', $timeout, $username, $password, $audience);
+    public function sendCheckoutRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Checkout', $accessData, $cb);
     }
 
-    public function sendSettleRequest($xmlRequest, $timeout, $username, $password, $audience) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $timeout, $username, $password, $audience);
+    public function sendSettleRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $$accessData, $cb);
     }
 
-    public function sendCreditRequest($xmlRequest, $timeout, $username, $password, $audience) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/credit', $timeout, $username, $password, $audience);
+    public function sendCreditRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/credit', $accessData, $cb);
     }
 
-    public function sendCancelRequest($xmlRequest, $timeout, $username, $password, $audience) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/cancel', $timeout, $username, $password, $audience);
+    public function sendCancelRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/cancel', $accessData, $cb);
     }
 
-    public function sendGetTransactionRequest($xmlRequest, $timeout, $username, $password, $audience) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/status', $timeout, $username, $password, $audience);
+    public function sendGetTransactionRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/status', $accessData, $cb);
     }
 
-    private function sendRequest($xmlRequest, $endpoint, $timeout, $username, $password, $audience) {
-        $token = $this->cembraPayAzure->getToken($timeout, $username, $password, $audience);
-        if (empty($token["access_token"])) {
+    private function sendRequest($xmlRequest, $endpoint, CembraPayLoginDto $accessData, $cb) {
+        $token = $accessData->accessToken;
+        if (!$this->cembraPayAzure->validToken($token)) {
+            $token = $this->cembraPayAzure->getToken($accessData);
+        }
+        if (empty($token)) {
             return "";
         }
         $response = "";
-        if (intval($timeout) < 0) {
+        if (intval($accessData->timeout) < 0) {
             $timeout = 30;
+        } else {
+            $timeout = $accessData->timeout;
         }
         if ($this->server == 'test') {
             $url = 'https://transactions-gateway.sit.byjunoag.ch/'.$endpoint;
@@ -87,7 +87,7 @@ class CembraPayCommunicator
         $headers = [
             "Content-type: application/json",
             "accept: text/plain",
-            "Authorization: Bearer ".$token["access_token"]
+            "Authorization: Bearer ".$token
         ];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -102,45 +102,8 @@ class CembraPayCommunicator
         @curl_close($curl);
 
         $response = trim($response);
+        $cb($accessData->helperObject, $token);
         return $response;
     }
 
-    public function sendS4Request($xmlRequest, $timeout = 30) {
-        $response = "";
-        if (intval($timeout) < 0) {
-            $timeout = 30;
-        }
-        if ($this->server == 'test') {
-            $sslsock = fsockopen("ssl://secure.intrum.ch", 443, $errno, $errstr, $timeout);
-        } else {
-            $sslsock = fsockopen("ssl://secure.intrum.ch", 443, $errno, $errstr, $timeout);
-        }
-        if(is_resource($sslsock)) {
-
-            $request_data	= urlencode("REQUEST")."=".urlencode($xmlRequest);
-            $request_length	= strlen($request_data);
-
-            if ($this->server == 'test') {
-                fputs($sslsock, "POST /services/creditCheckDACH_01_41_TEST/sendTransaction.cfm HTTP/1.0\r\n");
-            } else {
-                fputs($sslsock, "POST /services/creditCheckDACH_01_41/sendTransaction.cfm HTTP/1.0\r\n");
-            }
-
-            fputs($sslsock, "Host: byjuno.com\r\n");
-            fputs($sslsock, "Content-type: application/x-www-form-urlencoded\r\n");
-            fputs($sslsock, "Content-Length: ".$request_length."\r\n");
-            fputs($sslsock, "Connection: close\r\n\r\n");
-            fputs($sslsock, $request_data);
-
-            while(!feof($sslsock)) {
-                $response .= @fgets($sslsock, 128);
-            }
-
-            fclose($sslsock);
-            $response = substr($response, strpos($response,'<?xml')-1);
-            $response = substr($response, 1,strpos($response,'Response>')+8);
-        }
-        return $response;
-    }
-
-};
+}

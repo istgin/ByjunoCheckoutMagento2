@@ -70,11 +70,10 @@ class StartCheckout implements ActionInterface
             } else {
                 $cembrapayCommunicator->setServer('test');
             }
-            $response = $cembrapayCommunicator->sendCheckoutRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
-                ScopeInterface::SCOPE_STORE),
-                $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE),
-                $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE),
-                $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE));
+            $response = $cembrapayCommunicator->sendCheckoutRequest($json, $this->_dataHelper->getAccessData(),
+                function ($object, $token) {
+                    $object->saveToken($token);
+                });
 
             $status = "";
             $responseRes = null;

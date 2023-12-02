@@ -17,7 +17,9 @@ use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleRe
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayGetStatusRequest;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayGetStatusResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayLoginDto;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CustomerConsents;
+use Magento\Framework\App\Config\ReinitableConfigInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
@@ -25,7 +27,6 @@ use Magento\Store\Model\ScopeInterface;
 
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
-
     public static $SINGLEINVOICE = 'SINGLE-INVOICE';
     public static $CEMBRAPAYINVOICE = 'BYJUNO-INVOICE';
 
@@ -74,6 +75,15 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     protected $_url;
     /* @var $_scopeConfig \Magento\Framework\App\Config\ScopeConfigInterface */
     public $_scopeConfig;
+    /* @var $_writerInterface \Magento\Framework\App\Config\Storage\WriterInterface */
+    public $_writerInterface;
+    /**
+     * Reinitable Config Model.
+     *
+     * @var ReinitableConfigInterface
+     */
+    private $_reinitableConfig;
+
     public $_checkoutSession;
     protected $_countryHelper;
     protected $_resolver;
@@ -221,7 +231,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Customer\Api\CustomerMetadataInterface $customerMetadata,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure $cembraPayAzure
+        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure $cembraPayAzure,
+        \Magento\Framework\App\Config\Storage\WriterInterface $writerInterface,
+        ReinitableConfigInterface $reinitableConfig
     )
     {
 
@@ -246,6 +258,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->quoteRepository = $quoteRepository;
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->cembraPayAzure = $cembraPayAzure;
+        $this->_writerInterface = $writerInterface;
+        $this->_reinitableConfig = $reinitableConfig;
     }
 
     function getPendingOrders()
@@ -358,11 +372,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     } else {
                         $cembrapayCommunicator->setServer('test');
                     }
-                    $response = $cembrapayCommunicator->sendScreeningRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
-                        ScopeInterface::SCOPE_STORE),
-                        $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE),
-                        $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE),
-                        $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE));
+                    $response = $cembrapayCommunicator->sendScreeningRequest($json, $this->getAccessData(), function ($object, $token) {
+                        $object->saveToken($token);
+                    });
 
                     if ($response) {
                         /* @var $responseRes CembraPayCheckoutScreeningResponse */
@@ -415,6 +427,33 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
         return true;
+    }
+
+    public function saveToken($token) {
+        $this->_writerInterface->save('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token', $token);
+        $this->_reinitableConfig->reinit();
+    }
+
+    public function getAccessData() {
+        $accessData = new CembraPayLoginDto();
+        $accessData->helperObject = $this;
+        $accessData->timeout = (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout', ScopeInterface::SCOPE_STORE);
+        $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE);
+        $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE);
+        $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE);
+        $accessData->accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token');
+        return $accessData;
+    }
+
+    public function getAccessDataWebshop($webShopId) {
+        $accessData = new CembraPayLoginDto();
+        $accessData->helperObject = $this;
+        $accessData->timeout = (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout', ScopeInterface::SCOPE_STORE, $webShopId);
+        $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE, $webShopId);
+        $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE, $webShopId);
+        $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE, $webShopId);
+        $accessData->accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token');
+        return $accessData;
     }
 
     public function isTheSame(CembraPayCheckoutAutRequest $request)
