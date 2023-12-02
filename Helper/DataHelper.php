@@ -56,7 +56,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $CANCEL_OK = 'SUCCESS';
     public static $CHK_OK = 'SUCCESS';
     public static $GET_OK = 'SUCCESS';
-    public static $GET_OK_TRANSACTION = 'SUCCESS';
+    public static $GET_OK_TRANSACTION_STATUSES = ['AUTHORIZED', 'SETTLED', 'PARTIALLY SETTLED'];
 
 
     public static $REQUEST_ERROR = 'REQUEST_ERROR';
@@ -361,7 +361,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     $response = $cembrapayCommunicator->sendScreeningRequest($json, (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
                         ScopeInterface::SCOPE_STORE),
                         $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE),
-                        $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE));
+                        $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE),
+                        $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE));
 
                     if ($response) {
                         /* @var $responseRes CembraPayCheckoutScreeningResponse */
@@ -958,28 +959,18 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $responseObject = json_decode($response);
         $result = new CembraPayGetStatusResponse();
-        if (empty($responseObject->processingStatus)) {
-            $result->processingStatus = self::$REQUEST_ERROR;
+        if (empty($responseObject->transactionStatus->transactionStatus)) {
+            $result->transactionStatus->transactionStatus= self::$REQUEST_ERROR;
         } else {
-            $result->processingStatus = $responseObject->processingStatus;
-            if ($responseObject->processingStatus == self::$GET_OK) {
-                $result->requestMerchantId = $responseObject->requestMerchantId;
-                $result->requestMsgType = $responseObject->transactionId;
-                $result->requestMsgId = $responseObject->requestMsgType;
-                $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
-                $result->replyMsgId = $responseObject->replyMsgId;
-                $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
-                $result->merchantCustRef = $responseObject->merchantCustRef;
-                $result->token = $responseObject->token;
-                $result->isTokenDeleted = $responseObject->isTokenDeleted;
-                $result->merchantOrderRef = $responseObject->merchantOrderRef;
-                $result->processingStatus = $responseObject->processingStatus;
-                $result->authorization->authorizationCurrency = $responseObject->processingStatus;
-                $result->authorization->authorizationValidTill = $responseObject->authorizationValidTill;
-                $result->authorization->authorizedRemainingAmount = $responseObject->authorizedRemainingAmount;
-                $result->transactionStatus->transactionId = $responseObject->transactionStatus->transactionId;
-                $result->transactionStatus->transactionStatus = $responseObject->transactionStatus->transactionStatus;
-            }
+            $result->requestMerchantId = $responseObject->requestMerchantId;
+            $result->requestMsgType = $responseObject->transactionId;
+            $result->requestMsgId = $responseObject->requestMsgType;
+            $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
+            $result->replyMsgId = $responseObject->replyMsgId;
+            $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
+            $result->isTokenDeleted = $responseObject->isTokenDeleted;
+            $result->merchantOrderRef = $responseObject->merchantOrderRef;
+            $result->transactionStatus->transactionStatus = $responseObject->transactionStatus->transactionStatus;
         }
         return $result;
     }

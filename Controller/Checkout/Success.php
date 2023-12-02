@@ -70,22 +70,23 @@ class Success implements ActionInterface
         $response = $cembrapayCommunicator->sendGetTransactionRequest($json, (int)$this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout',
             ScopeInterface::SCOPE_STORE),
             $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE),
-            $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE));
+            $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE),
+            $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE));
 
-        $status = "";
         $transactionStatus = "";
         $responseRes = null;
         if ($response) {
             $responseRes = $this->_dataHelper->getTransactionResponse($response);
-            $status = $responseRes->processingStatus;
-            $transactionStatus = $responseRes->transactionStatus->transactionStatus;
+            if (!empty($responseRes->transactionStatus)) {
+                $transactionStatus = $responseRes->transactionStatus->transactionStatus;
+            }
             $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
                 "-","-","-","-","-","-","-",$transactionId, $order->getRealOrderId());
         } else {
             $this->_dataHelper->saveLog($json, $response, "Query error", $CembraPayRequestName,
                 "-","-","-","-","-","-","-",$transactionId,"-");
         }
-        if ($status == DataHelper::$GET_OK && $transactionStatus == DataHelper::$GET_OK_TRANSACTION) {
+        if (!empty($transactionStatus) && in_array($transactionStatus, DataHelper::$GET_OK_TRANSACTION_STATUSES)) {
             $payment->setAdditionalInformation("chk_processed_ok", 'true');
             $payment->save();
 
@@ -109,7 +110,7 @@ class Success implements ActionInterface
             }
 
             $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('checkout/success');
+            $resultRedirect->setPath('checkout/onepage/success/');
             return $resultRedirect;
         } else {
             $resultRedirect = $this->resultRedirectFactory->create();

@@ -39,36 +39,36 @@ class CembraPayCommunicator
         return $this->server;
     }
 
-    public function sendScreeningRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Screening', $timeout, $username, $password);
+    public function sendScreeningRequest($xmlRequest, $timeout, $username, $password, $audience) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Screening', $timeout, $username, $password, $audience);
     }
 
-    public function sendAuthRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout, $username, $password);
+    public function sendAuthRequest($xmlRequest, $timeout, $username, $password, $audience) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/authorize', $timeout, $username, $password, $audience);
     }
 
-    public function sendCheckoutRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Checkout', $timeout, $username, $password);
+    public function sendCheckoutRequest($xmlRequest, $timeout, $username, $password, $audience) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Checkout', $timeout, $username, $password, $audience);
     }
 
-    public function sendSettleRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $timeout, $username, $password);
+    public function sendSettleRequest($xmlRequest, $timeout, $username, $password, $audience) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $timeout, $username, $password, $audience);
     }
 
-    public function sendCreditRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/credit', $timeout, $username, $password);
+    public function sendCreditRequest($xmlRequest, $timeout, $username, $password, $audience) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/credit', $timeout, $username, $password, $audience);
     }
 
-    public function sendCancelRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/cancel', $timeout, $username, $password);
+    public function sendCancelRequest($xmlRequest, $timeout, $username, $password, $audience) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/cancel', $timeout, $username, $password, $audience);
     }
 
-    public function sendGetTransactionRequest($xmlRequest, $timeout, $username, $password) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/status', $timeout, $username, $password);
+    public function sendGetTransactionRequest($xmlRequest, $timeout, $username, $password, $audience) {
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/status', $timeout, $username, $password, $audience);
     }
 
-    private function sendRequest($xmlRequest, $endpoint, $timeout, $username, $password) {
-        $token = $this->cembraPayAzure->getToken($timeout, $username, $password);
+    private function sendRequest($xmlRequest, $endpoint, $timeout, $username, $password, $audience) {
+        $token = $this->cembraPayAzure->getToken($timeout, $username, $password, $audience);
         if (empty($token["access_token"])) {
             return "";
         }

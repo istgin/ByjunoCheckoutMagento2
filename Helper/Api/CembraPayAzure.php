@@ -19,8 +19,7 @@ class CembraPayAzure
         --data client_secret=<> \
         --data scope=<>
      */
-    public function getToken($timeout, $username, $password) {
-        $response = "";
+    public function getToken($timeout, $username, $password, $audience) {
         if (intval($timeout) < 0) {
             $timeout = 30;
         }
@@ -29,7 +28,7 @@ class CembraPayAzure
             "grant_type" => "client_credentials",
             "client_id" => $username,
             "client_secret" => $password,
-            "scope" => "api://32c02937-6069-4295-a5df-92f0416dff25/.default"
+            "scope" => $audience
         ];
 
         $headers = [

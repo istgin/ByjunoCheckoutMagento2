@@ -63,6 +63,9 @@
                 <field id="cembrapaypassword" translate="label" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Password</label>
                 </field>
+                <field id="audience" translate="label" type="text" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Audience</label>
+                </field>
                 <field id="minamount" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Mininmal amount for checkout</label>
                 </field>
