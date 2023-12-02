@@ -64,7 +64,7 @@ class CembraPayCommunicator
 
     private function sendRequest($xmlRequest, $endpoint, CembraPayLoginDto $accessData, $cb) {
         $token = $accessData->accessToken;
-        if (!$this->cembraPayAzure->validToken($token)) {
+        if (!CembraPayAzure::validToken($token)) {
             $token = $this->cembraPayAzure->getToken($accessData);
         }
         if (empty($token)) {

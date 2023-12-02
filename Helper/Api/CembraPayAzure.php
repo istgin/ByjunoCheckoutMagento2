@@ -56,7 +56,7 @@ class CembraPayAzure
         return $response;
     }
 
-    public function validToken($token, $timeoutSec = 120)
+    public static function validToken($token, $timeoutSec = 120)
     {
         var_dump($token);
         $tokenExp = explode('.', $token ?? "");
@@ -77,7 +77,7 @@ class CembraPayAzure
         if (!empty($reponse->token_type)
             && $reponse->token_type == "Bearer"
             && !empty($reponse->access_token)
-            && $this->validToken($reponse->access_token)) {
+            && self::validToken($reponse->access_token)) {
                 return $reponse->access_token;
         }
         return $result;
