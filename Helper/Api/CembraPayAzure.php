@@ -58,7 +58,6 @@ class CembraPayAzure
 
     public static function validToken($token, $timeoutSec = 120)
     {
-        var_dump($token);
         $tokenExp = explode('.', $token ?? "");
         if (!empty($tokenExp[1])) {
             $jsonToken = base64_decode($tokenExp[1]);
