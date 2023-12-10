@@ -58,14 +58,24 @@
                         </label>
                         <div class="control">
                             <input name="payment[invoice_customer_dob]" id="customer_dob_invoice"
-                                    style="width: 150px"
-                                    placeholder=""
-                                    type="text" class="input-text"
-                                    data-bind="attr:{placeholder: $t('DD.MM.YYYY')}, datepicker: { storage: getDob(), options: {
+                                   style="width: 150px"
+                                   placeholder=""
+                                   type="text" class="input-text"
+                                   data-bind="attr:{placeholder: $t('DD.MM.YYYY')}, datepicker: { storage: getDob(), options: {
                                                                 changeMonth: true,
+                                                                defaultDate: '01.01.2000',
                                                                 changeYear: true,
+                                                                closeText: getLcloseText(),
+                                                                prevText: getLprevText(),
+                                                                nextText: getLnextText(),
+                                                                currentText: getLcurrentText(),
+                                                                monthNames: getLmonthNames(),
+                                                                monthNamesShort: getLmonthNamesShort(),
+                                                                dayNamesShort: getLdayNamesShort(),
+                                                                dayNames: getLdayNames(),
+                                                                dayNamesMin: getLdayNamesMin(),
 																yearRange: getYearRange(),
-                                                                showButtonPanel: true,
+                                                                showButtonPanel: false,
                                                                 dateFormat: 'dd.MM.yy'} }">
                         </div>
                     </div>

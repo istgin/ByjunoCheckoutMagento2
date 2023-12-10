@@ -1,9 +1,3 @@
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
-/*browser:true*/
-/*global define*/
 define(
     [
         'ko',
@@ -20,7 +14,8 @@ define(
                 template: 'CembraPayCheckout_CembraPayCheckoutCore/payment/form_invoice',
                 paymentPlan: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_payment,
                 deliveryPlan: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_delivery,
-                customGender: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_customgender
+                customGender: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_customgender,
+                value: ''
             },
 
             initObservable: function () {
@@ -28,9 +23,38 @@ define(
                     .observe([
                         'paymentPlan',
                         'deliveryPlan',
-                        'customGender'
+                        'customGender',
+                        'value'
                     ]);
                 return this;
+            },
+
+            getLcloseText: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.closeText;
+            },
+            getLprevText: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.prevText;
+            },
+            getLnextText: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.nextText;
+            },
+            getLcurrentText: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.currentText;
+            },
+            getLmonthNames: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.monthNames;
+            },
+            getLmonthNamesShort: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.monthNamesShort;
+            },
+            getLdayNamesShort: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.dayNamesShort;
+            },
+            getLdayNames: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.dayNames;
+            },
+            getLdayNamesMin: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.dayNamesMin;
             },
 
             afterPlaceOrder: function () {
@@ -159,14 +183,6 @@ define(
                 return (window.checkoutConfig.payment.cembrapaycheckout_invoice.methods.length > 1);
             },
 
-            isSinglePaymentPlanVisible: function() {
-                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.methods.length === 1);
-            },
-
-            isSinglePaymentPlanVisibleTC: function() {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.methods[0].link;
-            },
-
             getDeliveryPlans: function () {
                 var list = [];
                 for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_invoice.delivery.length; i++) {
@@ -205,14 +221,14 @@ define(
             },
 
             isGenderEnabled: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_installment.gender_enable;
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.gender_enable;
             },
 
             isBirthdayEnabled: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_installment.birthday_enable;
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.birthday_enable;
             },
             isB2bUid: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_installment.b2b_uid;
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.b2b_uid;
             },
 
             getGenders: function() {
@@ -227,7 +243,15 @@ define(
                     );
                 }
                 return list;
-            }
+            },
+
+            isSinglePaymentPlanVisible: function() {
+                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.methods.length === 1);
+            },
+
+            isSinglePaymentPlanVisibleTC: function() {
+                return window.checkoutConfig.payment.cembrapaycheckout_invoice.methods[0].link;
+            },
 
         });
     }

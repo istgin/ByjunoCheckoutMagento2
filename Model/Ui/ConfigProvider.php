@@ -7,6 +7,10 @@ namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Ui;
 
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Framework\Locale\Bundle\DataBundle;
+use Magento\Framework\Locale\ResolverInterface;
+use Magento\Framework\Json\EncoderInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Payment\Helper\Data as PaymentHelper;
 
 /**
@@ -41,6 +45,18 @@ class ConfigProvider implements ConfigProviderInterface
     protected $methodInstanceInstallment;
 
     /**
+     * JSON Encoder
+     *
+     * @var EncoderInterface
+     */
+    private $encoder;
+
+    /**
+     * @var ResolverInterface
+     */
+    private $localeResolver;
+
+    /**
      * @var DataHelper
      */
     protected $dataHelper;
@@ -50,7 +66,9 @@ class ConfigProvider implements ConfigProviderInterface
         PaymentHelper $paymentHelper,
         \Magento\Framework\Locale\Resolver $resolver,
         \Magento\Checkout\Model\Session $checkoutSession,
-        DataHelper $dataHelper
+        DataHelper $dataHelper,
+        ?ResolverInterface $localeResolver = null,
+        ?EncoderInterface $encoder = null
     )
     {
         $this->_checkoutSession = $checkoutSession;
@@ -59,6 +77,8 @@ class ConfigProvider implements ConfigProviderInterface
         $this->_scopeConfig = $scopeConfig;
         $this->_resolver = $resolver;
         $this->dataHelper = $dataHelper;
+        $this->encoder = $encoder ?? ObjectManager::getInstance()->get(EncoderInterface::class);
+        $this->localeResolver = $localeResolver ?? ObjectManager::getInstance()->get(ResolverInterface::class);
     }
 
     private function getCembraPayLogoInstallment()
@@ -113,6 +133,24 @@ class ConfigProvider implements ConfigProviderInterface
         if (!$isAvaliable) {
             return [];
         }
+
+
+        $localeData = (new DataBundle())->get($this->localeResolver->getLocale());
+        $monthsData = $localeData['calendar']['gregorian']['monthNames'];
+        $daysData = $localeData['calendar']['gregorian']['dayNames'];
+
+        $calendarConfig = [
+            'closeText' => __('Done'),
+            'prevText' => __('Prev'),
+            'nextText' => __('Next'),
+            'currentText' => __('Today'),
+            'monthNames' => array_values(iterator_to_array($monthsData['format']['wide'])),
+            'monthNamesShort' => array_values(iterator_to_array($monthsData['format']['abbreviated'])),
+            'dayNames' => array_values(iterator_to_array($daysData['format']['wide'])),
+            'dayNamesShort' => array_values(iterator_to_array($daysData['format']['abbreviated'])),
+            'dayNamesMin' => array_values(iterator_to_array($daysData['format']['short'])),
+        ];
+
         $isCompany = false;
         if (!empty($this->_checkoutSession->getQuote()->getBillingAddress()->getCompany()) &&
             $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1'
@@ -299,7 +337,8 @@ class ConfigProvider implements ConfigProviderInterface
                     'custom_genders' => $genders,
                     'gender_enable' => $gender_enable,
                     'birthday_enable' => $birthday_enable,
-                    'b2b_uid' => $b2b_uid
+                    'b2b_uid' => $b2b_uid,
+                    'calendar_config' => $calendarConfig
                 ],
                 self::CODE_INSTALLMENT => [
                     'redirectUrl' => $this->methodInstanceInvoice->getConfigData('order_place_redirect_url'),
@@ -313,7 +352,8 @@ class ConfigProvider implements ConfigProviderInterface
                     'custom_genders' => $genders,
                     'gender_enable' => $gender_enable,
                     'birthday_enable' => $birthday_enable,
-                    'b2b_uid' => $b2b_uid
+                    'b2b_uid' => $b2b_uid,
+                    'calendar_config' => $calendarConfig
                 ]
             ]
         ];
