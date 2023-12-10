@@ -415,8 +415,8 @@
                 <audience>api://fb6abffc-f90d-4c10-aca5-6c59533c76c2/.default</audience>
                 <access_token/>
                 <businesstobusiness>0</businesstobusiness>
-                <cembrapaycheckout_prod_email>invoices@byjuno.ch</cembrapaycheckout_prod_email>
-                <cembrapaycheckout_test_email>test-invoices@byjuno.ch</cembrapaycheckout_test_email>
+                <cembrapaycheckout_prod_email>invoices@cembrapay.ch</cembrapaycheckout_prod_email>
+                <cembrapaycheckout_test_email>uat-invoices@cembrapay.ch</cembrapaycheckout_test_email>
                 <cembrapaysettletransacton>0</cembrapaysettletransacton>
                 <cembrapays5transacton>0</cembrapays5transacton>
                 <gender_enable>0</gender_enable>

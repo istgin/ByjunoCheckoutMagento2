@@ -96,7 +96,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
     { /* @var $order \Magento\Sales\Model\Order */
         $order = $payment->getOrder();
         $webshopProfileId = $payment->getAdditionalInformation("webshop_profile_id");
-        if ($this->_scopeConfig->getValue('byjunocheckoutsettings/byjuno_setup/cembrapays5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
+        if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapays5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
 
