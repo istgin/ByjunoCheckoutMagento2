@@ -189,7 +189,7 @@ class Startpayment extends Action
             );
             $CembraPayRequestName = $request->requestMsgType;
             $json = $request->createRequest();
-            $cembrapayCommunicator = new CembraPayCommunicator(self::$_dataHelper->cembraPayAzure);
+            $cembrapayCommunicator = new CembraPayCommunicator($_internalDataHelper->cembraPayAzure);
             $mode = $_internalDataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
             if ($mode == 'live') {
                 $cembrapayCommunicator->setServer('live');
