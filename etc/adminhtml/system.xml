@@ -263,6 +263,42 @@
                     <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
+            <group id="cembrapaycheckout_installment_4installment" translate="label" type="text" sortOrder="10" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>4 Installments</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="cembrapaycheckout_installment_4installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="cembrapaycheckout_installment_6installment" translate="label" type="text" sortOrder="10" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>6 Installments</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="cembrapaycheckout_installment_6installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
             <group id="cembrapaycheckout_installment_10installment" translate="label" type="text" sortOrder="20" showInDefault="1"
                    showInWebsite="1" showInStore="1">
                 <label>10 installments</label>
@@ -317,9 +353,9 @@
                     <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
-            <group id="cembrapaycheckout_installment_4x12installment" translate="label" type="text" sortOrder="50" showInDefault="1"
+            <group id="cembrapaycheckout_installment_36installment" translate="label" type="text" sortOrder="40" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>4 installments in 12 month</label>
+                <label>36 installments</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -330,7 +366,25 @@
                 <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>T&amp;C URL</label>
                 </field>
-                <field id="cembrapaycheckout_installment_4x12installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="cembrapaycheckout_installment_36installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed when</label>
+                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                </field>
+            </group>
+            <group id="cembrapaycheckout_installment_48installment" translate="label" type="text" sortOrder="40" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>48 installments</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>T&amp;C URL</label>
+                </field>
+                <field id="cembrapaycheckout_installment_48installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
                     <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
                 </field>

@@ -67,6 +67,14 @@
                     <name>3 Raten</name>
                     <link>https://byjuno.ch/de/3a/terms/</link>
                 </cembrapaycheckout_installment_3installment>
+                <cembrapaycheckout_installment_4installment>
+                    <name>4 Raten</name>
+                    <link>https://byjuno.ch/de/3a/terms/</link>
+                </cembrapaycheckout_installment_4installment>
+                <cembrapaycheckout_installment_6installment>
+                    <name>6 Raten</name>
+                    <link>https://byjuno.ch/de/3a/terms/</link>
+                </cembrapaycheckout_installment_6installment>
                 <cembrapaycheckout_installment_10installment>
                     <name>10 Raten</name>
                     <link>https://byjuno.ch/de/1d/terms/</link>
@@ -79,10 +87,14 @@
                     <name>24 Raten</name>
                     <link>https://byjuno.ch/de/1d/terms/</link>
                 </cembrapaycheckout_installment_24installment>
-                <cembrapaycheckout_installment_4x12installment>
-                    <name>4 Raten innerhalb von 12 Monaten</name>
+                <cembrapaycheckout_installment_36installment>
+                    <name>36 Raten</name>
                     <link>https://byjuno.ch/de/1d/terms/</link>
-                </cembrapaycheckout_installment_4x12installment>
+                </cembrapaycheckout_installment_36installment>
+                <cembrapaycheckout_installment_48installment>
+                    <name>48 Raten</name>
+                    <link>https://byjuno.ch/de/1d/terms/</link>
+                </cembrapaycheckout_installment_48installment>
                 <cembrapaycheckout_installment_localization>
                     <cembrapaycheckout_installment_toc_string>AGB</cembrapaycheckout_installment_toc_string>
                     <cembrapaycheckout_installment_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen Geschäftsbedingungen</cembrapaycheckout_installment_payment_message>
@@ -158,6 +170,14 @@
                     <name>3 tranches</name>
                     <link>https://byjuno.ch/fr/3a/terms/</link>
                 </cembrapaycheckout_installment_3installment>
+                <cembrapaycheckout_installment_4installment>
+                    <name>4 tranches</name>
+                    <link>https://byjuno.ch/fr/3a/terms/</link>
+                </cembrapaycheckout_installment_4installment>
+                <cembrapaycheckout_installment_6installment>
+                    <name>6 tranches</name>
+                    <link>https://byjuno.ch/fr/3a/terms/</link>
+                </cembrapaycheckout_installment_6installment>
                 <cembrapaycheckout_installment_10installment>
                     <name>10 tranches</name>
                     <link>https://byjuno.ch/fr/1d/terms/</link>
@@ -170,10 +190,14 @@
                     <name>24 tranches</name>
                     <link>https://byjuno.ch/fr/1d/terms/</link>
                 </cembrapaycheckout_installment_24installment>
-                <cembrapaycheckout_installment_4x12installment>
-                    <name>4 tranches dans 12 mois</name>
+                <cembrapaycheckout_installment_36installment>
+                    <name>36 tranches</name>
                     <link>https://byjuno.ch/fr/1d/terms/</link>
-                </cembrapaycheckout_installment_4x12installment>
+                </cembrapaycheckout_installment_36installment>
+                <cembrapaycheckout_installment_48installment>
+                    <name>48 tranches</name>
+                    <link>https://byjuno.ch/fr/1d/terms/</link>
+                </cembrapaycheckout_installment_48installment>
                 <cembrapaycheckout_installment_localization>
                     <cembrapaycheckout_installment_toc_string>CGV</cembrapaycheckout_installment_toc_string>
                     <cembrapaycheckout_installment_payment_message>Veuillez choisir le type de paiement et accepter les conditions générales</cembrapaycheckout_installment_payment_message>
@@ -252,6 +276,14 @@
                     <name>3 Raten</name>
                     <link>https://byjuno.ch/it/3a/terms/</link>
                 </cembrapaycheckout_installment_3installment>
+                <cembrapaycheckout_installment_4installment>
+                    <name>4 Raten</name>
+                    <link>https://byjuno.ch/it/1d/terms/</link>
+                </cembrapaycheckout_installment_4installment>
+                <cembrapaycheckout_installment_6installment>
+                    <name>6 Raten</name>
+                    <link>https://byjuno.ch/it/1d/terms/</link>
+                </cembrapaycheckout_installment_6installment>
                 <cembrapaycheckout_installment_10installment>
                     <name>10 Raten</name>
                     <link>https://byjuno.ch/it/1d/terms/</link>
@@ -264,10 +296,14 @@
                     <name>24 Raten</name>
                     <link>https://byjuno.ch/it/1d/terms/</link>
                 </cembrapaycheckout_installment_24installmentoice_partial>
-                <cembrapaycheckout_installment_4x12installment>
-                    <name>4 Raten innerhalb von 12 Monaten</name>
+                <cembrapaycheckout_installment_36installmentoice_partial>
+                    <name>36 Raten</name>
                     <link>https://byjuno.ch/it/1d/terms/</link>
-                </cembrapaycheckout_installment_4x12installment>
+                </cembrapaycheckout_installment_36installmentoice_partial>
+                <cembrapaycheckout_installment_48installment>
+                    <name>48 Raten</name>
+                    <link>https://byjuno.ch/it/1d/terms/</link>
+                </cembrapaycheckout_installment_48installment>
                 <cembrapaycheckout_installment_localization>
                     <cembrapaycheckout_installment_toc_string>CGC</cembrapaycheckout_installment_toc_string>
                     <cembrapaycheckout_installment_payment_message>La preghiamo di scegliere la modalità di pagamento e di accettare le condizioni generali di contratto</cembrapaycheckout_installment_payment_message>
@@ -342,6 +378,14 @@
                     <name>3 installments</name>
                     <link>https://byjuno.ch/en/3a/terms/</link>
                 </cembrapaycheckout_installment_3installment>
+                <cembrapaycheckout_installment_4installment>
+                    <name>4 installments</name>
+                    <link>https://byjuno.ch/en/1d/terms/</link>
+                </cembrapaycheckout_installment_4installment>
+                <cembrapaycheckout_installment_6installment>
+                    <name>6 installments</name>
+                    <link>https://byjuno.ch/en/1d/terms/</link>
+                </cembrapaycheckout_installment_6installment>
                 <cembrapaycheckout_installment_10installment>
                     <name>10 installments</name>
                     <link>https://byjuno.ch/en/1d/terms/</link>
@@ -354,10 +398,14 @@
                     <name>24 installments</name>
                     <link>https://byjuno.ch/en/1d/terms/</link>
                 </cembrapaycheckout_installment_24installment>
-                <cembrapaycheckout_installment_4x12installment>
-                    <name>4 installments in 12 months</name>
+                <cembrapaycheckout_installment_36installment>
+                    <name>36 installments</name>
                     <link>https://byjuno.ch/en/1d/terms/</link>
-                </cembrapaycheckout_installment_4x12installment>
+                </cembrapaycheckout_installment_36installment>
+                <cembrapaycheckout_installment_48installment>
+                    <name>48 installments</name>
+                    <link>https://byjuno.ch/en/1d/terms/</link>
+                </cembrapaycheckout_installment_48installment>
                 <cembrapaycheckout_installment_localization>
                     <cembrapaycheckout_installment_toc_string>CGC</cembrapaycheckout_installment_toc_string>
                     <cembrapaycheckout_installment_payment_message>La preghiamo di scegliere la modalità di pagamento e di accettare le condizioni generali di contratto</cembrapaycheckout_installment_payment_message>
@@ -492,6 +540,18 @@
                 <link>https://byjuno.ch/de/3a/terms/</link>
                 <cembrapaycheckout_installment_3installment_allow>0</cembrapaycheckout_installment_3installment_allow>
             </cembrapaycheckout_installment_3installment>
+            <cembrapaycheckout_installment_4installment>
+                <active>0</active>
+                <name>4 Raten</name>
+                <link>https://byjuno.ch/de/3a/terms/</link>
+                <cembrapaycheckout_installment_4installment_allow>0</cembrapaycheckout_installment_4installment_allow>
+            </cembrapaycheckout_installment_4installment>
+            <cembrapaycheckout_installment_6installment>
+                <active>0</active>
+                <name>6 Raten</name>
+                <link>https://byjuno.ch/de/3a/terms/</link>
+                <cembrapaycheckout_installment_6installment_allow>0</cembrapaycheckout_installment_6installment_allow>
+            </cembrapaycheckout_installment_6installment>
             <cembrapaycheckout_installment_10installment>
                 <active>0</active>
                 <name>10 Raten</name>
@@ -510,12 +570,18 @@
                 <link>https://byjuno.ch/de/1d/terms/</link>
                 <cembrapaycheckout_installment_24installment_allow>0</cembrapaycheckout_installment_24installment_allow>
             </cembrapaycheckout_installment_24installment>
-            <cembrapaycheckout_installment_4x12installment>
+            <cembrapaycheckout_installment_36installment>
                 <active>0</active>
-                <name>4 Raten innerhalb von 12 Monaten</name>
+                <name>36 Raten</name>
                 <link>https://byjuno.ch/de/1d/terms/</link>
-                <cembrapaycheckout_installment_4x12installment_allow>0</cembrapaycheckout_installment_4x12installment_allow>
-            </cembrapaycheckout_installment_4x12installment>
+                <cembrapaycheckout_installment_36installment_allow>0</cembrapaycheckout_installment_36installment_allow>
+            </cembrapaycheckout_installment_36installment>
+            <cembrapaycheckout_installment_48installment>
+                <active>0</active>
+                <name>48 Raten</name>
+                <link>https://byjuno.ch/de/1d/terms/</link>
+                <cembrapaycheckout_installment_48installment_allow>0</cembrapaycheckout_installment_48installment_allow>
+            </cembrapaycheckout_installment_48installment>
             <cembrapaycheckout_installment_localization>
                 <cembrapaycheckout_installment_toc_string>AGB</cembrapaycheckout_installment_toc_string>
                 <cembrapaycheckout_installment_payment_message>Bitte wählen Sie die Zahlungsart und akzeptieren Sie die Allgemeinen
