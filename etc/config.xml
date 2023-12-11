@@ -425,7 +425,6 @@
                 <gender_male_possible_prefix>Herr;Mr</gender_male_possible_prefix>
                 <gender_female_possible_prefix>Frau;Mrs;Ms</gender_female_possible_prefix>
                 <screeningbeforeshow>0</screeningbeforeshow>
-                <country_phone_validation>1</country_phone_validation>
                 <ip_detect_string />
                 <cembrapaycheckout_invoice_paper>0</cembrapaycheckout_invoice_paper>
                 <force_send_email>1</force_send_email>

@@ -215,23 +215,6 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
             }
         }
 
-        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/country_phone_validation",
-                ScopeInterface::SCOPE_STORE) == 1 && $payment->getQuote() != null) {
-
-            $pattern = "/^[0-9]{4}$/";
-            if (strtolower($payment->getQuote()->getBillingAddress()->getCountryId() ?? "") == 'ch' && !preg_match($pattern, $payment->getQuote()->getBillingAddress()->getPostcode())) {
-                throw new LocalizedException(
-                    __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/postal_code_wrong', ScopeInterface::SCOPE_STORE).
-                        ": " . $payment->getQuote()->getBillingAddress()->getPostcode())
-                );
-            }
-            if (!preg_match("/^[0-9\+\(\)\s]+$/", $payment->getQuote()->getBillingAddress()->getTelephone())) {
-                throw new LocalizedException(
-                    __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/telephone_code_wrong', ScopeInterface::SCOPE_STORE).
-                        ": " . $payment->getQuote()->getBillingAddress()->getTelephone())
-                );
-            }
-        }
     }
 
     /* @var $payment \Magento\Sales\Model\Order\Payment */
