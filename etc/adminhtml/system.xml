@@ -100,7 +100,7 @@
                     <frontend_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\ExplainS4</frontend_model>
                 </field>
                 <field id="cembrapays5transacton" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enable S5 Transaction</label>
+                    <label>Enable Cancel &amp; Creditnote Transaction</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="cembrapays5transactonexplain" translate="label" type="label" sortOrder="145" showInDefault="1" showInWebsite="1" showInStore="1">
