@@ -53,4 +53,18 @@ class CembraPayLogger
         $result = $conn->fetchRow($select);
         return $result;
     }
+
+    public function getChkTransaction($orderId) {
+
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $connection = $objectManager->create('\Magento\Framework\App\ResourceConnection');
+        $tableName = $connection->getTableName("cembrapaycheckout_log");
+        $conn = $connection->getConnection();
+
+        $select = $conn->select()->from($tableName)
+            ->where('order_id = ?', $orderId)
+            ->where('type = ?',  DataHelper::$MESSAGE_CHK);
+        $result = $conn->fetchRow($select);
+        return $result;
+    }
 };

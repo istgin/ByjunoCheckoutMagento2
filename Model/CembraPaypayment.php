@@ -7,6 +7,7 @@ namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
 
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutScreeningResponse;
+use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleResponse;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
 use CembraPayCheckout\CembraPayCheckoutCore\Observer\InvoiceObserver;
@@ -99,11 +100,14 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapays5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
-
-        $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
+        $txType = "CHK";
+        if ($payment->getAdditionalInformation("auth_executed_ok") == 'true') {
+            $txType = "AUT";
+        }
+        $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId(), $txType);
         if ($tx == null || !$tx || empty($tx["transaction_id"])) {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: ".$txType." NOT FOUND)")
             );
         }
 
@@ -231,10 +235,14 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
             return $this;
         }
 
+        $txType = "CHK";
+        if ($payment->getAdditionalInformation("auth_executed_ok") == 'true') {
+            $txType = "AUT";
+        }
         $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
         if ($tx == null || !$tx || empty($tx["transaction_id"])) {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: ".$txType." NOT FOUND)")
             );
         }
         $request = $this->_dataHelper->CreateMagentoShopRequestCredit($order, $amount, $incoiceId, $webshopProfileId, $tx["transaction_id"]);
@@ -300,20 +308,19 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaysettletransacton", ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
-        if ($payment->getAdditionalInformation("auth_executed_ok") == null || $payment->getAdditionalInformation("auth_executed_ok") == 'false') {
+        $txType = "CHK";
+        if ($payment->getAdditionalInformation("auth_executed_ok") == 'true') {
+            $txType = "AUT";
+        }
+        $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId(), $txType);
+        if ($tx == null || !$tx || empty($tx["transaction_id"])) {
             throw new LocalizedException (
-                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
+                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: ".$txType." NOT FOUND)")
             );
         }
         $incrementValue =  $this->_eavConfig->getEntityType($invoice->getEntityType())->fetchNewIncrementId($invoice->getStoreId());
         if ($invoice->getIncrementId() == null) {
             $invoice->setIncrementId($incrementValue);
-        }
-        $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
-        if ($tx == null || !$tx || empty($tx["transaction_id"])) {
-            throw new LocalizedException (
-                __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: AUT NOT FOUND)")
-            );
         }
         $request = $this->_dataHelper->CreateMagentoShopRequestSettlePaid($order, $invoice, $payment, $webshopProfileId, $tx["transaction_id"]);
 
@@ -339,7 +346,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         $status = "";
         $responseRes = null;
         if ($response) {
-            /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
+            /* @var $responseRes CembraPayCheckoutSettleResponse */
             $responseRes = $this->_dataHelper->settleResponse($response);
             $status = $responseRes->processingStatus;
             $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,

@@ -47,7 +47,7 @@ class CembraPayCommunicator
     }
 
     public function sendSettleRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $$accessData, $cb);
+        return $this->sendRequest($xmlRequest, 'api/v1.0/Transactions/settle', $accessData, $cb);
     }
 
     public function sendCreditRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {

@@ -169,9 +169,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_cembrapayLogger->log($data);
     }
 
-    function getTransactionForOrder($orderId)
+    function getTransactionForOrder($orderId, $tx)
     {
-        return $this->_cembrapayLogger->getAuthTransaction($orderId);
+        if ($tx == "CHK") {
+            return $this->_cembrapayLogger->getChkTransaction($orderId);
+        } else {
+            return $this->_cembrapayLogger->getAuthTransaction($orderId);
+        }
     }
 
     public function getClientIp()
