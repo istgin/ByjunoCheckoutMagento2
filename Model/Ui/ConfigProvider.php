@@ -12,6 +12,7 @@ use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Payment\Helper\Data as PaymentHelper;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class ConfigProvider
@@ -323,6 +324,10 @@ class ConfigProvider implements ConfigProviderInterface
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {
             $paperInvoice = true;
         }
+        $paymentMode = "checkout";
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+            $paymentMode = "authorization";
+        }
         return [
             'payment' => [
                 self::CODE_INVOICE => [
@@ -331,6 +336,7 @@ class ConfigProvider implements ConfigProviderInterface
                     'delivery' => $invoiceDelivery,
                     'default_payment' => $defaultInvoicePlan,
                     'default_delivery' => 'email',
+                    'default_agreetc' => false,
                     'paper_invoice' => $paperInvoice,
                     'logo' => $this->getCembraPayLogoInvoice(),
                     'default_customgender' => $dafualtGender,
@@ -338,7 +344,8 @@ class ConfigProvider implements ConfigProviderInterface
                     'gender_enable' => $gender_enable,
                     'birthday_enable' => $birthday_enable,
                     'b2b_uid' => $b2b_uid,
-                    'calendar_config' => $calendarConfig
+                    'calendar_config' => $calendarConfig,
+                    'payment_mode' => $paymentMode
                 ],
                 self::CODE_INSTALLMENT => [
                     'redirectUrl' => $this->methodInstanceInvoice->getConfigData('order_place_redirect_url'),
@@ -346,6 +353,7 @@ class ConfigProvider implements ConfigProviderInterface
                     'delivery' => $invoiceDelivery,
                     'default_payment' => $defaultInstallmentPlan,
                     'default_delivery' => 'email',
+                    'default_agreetc' => false,
                     'paper_invoice' => $paperInvoice,
                     'logo' => $this->getCembraPayLogoInstallment(),
                     'default_customgender' => $dafualtGender,
@@ -353,7 +361,8 @@ class ConfigProvider implements ConfigProviderInterface
                     'gender_enable' => $gender_enable,
                     'birthday_enable' => $birthday_enable,
                     'b2b_uid' => $b2b_uid,
-                    'calendar_config' => $calendarConfig
+                    'calendar_config' => $calendarConfig,
+                    'payment_mode' => $paymentMode
                 ]
             ]
         ];

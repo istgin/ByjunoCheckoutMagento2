@@ -14,6 +14,7 @@ define(
                 template: 'CembraPayCheckout_CembraPayCheckoutCore/payment/form_invoice',
                 paymentPlan: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_payment,
                 deliveryPlan: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_delivery,
+                agreeTc: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_agreetc,
                 customGender: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_customgender,
                 value: ''
             },
@@ -23,6 +24,7 @@ define(
                     .observe([
                         'paymentPlan',
                         'deliveryPlan',
+                        'agreeTc',
                         'customGender',
                         'value'
                     ]);
@@ -55,6 +57,24 @@ define(
             },
             getLdayNamesMin: function () {
                 return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.dayNamesMin;
+            },
+
+            getAgreementLink: function () {
+                for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_invoice.methods.length; i++) {
+                    var method = window.checkoutConfig.payment.cembrapaycheckout_invoice.methods[i];
+                    if (method.value == this.paymentPlan()) {
+                        return method.link
+                    }
+                }
+                return this.paymentPlan()
+            },
+
+            getAgreeTc: function () {
+                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.payment_mode == "authorization") ? this.agreeTc() : true;
+            },
+
+            agreeChecked: function () {
+                this.agreeTc(jquery("#cembra_agree_invoice").is(":checked"))
             },
 
             afterPlaceOrder: function () {
@@ -110,6 +130,7 @@ define(
                         'additional_data': {
                             'invoice_payment_plan': this.paymentPlan(),
                             'invoice_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'invoice_customer_gender': this.customGender(),
                             'invoice_customer_dob': jquery("#customer_dob_invoice").val()
                         }
@@ -120,6 +141,7 @@ define(
                         'additional_data': {
                             'invoice_payment_plan': this.paymentPlan(),
                             'invoice_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'invoice_customer_gender': this.customGender(),
                             'invoice_customer_b2b_uid': jquery("#customer_b2b_uid_invoice").val()
                         }
@@ -130,6 +152,7 @@ define(
                         'additional_data': {
                             'invoice_payment_plan': this.paymentPlan(),
                             'invoice_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'invoice_customer_gender': this.customGender()
                         }
                     };
@@ -139,6 +162,7 @@ define(
                         'additional_data': {
                             'invoice_payment_plan': this.paymentPlan(),
                             'invoice_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'invoice_customer_dob': jquery("#customer_dob_invoice").val()
                         }
                     };
@@ -148,6 +172,7 @@ define(
                         'additional_data': {
                             'invoice_payment_plan': this.paymentPlan(),
                             'invoice_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'invoice_customer_b2b_uid': jquery("#customer_b2b_uid_invoice").val()
                         }
                     };
@@ -156,7 +181,8 @@ define(
                         'method': this.item.method,
                         'additional_data': {
                             'invoice_payment_plan': this.paymentPlan(),
-                            'invoice_send': this.deliveryPlan()
+                            'invoice_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc()
                         }
                     };
                 }
@@ -177,6 +203,10 @@ define(
 
             isDeliveryVisibility: function() {
                 return window.checkoutConfig.payment.cembrapaycheckout_invoice.paper_invoice;
+            },
+
+            isAgreeVisibility: function () {
+                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.payment_mode == "authorization") ? true : false;
             },
 
             isPaymentPlanVisible: function() {
