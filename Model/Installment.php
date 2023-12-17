@@ -102,6 +102,9 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
         if (isset($dataKey['installment_payment_plan'])) {
             $payment->setAdditionalInformation('payment_plan', $dataKey['installment_payment_plan']);
         }
+        if (isset($dataKey['agree_tc'])) {
+            $payment->setAdditionalInformation('agree_tc', $dataKey['agree_tc']);
+        }
         $paperInvoice = false;
         if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_invoice_paper",
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1) {

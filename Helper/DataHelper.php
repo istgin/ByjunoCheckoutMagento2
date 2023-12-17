@@ -659,9 +659,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function createMagentoShopRequestAuthorization(Order $order,
                                                           Order\Payment $paymentMethod,
-                                                          $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webShopProfile)
+                                                          $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $agree_tc, $webShopProfile)
     {
-
         $request = new CembraPayCheckoutAutRequest();
         $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
         $request->requestMsgType = self::$MESSAGE_AUTH;
@@ -810,16 +809,21 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $request->byjunoDetails->invoiceDeliveryType = "EMAIL";
         }
-
-        $customerConsents = new CustomerConsents();
-        $customerConsents->consentType = "BYJUNO-TC";
-        $customerConsents->consentProvidedAt = "MERCHANT";
-        $customerConsents->consentDate = CembraPayCheckoutAutRequest::Date();
-        $methods = $this->getMethodsMapping();
-        $customerConsents->consentReference = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
-
-        $request->customerConsents = array($customerConsents);
-
+        if ($agree_tc) {
+            $customerConsents = new CustomerConsents();
+            $customerConsents->consentType = "BYJUNO-TC";
+            $customerConsents->consentProvidedAt = "MERCHANT";
+            $customerConsents->consentDate = CembraPayCheckoutAutRequest::Date();
+            $methods = $this->getMethodsMapping();
+            $link = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
+            $exLink = explode("/", $link);
+            $consentReference = end($exLink);
+            if (empty($consentReference) && isset($exLink[count($exLink) - 1])) {
+                $consentReference = $exLink[count($exLink) - 2];
+            }
+            $customerConsents->consentReference = $consentReference;
+            $request->customerConsents = array($customerConsents);
+        }
         $request->merchantDetails->transactionChannel = "WEB";
         $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 0.0.1";
 

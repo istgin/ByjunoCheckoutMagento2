@@ -163,6 +163,7 @@ class Startpayment extends Action
             self::$_dataHelper->_checkoutSession->setCembraPayCheckoutStatus('');
             $resultRedirect->setPath('checkout/onepage/success');
         } else {
+            self::$_dataHelper->_checkoutSession->setCembraPayCheckoutStatus('');
             $order = self::$_dataHelper->_checkoutSession->getLastRealOrder();
             $order->registerCancellation("Payment canceled")->save();
             $this->restoreQuote();
@@ -185,6 +186,7 @@ class Startpayment extends Action
                 $payment->getAdditionalInformation('customer_dob'),
                 $payment->getAdditionalInformation('pref_lang'),
                 $payment->getAdditionalInformation('customer_b2b_uid'),
+                $payment->getAdditionalInformation('agree_tc'),
                 $payment->getAdditionalInformation('webshop_profile_id')
             );
             $CembraPayRequestName = $request->requestMsgType;

@@ -158,6 +158,9 @@ class Invoice extends CembraPaypayment
         if (isset($dataKey['invoice_payment_plan'])) {
             $payment->setAdditionalInformation('payment_plan', $dataKey['invoice_payment_plan']);
         }
+        if (isset($dataKey['agree_tc'])) {
+            $payment->setAdditionalInformation('agree_tc', $dataKey['agree_tc']);
+        }
         $paperInvoice = false;
         if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_invoice_paper",
                 ScopeInterface::SCOPE_STORE) == 1) {
