@@ -21,6 +21,9 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment;
+use Magento\Store\Model\ScopeInterface;
 
 
 /**
@@ -162,13 +165,13 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
         }
         $this->validateCustomCembraPayFields($payment, $isCompany);
         if ($payment->getAdditionalInformation('payment_plan') == null ||
-            ($payment->getAdditionalInformation('payment_plan') != 'installment_3installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_4installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_6installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_12installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_24installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_36installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_48installment_enable')) {
+            ($payment->getAdditionalInformation('payment_plan') != DataHelper::$INSTALLMENT_3 &&
+                $payment->getAdditionalInformation('payment_plan') != DataHelper::$INSTALLMENT_4 &&
+                $payment->getAdditionalInformation('payment_plan') != DataHelper::$INSTALLMENT_6 &&
+                $payment->getAdditionalInformation('payment_plan') != DataHelper::$INSTALLMENT_12 &&
+                $payment->getAdditionalInformation('payment_plan') != DataHelper::$INSTALLMENT_24 &&
+                $payment->getAdditionalInformation('payment_plan') != DataHelper::$INSTALLMENT_36 &&
+                $payment->getAdditionalInformation('payment_plan') != DataHelper::$INSTALLMENT_48)) {
             throw new LocalizedException(
                 __("Invalid payment plan")
             );
@@ -267,10 +270,13 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
      */
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-       // if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/singlerequest", \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
-            /* @var $order \Magento\Sales\Model\Order */
-            $order = $payment->getOrder();
-            $result = Startpayment::executeS3Order($order, $this->_dataHelper);
+        /* @var $order Order */
+        /* @var $p Payment*/
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+
+            $p = $payment;
+            $order = $p->getOrder();
+            $result = Startpayment::executeAuthorizeRequestOrder($order, $this->_dataHelper);
             if ($result == null) {
                 return $this;
             } else {
@@ -278,8 +284,8 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
                     __($result)
                 );
             }
-       // } else {
-     //       return $this;
-     //   }
+        } else {
+            return $this;
+        }
     }
 }

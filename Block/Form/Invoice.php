@@ -25,6 +25,7 @@ class Invoice extends \Magento\Payment\Block\Form
      */
     protected $_paymentConfig;
     protected $_adminSession;
+    protected $_dataHelper;
 
 
     /**
@@ -35,6 +36,7 @@ class Invoice extends \Magento\Payment\Block\Form
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Payment\Model\Config $paymentConfig,
+        DataHelper $helper,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -115,16 +117,16 @@ class Invoice extends \Magento\Payment\Block\Form
         }
 
         $methodsAvailableInvoice = Array();
-        $methods = $this->dgetMethodsMapping();
+        $availableMethods = $this->_dataHelper->dgetMethodsMapping();
 
         $cembrapaycheckout_single_invoice_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/cembrapaycheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             && ($cembrapaycheckout_single_invoice_allow == '0' || ($cembrapaycheckout_single_invoice_allow == '1' && !$isCompany) || ($cembrapaycheckout_single_invoice_allow == '2' && $isCompany))
         ) {
             $methodsAvailableInvoice[] = Array(
-                "value" => DataHelper::$SINGLEINVOICE,
-                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "value" => $availableMethods[DataHelper::$SINGLEINVOICE]["value"],
+                "name" => $availableMethods[DataHelper::$SINGLEINVOICE]["name"],
+                "link" => $availableMethods[DataHelper::$SINGLEINVOICE]["link"]
             );
         }
 
@@ -132,9 +134,9 @@ class Invoice extends \Magento\Payment\Block\Form
         if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             && ($cembrapaycheckout_invoice_partial_allow == '0' || ($cembrapaycheckout_invoice_partial_allow == '1' && !$isCompany) || ($cembrapaycheckout_invoice_partial_allow == '2' && $isCompany))) {
             $methodsAvailableInvoice[] = Array(
-                "value" => DataHelper::$CEMBRAPAYINVOICE,
-                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "value" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["value"],
+                "name" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["name"],
+                "link" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["link"]
             );
         }
 

@@ -74,7 +74,7 @@ define(
             },
 
             agreeChecked: function () {
-                this.agreeTc(jquery("#cembra_agree_installmen").is(":checked"))
+                this.agreeTc(jquery("#cembra_agree_installment").is(":checked"))
             },
 
             afterPlaceOrder: function () {

@@ -177,7 +177,6 @@ class Startpayment extends Action
     {
         /* @var $payment \Magento\Sales\Model\Order\Payment */
         $payment = $order->getPayment();
-
         try {
             $request = $_internalDataHelper->createMagentoShopRequestAuthorization(
                 $order,

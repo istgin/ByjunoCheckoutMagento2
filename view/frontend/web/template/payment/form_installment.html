@@ -107,7 +107,6 @@
                                   attr: {value: value},
                                   checked: $parent.paymentPlan" />
                         <span data-bind="text: label"></span>
-                        <a data-bind="attr: {href: link, target: '_blank'}, text: $t('(T&C)')"></a>
                     </label><br />
                 </div>
             </div>
@@ -146,8 +145,8 @@
         </div>
         <!-- ko if: (isAgreeVisibility())-->
         <div class="checkout-agreements-block">
-            <input type="checkbox" class="checkbox" id="cembra_agree_invoice" data-bind="checked: agreeChecked()" />
-            <label class="label" for="cembra_agree_invoice">
+            <input type="checkbox" class="checkbox" id="cembra_agree_installment" data-bind="checked: agreeChecked()" />
+            <label class="label" for="cembra_agree_installment">
                 <a data-bind="attr: {href: getAgreementLink(), target: '_blank'}, text: $t('Agreement')"></a>
             </label>
         </div>
@@ -158,7 +157,7 @@
                         type="submit"
                         data-bind="
                         click: placeOrder,
-                        attr: {title: $t('Place Order')}
+                        attr: {title: $t('Place Order'), disabled: (getBillingAddress() == null || !getAgreeTc()) ? 'disabled' : null }
                         ">
                     <span data-bind="i18n: 'Place Order'"></span>
                 </button>
