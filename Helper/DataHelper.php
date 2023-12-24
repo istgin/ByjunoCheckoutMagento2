@@ -30,13 +30,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $SINGLEINVOICE = 'SINGLE-INVOICE';
     public static $CEMBRAPAYINVOICE = 'BYJUNO-INVOICE';
 
-    public static $INSTALLMENT_3 = 'INSTRALLMENT-3';
-    public static $INSTALLMENT_4 = 'INSTRALLMENT-4';
-    public static $INSTALLMENT_6 = 'INSTRALLMENT-6';
-    public static $INSTALLMENT_12 = 'INSTRALLMENT-12';
-    public static $INSTALLMENT_24 = 'INSTRALLMENT-24';
-    public static $INSTALLMENT_36 = 'INSTRALLMENT-36';
-    public static $INSTALLMENT_48 = 'INSTALLMENT-48';
+    public static $INSTALLMENT_3 = 'INSTALLMENT_3';
+    public static $INSTALLMENT_4 = 'INSTALLMENT_4';
+    public static $INSTALLMENT_6 = 'INSTALLMENT_6';
+    public static $INSTALLMENT_12 = 'INSTALLMENT_12';
+    public static $INSTALLMENT_24 = 'INSTALLMENT_24';
+    public static $INSTALLMENT_36 = 'INSTALLMENT_36';
+    public static $INSTALLMENT_48 = 'INSTALLMENT_48';
 
     public static $MESSAGE_SCREENING = 'SCR';
     public static $MESSAGE_AUTH = 'AUT';

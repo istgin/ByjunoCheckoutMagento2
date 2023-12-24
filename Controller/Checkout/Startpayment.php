@@ -164,10 +164,16 @@ class Startpayment extends Action
             $resultRedirect->setPath('checkout/onepage/success');
         } else {
             self::$_dataHelper->_checkoutSession->setCembraPayCheckoutStatus('');
-            $order = self::$_dataHelper->_checkoutSession->getLastRealOrder();
-            $order->registerCancellation("Payment canceled")->save();
-            $this->restoreQuote();
-            $this->messageManager->addExceptionMessage(new \Exception("Payment canceled"), "Payment canceled");
+            try {
+                $order = self::$_dataHelper->_checkoutSession->getLastRealOrder();
+                if ($order != null) {
+                    $order->registerCancellation("Payment canceled")->save();
+                    $this->restoreQuote();
+                    $this->messageManager->addExceptionMessage(new \Exception("Payment canceled"), "Payment canceled");
+                }
+            } catch (\Exception $e)
+            {
+            }
             $resultRedirect->setPath('checkout/cart');
         }
         return $resultRedirect;
@@ -246,7 +252,7 @@ class Startpayment extends Action
                 $_internalDataHelper->_checkoutSession->setCembraPayCheckoutStatus($status);
 
             } else {
-                $error = "Payment rejected";//$_internalDataHelper->getCembraPayErrorMessage($statusS3, $requestTypeS3) . "(S3)";
+                $error = $_internalDataHelper->getCembraPayErrorMessage();
                 return $error;
             }
 
