@@ -44,6 +44,7 @@ class Invoice extends \Magento\Payment\Block\Form
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $authSession = $objectManager->get('\Magento\Backend\Model\Session\Quote');
         $this->_adminSession = $authSession;
+        $this->_dataHelper = $helper;
     }
 
     public function getGenders()
@@ -117,7 +118,17 @@ class Invoice extends \Magento\Payment\Block\Form
         }
 
         $methodsAvailableInvoice = Array();
-        $availableMethods = $this->_dataHelper->dgetMethodsMapping();
+        $availableMethods = $this->_dataHelper->getMethodsMapping();
+
+        $cembrapaycheckout_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            && ($cembrapaycheckout_invoice_partial_allow == '0' || ($cembrapaycheckout_invoice_partial_allow == '1' && !$isCompany) || ($cembrapaycheckout_invoice_partial_allow == '2' && $isCompany))) {
+            $methodsAvailableInvoice[] = Array(
+                "value" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["value"],
+                "name" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["name"],
+                "link" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["link"]
+            );
+        }
 
         $cembrapaycheckout_single_invoice_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/cembrapaycheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
@@ -127,16 +138,6 @@ class Invoice extends \Magento\Payment\Block\Form
                 "value" => $availableMethods[DataHelper::$SINGLEINVOICE]["value"],
                 "name" => $availableMethods[DataHelper::$SINGLEINVOICE]["name"],
                 "link" => $availableMethods[DataHelper::$SINGLEINVOICE]["link"]
-            );
-        }
-
-        $cembrapaycheckout_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_invoice_partial_allow == '0' || ($cembrapaycheckout_invoice_partial_allow == '1' && !$isCompany) || ($cembrapaycheckout_invoice_partial_allow == '2' && $isCompany))) {
-            $methodsAvailableInvoice[] = Array(
-                "value" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["value"],
-                "name" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["name"],
-                "link" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["link"]
             );
         }
 

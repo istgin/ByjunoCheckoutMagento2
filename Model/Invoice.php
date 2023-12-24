@@ -81,9 +81,8 @@ class Invoice extends CembraPaypayment
         $this->eventManager = $eventManager;
         $objectManager = ObjectManager::getInstance();
         $this->_scopeConfig = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
-
-        $objectManager = ObjectManager::getInstance();
         $state = $objectManager->get('Magento\Framework\App\State');
+
         if ($state->getAreaCode() == "adminhtml") {
             $this->_checkoutSession = $objectManager->get('Magento\Backend\Model\Session\Quote');
         } else {
@@ -158,8 +157,14 @@ class Invoice extends CembraPaypayment
         if (isset($dataKey['invoice_payment_plan'])) {
             $payment->setAdditionalInformation('payment_plan', $dataKey['invoice_payment_plan']);
         }
-        if (isset($dataKey['agree_tc'])) {
-            $payment->setAdditionalInformation('agree_tc', $dataKey['agree_tc']);
+        $objectManager = ObjectManager::getInstance();
+        $state = $objectManager->get('Magento\Framework\App\State');
+        if ($state->getAreaCode() == "adminhtml") {
+            $payment->setAdditionalInformation('agree_tc', true);
+        } else {
+            if (isset($dataKey['agree_tc'])) {
+                $payment->setAdditionalInformation('agree_tc', $dataKey['agree_tc']);
+            }
         }
         $paperInvoice = false;
         if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_invoice_paper",
@@ -255,7 +260,6 @@ class Invoice extends CembraPaypayment
         /* @var $order Order */
         /* @var $p Payment*/
         if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
-
             $p = $payment;
             $order = $p->getOrder();
             $result = Startpayment::executeAuthorizeRequestOrder($order, $this->_dataHelper);
