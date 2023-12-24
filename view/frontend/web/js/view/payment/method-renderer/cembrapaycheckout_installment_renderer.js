@@ -1,9 +1,3 @@
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
-/*browser:true*/
-/*global define*/
 define(
     [
         'ko',
@@ -20,7 +14,9 @@ define(
                 template: 'CembraPayCheckout_CembraPayCheckoutCore/payment/form_installment',
                 paymentPlan: window.checkoutConfig.payment.cembrapaycheckout_installment.default_payment,
                 deliveryPlan: window.checkoutConfig.payment.cembrapaycheckout_installment.default_delivery,
-                customGender: window.checkoutConfig.payment.cembrapaycheckout_installment.default_customgender
+                agreeTc: window.checkoutConfig.payment.cembrapaycheckout_installment.default_agreetc,
+                customGender: window.checkoutConfig.payment.cembrapaycheckout_installment.default_customgender,
+                value: ''
             },
 
             initObservable: function () {
@@ -28,9 +24,57 @@ define(
                     .observe([
                         'paymentPlan',
                         'deliveryPlan',
-                        'customGender'
+                        'agreeTc',
+                        'customGender',
+                        'value'
                     ]);
                 return this;
+            },
+
+            getLcloseText: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.closeText;
+            },
+            getLprevText: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.prevText;
+            },
+            getLnextText: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.nextText;
+            },
+            getLcurrentText: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.currentText;
+            },
+            getLmonthNames: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.monthNames;
+            },
+            getLmonthNamesShort: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.monthNamesShort;
+            },
+            getLdayNamesShort: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.dayNamesShort;
+            },
+            getLdayNames: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.dayNames;
+            },
+            getLdayNamesMin: function () {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.calendar_config.dayNamesMin;
+            },
+
+            getAgreementLink: function () {
+                for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_installment.methods.length; i++) {
+                    var method = window.checkoutConfig.payment.cembrapaycheckout_installment.methods[i];
+                    if (method.value === this.paymentPlan()) {
+                        return method.link
+                    }
+                }
+                return this.paymentPlan()
+            },
+
+            getAgreeTc: function () {
+                return (window.checkoutConfig.payment.cembrapaycheckout_installment.payment_mode === "authorization") ? this.agreeTc() : true;
+            },
+
+            agreeChecked: function () {
+                this.agreeTc(jquery("#cembra_agree_installmen").is(":checked"))
             },
 
             afterPlaceOrder: function () {
@@ -87,6 +131,7 @@ define(
                         'additional_data': {
                             'installment_payment_plan': this.paymentPlan(),
                             'installment_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'installment_customer_gender': this.customGender(),
                             'installment_customer_dob': jquery("#customer_dob_installment").val()
                         }
@@ -97,6 +142,7 @@ define(
                         'additional_data': {
                             'installment_payment_plan': this.paymentPlan(),
                             'installment_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'installment_customer_gender': this.customGender(),
                             'installment_customer_b2b_uid': jquery("#customer_b2b_uid_installment").val()
                         }
@@ -107,6 +153,7 @@ define(
                         'additional_data': {
                             'installment_payment_plan': this.paymentPlan(),
                             'installment_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'installment_customer_gender': this.customGender()
                         }
                     };
@@ -116,6 +163,7 @@ define(
                         'additional_data': {
                             'installment_payment_plan': this.paymentPlan(),
                             'installment_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'installment_customer_dob': jquery("#customer_dob_installment").val()
                         }
                     };
@@ -125,6 +173,7 @@ define(
                         'additional_data': {
                             'installment_payment_plan': this.paymentPlan(),
                             'installment_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc(),
                             'installment_customer_b2b_uid': jquery("#customer_b2b_uid_installment").val()
                         }
                     };
@@ -133,7 +182,8 @@ define(
                         'method': this.item.method,
                         'additional_data': {
                             'installment_payment_plan': this.paymentPlan(),
-                            'installment_send': this.deliveryPlan()
+                            'installment_send': this.deliveryPlan(),
+                            'agree_tc': this.agreeTc()
                         }
                     };
                 }
@@ -156,6 +206,10 @@ define(
                 return window.checkoutConfig.payment.cembrapaycheckout_installment.paper_invoice;
             },
 
+            isAgreeVisibility: function () {
+                return (window.checkoutConfig.payment.cembrapaycheckout_installment.payment_mode === "authorization");
+            },
+
             isPaymentPlanVisible: function() {
                 return (window.checkoutConfig.payment.cembrapaycheckout_installment.methods.length > 1);
             },
@@ -164,7 +218,7 @@ define(
                 var list = [];
                 for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_installment.delivery.length; i++) {
                     var value = window.checkoutConfig.payment.cembrapaycheckout_installment.delivery[i];
-                    if (value.value == 'email') {
+                    if (value.value === 'email') {
                         list.push(
                             {
                                 'value': value.value,
@@ -220,7 +274,15 @@ define(
                     );
                 }
                 return list;
-            }
+            },
+
+            isSinglePaymentPlanVisible: function() {
+                return (window.checkoutConfig.payment.cembrapaycheckout_installment.methods.length === 1);
+            },
+
+            isSinglePaymentPlanVisibleTC: function() {
+                return window.checkoutConfig.payment.cembrapaycheckout_installment.methods[0].link;
+            },
         });
     }
 );

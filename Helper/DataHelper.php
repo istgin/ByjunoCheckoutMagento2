@@ -30,6 +30,14 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $SINGLEINVOICE = 'SINGLE-INVOICE';
     public static $CEMBRAPAYINVOICE = 'BYJUNO-INVOICE';
 
+    public static $INSTALLMENT_3 = 'INSTRALLMENT-3';
+    public static $INSTALLMENT_4 = 'INSTRALLMENT-4';
+    public static $INSTALLMENT_6 = 'INSTRALLMENT-6';
+    public static $INSTALLMENT_12 = 'INSTRALLMENT-12';
+    public static $INSTALLMENT_24 = 'INSTRALLMENT-24';
+    public static $INSTALLMENT_36 = 'INSTRALLMENT-36';
+    public static $INSTALLMENT_48 = 'INSTALLMENT-48';
+
     public static $MESSAGE_SCREENING = 'SCR';
     public static $MESSAGE_AUTH = 'AUT';
     public static $MESSAGE_SET = 'SET';
@@ -129,6 +137,41 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 "value" => self::$SINGLEINVOICE,
                 "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", ScopeInterface::SCOPE_STORE),
                 "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/link", ScopeInterface::SCOPE_STORE)
+            ),
+            self::$INSTALLMENT_3 => array(
+                "value" => self::$INSTALLMENT_3,
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/link", ScopeInterface::SCOPE_STORE)
+            ),
+            self::$INSTALLMENT_4 => array(
+                "value" => self::$INSTALLMENT_4,
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/link", ScopeInterface::SCOPE_STORE)
+            ),
+            self::$INSTALLMENT_6 => array(
+                "value" => self::$INSTALLMENT_6,
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/link", ScopeInterface::SCOPE_STORE)
+            ),
+            self::$INSTALLMENT_12 => array(
+                "value" => self::$INSTALLMENT_12,
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/link", ScopeInterface::SCOPE_STORE)
+            ),
+            self::$INSTALLMENT_24 => array(
+                "value" => self::$INSTALLMENT_24,
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/link", ScopeInterface::SCOPE_STORE)
+            ),
+            self::$INSTALLMENT_36 => array(
+                "value" => self::$INSTALLMENT_36,
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/link", ScopeInterface::SCOPE_STORE)
+            ),
+            self::$INSTALLMENT_48 => array(
+                "value" => self::$INSTALLMENT_48,
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/name", ScopeInterface::SCOPE_STORE),
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/link", ScopeInterface::SCOPE_STORE)
             ),
         );
         return $methods;

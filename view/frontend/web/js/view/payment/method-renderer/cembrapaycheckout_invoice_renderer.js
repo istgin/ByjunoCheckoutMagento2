@@ -62,7 +62,7 @@ define(
             getAgreementLink: function () {
                 for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_invoice.methods.length; i++) {
                     var method = window.checkoutConfig.payment.cembrapaycheckout_invoice.methods[i];
-                    if (method.value == this.paymentPlan()) {
+                    if (method.value === this.paymentPlan()) {
                         return method.link
                     }
                 }
@@ -70,7 +70,7 @@ define(
             },
 
             getAgreeTc: function () {
-                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.payment_mode == "authorization") ? this.agreeTc() : true;
+                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.payment_mode === "authorization") ? this.agreeTc() : true;
             },
 
             agreeChecked: function () {
@@ -206,7 +206,7 @@ define(
             },
 
             isAgreeVisibility: function () {
-                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.payment_mode == "authorization") ? true : false;
+                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.payment_mode === "authorization");
             },
 
             isPaymentPlanVisible: function() {
@@ -217,7 +217,7 @@ define(
                 var list = [];
                 for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_invoice.delivery.length; i++) {
                     var value = window.checkoutConfig.payment.cembrapaycheckout_invoice.delivery[i];
-                    if (value.value == 'email') {
+                    if (value.value === 'email') {
                         list.push(
                             {
                                 'value': value.value,

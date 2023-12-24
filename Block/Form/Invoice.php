@@ -115,6 +115,7 @@ class Invoice extends \Magento\Payment\Block\Form
         }
 
         $methodsAvailableInvoice = Array();
+        $methods = $this->dgetMethodsMapping();
 
         $cembrapaycheckout_single_invoice_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/cembrapaycheckout_single_invoice_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)

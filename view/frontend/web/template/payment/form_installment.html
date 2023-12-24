@@ -62,9 +62,19 @@
                                    type="text" class="input-text"
                                    data-bind="attr:{placeholder: $t('DD.MM.YYYY')}, datepicker: { storage: getDob(), options: {
                                                                 changeMonth: true,
+                                                                defaultDate: '01.01.2000',
                                                                 changeYear: true,
+                                                                closeText: getLcloseText(),
+                                                                prevText: getLprevText(),
+                                                                nextText: getLnextText(),
+                                                                currentText: getLcurrentText(),
+                                                                monthNames: getLmonthNames(),
+                                                                monthNamesShort: getLmonthNamesShort(),
+                                                                dayNamesShort: getLdayNamesShort(),
+                                                                dayNames: getLdayNames(),
+                                                                dayNamesMin: getLdayNamesMin(),
 																yearRange: getYearRange(),
-                                                                showButtonPanel: true,
+                                                                showButtonPanel: false,
                                                                 dateFormat: 'dd.MM.yy'} }">
                         </div>
                     </div>
@@ -103,6 +113,11 @@
             </div>
         </div>
         <!-- /ko -->
+        <!-- ko if: (isSinglePaymentPlanVisible())-->
+        <div class="control" style="margin: 8px 0 0 0">
+            <a data-bind="attr: {href: isSinglePaymentPlanVisibleTC(), target: '_blank'}, text: $t('Proceed with payment you agree with terms & conditions')"></a>
+        </div>
+        <!-- /ko -->
         <!-- ko if: (isDeliveryVisibility())-->
         <br />
         <div class="field required">
@@ -129,6 +144,14 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
+        <!-- ko if: (isAgreeVisibility())-->
+        <div class="checkout-agreements-block">
+            <input type="checkbox" class="checkbox" id="cembra_agree_invoice" data-bind="checked: agreeChecked()" />
+            <label class="label" for="cembra_agree_invoice">
+                <a data-bind="attr: {href: getAgreementLink(), target: '_blank'}, text: $t('Agreement')"></a>
+            </label>
+        </div>
+        <!-- /ko -->
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"
