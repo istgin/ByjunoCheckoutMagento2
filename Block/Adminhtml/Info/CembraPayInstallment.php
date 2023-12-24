@@ -18,8 +18,6 @@ class CembraPayInstallment extends \Magento\Payment\Block\Info
             $repayment = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_6installment_enable') {
             $repayment = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        } else if ($plId == 'installment_10installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_10installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_12installment_enable') {
             $repayment = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_24installment_enable') {
@@ -62,8 +60,6 @@ class CembraPayInstallment extends \Magento\Payment\Block\Info
             $repayment = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_6installment_enable') {
             $repayment = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
-        } else if ($plId == 'installment_10installment_enable') {
-            $repayment = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_10installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_12installment_enable') {
             $repayment = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $webshopProfileId);
         } else if ($plId == 'installment_24installment_enable') {

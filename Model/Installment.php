@@ -163,11 +163,12 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
         $this->validateCustomCembraPayFields($payment, $isCompany);
         if ($payment->getAdditionalInformation('payment_plan') == null ||
             ($payment->getAdditionalInformation('payment_plan') != 'installment_3installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_10installment_enable' &&
+                $payment->getAdditionalInformation('payment_plan') != 'installment_4installment_enable' &&
+                $payment->getAdditionalInformation('payment_plan') != 'installment_6installment_enable' &&
                 $payment->getAdditionalInformation('payment_plan') != 'installment_12installment_enable' &&
                 $payment->getAdditionalInformation('payment_plan') != 'installment_24installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_4x12installment_enable' &&
-                $payment->getAdditionalInformation('payment_plan') != 'installment_4x10installment_enable')) {
+                $payment->getAdditionalInformation('payment_plan') != 'installment_36installment_enable' &&
+                $payment->getAdditionalInformation('payment_plan') != 'installment_48installment_enable')) {
             throw new LocalizedException(
                 __("Invalid payment plan")
             );
@@ -213,7 +214,6 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
         $cembrapaycheckout_installment_3installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_3installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_4installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_4installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_6installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_6installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $cembrapaycheckout_installment_10installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_10installment/cembrapaycheckout_installment_10installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_12installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/cembrapaycheckout_installment_12installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_24installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_24installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_36installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_36installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
@@ -228,9 +228,6 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
             ||
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             && ($cembrapaycheckout_installment_6installment_allow == '0' || ($cembrapaycheckout_installment_6installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_6installment_allow == '2' && $isCompany)))
-            ||
-            ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_10installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_installment_10installment_allow == '0' || ($cembrapaycheckout_installment_10installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_10installment_allow == '2' && $isCompany)))
             ||
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             && ($cembrapaycheckout_installment_12installment_allow == '0' || ($cembrapaycheckout_installment_12installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_12installment_allow == '2' && $isCompany)))

@@ -299,24 +299,6 @@
                     <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
-            <group id="cembrapaycheckout_installment_10installment" translate="label" type="text" sortOrder="20" showInDefault="1"
-                   showInWebsite="1" showInStore="1">
-                <label>10 installments</label>
-                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Enabled</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Title</label>
-                </field>
-                <field id="link" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>T&amp;C URL</label>
-                </field>
-                <field id="cembrapaycheckout_installment_10installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
-                </field>
-            </group>
             <group id="cembrapaycheckout_installment_12installment" translate="label" type="text" sortOrder="30" showInDefault="1"
                    showInWebsite="1" showInStore="1">
                 <label>12 installments</label>
