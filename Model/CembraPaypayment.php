@@ -11,6 +11,7 @@ use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleRe
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
 use CembraPayCheckout\CembraPayCheckoutCore\Observer\InvoiceObserver;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
@@ -70,7 +71,10 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
 
     public function isInitializeNeeded()
     {
-       if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+        $objectManager = ObjectManager::getInstance();
+        $state = $objectManager->get('Magento\Framework\App\State');
+        
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0' || $state->getAreaCode() == "adminhtml") {
             return false;
         } else {
             return true;

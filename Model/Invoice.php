@@ -259,7 +259,11 @@ class Invoice extends CembraPaypayment
     {
         /* @var $order Order */
         /* @var $p Payment*/
-        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+
+        $objectManager = ObjectManager::getInstance();
+        $state = $objectManager->get('Magento\Framework\App\State');
+
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0' || $state->getAreaCode() == "adminhtml") {
             $p = $payment;
             $order = $p->getOrder();
             $result = Startpayment::executeAuthorizeRequestOrder($order, $this->_dataHelper);

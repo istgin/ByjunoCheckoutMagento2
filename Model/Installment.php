@@ -9,6 +9,7 @@
 namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
 
 use CembraPayCheckout\CembraPayCheckoutCore\Controller\Checkout\Startpayment;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\CartInterface;
@@ -196,7 +197,12 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
     public function getConfigData($field, $storeId = null)
     {
         if ($field == 'order_place_redirect_url') {
-            return 'cembrapaycheckoutcore/checkout/startpayment';
+            if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+                // Checkout page active
+                return 'cembrapaycheckoutcore/checkout/startpayment';
+            } else {
+                return 'cembrapaycheckoutcore/checkout/startcheckout';
+            }
         }
         return parent::getConfigData($field, $storeId);
     }
@@ -272,7 +278,11 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
     {
         /* @var $order Order */
         /* @var $p Payment*/
-        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0') {
+
+        $objectManager = ObjectManager::getInstance();
+        $state = $objectManager->get('Magento\Framework\App\State');
+
+        if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/payment_mode", ScopeInterface::SCOPE_STORE) == '0' || $state->getAreaCode() == "adminhtml") {
 
             $p = $payment;
             $order = $p->getOrder();
