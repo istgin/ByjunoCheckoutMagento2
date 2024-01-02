@@ -135,7 +135,7 @@ class Invoice extends CembraPaypayment
         if ($quote != null) {
             /* @var $q Quote */
             $q = $quote;
-            $creditStatus = $this->_dataHelper->GetCreditStatus($q, $this->_dataHelper->getInvoiceEnabledMethods());
+            $creditStatus = $this->_dataHelper->GetCreditStatus($q, $this->_dataHelper->getEnabledMethods());
         }
         return $isAvaliable && $methodsAvailable && $creditStatus && parent::isAvailable($quote);
     }

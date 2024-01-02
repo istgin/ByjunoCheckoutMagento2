@@ -22,6 +22,7 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Model\ScopeInterface;
@@ -255,7 +256,9 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
         }
         $creditStatus = false;
         if ($quote != null) {
-            $creditStatus = $this->_dataHelper->GetCreditStatus($quote, Array());
+            /* @var $q Quote */
+            $q = $quote;
+            $creditStatus = $this->_dataHelper->GetCreditStatus($q, $this->_dataHelper->getEnabledMethods());
         }
         return $isAvaliable && $methodsAvailable && $creditStatus && parent::isAvailable($quote);
     }

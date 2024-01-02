@@ -70,7 +70,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public static $REQUEST_ERROR = 'REQUEST_ERROR';
 
-    public static $screeningStatus;
+    public static $allowedByjunoPaymentMethods;
 
     /**
      * @var \Magento\Quote\Api\CartRepositoryInterface
@@ -352,17 +352,45 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         "DELIVERY_COMPANYNAME"
     );
 
-    public function getInvoiceEnabledMethods()
+    public function getEnabledMethods()
     {
-        $methodsAvailableInvoice = array();
+        $methodsAvailable = array();
         if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)) {
-            $methodsAvailableInvoice[] = DataHelper::$SINGLEINVOICE;
+            $methodsAvailable[] = DataHelper::$SINGLEINVOICE;
         }
 
         if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)) {
-            $methodsAvailableInvoice[] = DataHelper::$CEMBRAPAYINVOICE;
+            $methodsAvailable[] = DataHelper::$CEMBRAPAYINVOICE;
         }
-        return $methodsAvailableInvoice;
+
+        if ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailable[] = DataHelper::$INSTALLMENT_3;
+        }
+
+        if ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailable[] = DataHelper::$INSTALLMENT_4;
+        }
+
+        if ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailable[] = DataHelper::$INSTALLMENT_6;
+        }
+
+        if ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailable[] = DataHelper::$INSTALLMENT_12;
+        }
+
+        if ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailable[] = DataHelper::$INSTALLMENT_24;
+        }
+
+        if ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailable[] = DataHelper::$INSTALLMENT_36;
+        }
+
+        if ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/active", ScopeInterface::SCOPE_STORE)) {
+            $methodsAvailable[] = DataHelper::$INSTALLMENT_48;
+        }
+        return $methodsAvailable;
     }
 
     /* @var $quote \Magento\Quote\Model\Quote */
@@ -384,7 +412,10 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             if (!empty($theSame) && is_array($theSame)) {
                 $this->_savedUser = $theSame;
             }
-            $status = $this->_checkoutSession->getScreeningStatus();
+            $allowedByjunoPaymentMethods = $this->_checkoutSession->getScreeningStatus();
+            if (empty($allowedByjunoPaymentMethods)) {
+                $allowedByjunoPaymentMethods = Array();
+            }
             try {
                 $request = $this->CreateMagentoShopRequestScreening($quote);
                 if ($request->amount == 0) {
@@ -401,16 +432,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                         return false;
                     }
                 }
-                if (!$this->isTheSame($request) || empty($status)) {
+                if (!$this->isTheSame($request) || empty($allowedByjunoPaymentMethods)) {
                     $CembraPayRequestName = $request->requestMsgType;
-                    //  $json = "{}";
-                    //   if ($request->custDetails->custType == 'C' && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness',
-                    //           \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == '1') {
-                    //       $CembraPayRequestName = "Screening request for company";
-                    //       $json = $request->createRequest();
-                    //   } else {
-                    //       $json = $request->createRequest();
-                    //   }
                     $json = $request->createRequest();
                     $cembrapayCommunicator = new CembraPayCommunicator($this->cembraPayAzure);
                     $mode = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
@@ -426,7 +449,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     if ($response) {
                         /* @var $responseRes CembraPayCheckoutScreeningResponse */
                         $responseRes = $this->screeningResponse($response);
-                        $status = $responseRes->screeningDetails->allowedCembraPayPaymentMethods;
+                        $allowedByjunoPaymentMethods = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
                         $this->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                             $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId, "-");
@@ -458,11 +481,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                         "DELIVERY_COMPANYNAME" => $request->deliveryDetails->deliveryCompanyName
                     );
                     $this->_checkoutSession->setIsTheSame($this->_savedUser);
-                    $this->_checkoutSession->setScreeningStatus($status);
+                    $this->_checkoutSession->setScreeningStatus($allowedByjunoPaymentMethods);
                 }
-                DataHelper::$screeningStatus = $status;
+                DataHelper::$allowedByjunoPaymentMethods = $allowedByjunoPaymentMethods;
                 foreach ($methods as $method) {
-                    foreach ($status as $st) {
+                    foreach ($allowedByjunoPaymentMethods as $st) {
                         if ($st == $method) {
                             return true;
                         }
@@ -505,7 +528,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function isTheSame(CembraPayCheckoutAutRequest $request)
     {
-
         if ($request->custDetails->firstName != $this->_savedUser["FirstName"]
             || $request->custDetails->lastName != $this->_savedUser["LastName"]
             || $request->billingAddr->addrFirstLine != $this->_savedUser["FirstLine"]
@@ -668,6 +690,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->sessionInfo->fingerPrint = $sedId;
         }
 
+        $customerConsents = new CustomerConsents();
+        $customerConsents->consentType = "BYJUNO-TC";
+        $customerConsents->consentProvidedAt = "MERCHANT";
+        $customerConsents->consentDate = CembraPayCheckoutAutRequest::Date();
+        $customerConsents->consentReference = "MERCHANT DATA PRIVACY";
+        $request->customerConsents = array($customerConsents);
+
         $request->merchantDetails->transactionChannel = "WEB";
         $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 0.0.1";
 
@@ -690,8 +719,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
                 $result->requestMsgId = $responseObject->requestMsgId;
                 $result->transactionId = $responseObject->transactionId;
-                if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedCembraPayPaymentMethods))) {
-                    $result->screeningDetails->allowedCembraPayPaymentMethods = $responseObject->screeningDetails->allowedCembraPayPaymentMethods;
+                if (!empty($responseObject->screeningDetails) && !empty(!empty($responseObject->screeningDetails->allowedByjunoPaymentMethods))) {
+                    $result->screeningDetails->allowedByjunoPaymentMethods = $responseObject->screeningDetails->allowedByjunoPaymentMethods;
                 }
             } else {
                 $result->processingStatus = $responseObject->processingStatus;
@@ -1058,7 +1087,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
             $result->replyMsgId = $responseObject->replyMsgId;
             $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
-            $result->isTokenDeleted = $responseObject->isTokenDeleted;
+            $result->isTokenDeleted = !empty($responseObject->isTokenDeleted) ? $responseObject->isTokenDeleted : false;
             $result->merchantOrderRef = $responseObject->merchantOrderRef;
             $result->transactionStatus->transactionStatus = $responseObject->transactionStatus->transactionStatus;
         }
