@@ -89,7 +89,7 @@
                 </field>
                 <field id="screeningbeforeshow" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Screening before show payment</label>
-                    <comment>Enable screening request before show CembraPay Checkout payment methods</comment>
+                    <comment><model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\ExplainScreening</model></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="cembrapaysettletransacton" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
