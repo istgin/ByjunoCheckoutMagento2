@@ -4,7 +4,6 @@ namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
 /*
  * {
-  "merchantId": "1234567890",
   "requestMsgType": "SET",
   "requestMsgId": "51c81c4b-6538-474a-9371-f61afe9e5b00",
   "requestMsgDateTime": "2022-05-21T11:43:59Z",
@@ -24,7 +23,6 @@ namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
 
 class CembraPayCheckoutSettleRequest extends CembraPayCheckoutAutRequest
 {
-    public $merchantId; //String
     public $requestMsgType; //String
     public $requestMsgId; //String
     public $requestMsgDateTime; //Date

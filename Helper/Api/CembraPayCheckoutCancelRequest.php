@@ -8,7 +8,6 @@ use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\SettlementDetails;
 
 /* sample request
 {
-"merchantId": "1234567890",
 "requestMsgType": "CAN",
 "requestMsgId": "13d2182e-acd1-4232-83f8-6342c0a67cb9",
 "requestMsgDateTime": "2023-11-03T14:18:44Z",
@@ -21,7 +20,6 @@ use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\SettlementDetails;
 
 class CembraPayCheckoutCancelRequest extends CembraPayCheckoutAutRequest
 {
-    public $merchantId; //String
     public $requestMsgType; //String
     public $requestMsgId; //String
     public $requestMsgDateTime; //Date

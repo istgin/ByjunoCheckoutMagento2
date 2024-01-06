@@ -8,7 +8,6 @@ namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
  * Copy
 Expand allCollapse all
 {
-"merchantId": "1234567890",
 "requestMsgType": "CHK",
 "requestMsgId": "4b07ca69-6906-4794-8770-f4c17af60bff",
 "requestMsgDateTime": "2022-06-06T06:14:04Z",

@@ -557,7 +557,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function CreateMagentoShopRequestSettlePaid(Order $order, Invoice $invoice, Order\Payment $payment, $webshopProfile, $tx)
     {
         $request = new CembraPayCheckoutSettleRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_SET;
         $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
         $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
@@ -582,7 +581,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
 
         $request = new CembraPayCheckoutAutRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE);
         $request->requestMsgType = self::$MESSAGE_SCREENING;
         $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
         $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
@@ -734,7 +732,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                                                           $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $agree_tc, $webShopProfile)
     {
         $request = new CembraPayCheckoutAutRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
         $request->requestMsgType = self::$MESSAGE_AUTH;
         $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
         $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
@@ -907,7 +904,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
 
         $request = new CembraPayCheckoutChkRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
         $request->requestMsgType = self::$MESSAGE_CHK;
         $request->requestMsgId = CembraPayCheckoutChkRequest::GUID();
         $request->requestMsgDateTime = CembraPayCheckoutChkRequest::Date();
@@ -1050,7 +1046,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public function createMagentoShopRequestGetTransaction($transactionId, $webShopProfile)
     {
         $request = new CembraPayGetStatusRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webShopProfile);
         $request->requestMsgType = self::$MESSAGE_STATUS;
         $request->requestMsgId = CembraPayCheckoutChkRequest::GUID();
         $request->requestMsgDateTime = CembraPayCheckoutChkRequest::Date();
@@ -1167,7 +1162,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId, $webshopProfile, $tx)
     {
         $request = new CembraPayCheckoutCreditRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_CNL;
         $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
         $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
@@ -1182,7 +1176,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     function CreateMagentoShopRequestCancel(Order $order, $amount, $webshopProfile, $tx)
     {
         $request = new CembraPayCheckoutCancelRequest();
-        $request->merchantId = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/merchantid', ScopeInterface::SCOPE_STORE, $webshopProfile);
         $request->requestMsgType = self::$MESSAGE_CAN;
         $request->requestMsgId = CembraPayCheckoutAutRequest::GUID();
         $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();

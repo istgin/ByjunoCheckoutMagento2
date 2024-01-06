@@ -54,9 +54,6 @@
                     <label>Mode</label>
                     <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\TestLive</source_model>
                 </field>
-                <field id="merchantid" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant ID</label>
-                </field>
                 <field id="cembrapaylogin" translate="label" type="text" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Login</label>
                 </field>
@@ -142,7 +139,7 @@
                     <comment>Email used to send orders, invoices and credit memos</comment>
                 </field>
                 <field id="cembrapaycheckout_test_email" translate="label" type="text" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Test email of byjuno</label>
+                    <label>Test email of CembraPay</label>
                     <comment>Email used to send test orders, invoices and credit memos</comment>
                 </field>
                 <field id="force_send_email" translate="label" type="select" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">

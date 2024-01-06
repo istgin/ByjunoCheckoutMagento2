@@ -94,7 +94,6 @@ class MerchantDetails
 
 class CembraPayCheckoutAutRequest
 {
-    public $merchantId; //String
     public $requestMsgType; //String
     public $requestMsgId; //String
     public $requestMsgDateTime; //Date

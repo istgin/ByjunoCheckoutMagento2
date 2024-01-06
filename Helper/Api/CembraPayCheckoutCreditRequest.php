@@ -8,7 +8,6 @@ use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\SettlementDetails;
 
 class CembraPayCheckoutCreditRequest extends CembraPayCheckoutAutRequest
 {
-    public $merchantId; //String
     public $requestMsgType; //String
     public $requestMsgId; //String
     public $requestMsgDateTime; //Date
