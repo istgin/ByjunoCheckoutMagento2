@@ -21,6 +21,7 @@ use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayLoginDto;
 use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CustomerConsents;
 use Magento\Framework\App\Config\ReinitableConfigInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Quote\Model\Quote\Address;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Store\Model\ScopeInterface;
@@ -661,7 +662,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->custContacts->email = (string)$quote->getBillingAddress()->getEmail();
 
         if (!$quote->isVirtual()) {
-            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryDetailsDifferent = !$this->isAddressesSimilair($quote->getBillingAddress(), $quote->getShippingAddress(),
+                $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1');
             $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($quote->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($quote->getShippingAddress()->getLastname());
@@ -842,7 +844,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->custContacts->email = (string)$order->getBillingAddress()->getEmail();
 
         if (!$order->getIsVirtual()) {
-            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryDetailsDifferent = !$this->isAddressesSimilair($order->getBillingAddress(), $order->getShippingAddress(),
+                $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1');
             $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($order->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($order->getShippingAddress()->getLastname());
@@ -987,7 +990,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->custContacts->email = (string)$order->getBillingAddress()->getEmail();
 
         if (!$order->getIsVirtual()) {
-            $request->deliveryDetails->deliveryDetailsDifferent = false;
+            $request->deliveryDetails->deliveryDetailsDifferent = !$this->isAddressesSimilair($order->getBillingAddress(), $order->getShippingAddress(),
+                $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1');
             $request->deliveryDetails->deliveryMethod = self::$DELIVERY_POST;
             $request->deliveryDetails->deliveryFirstName = $this->nullToString($order->getShippingAddress()->getFirstname());
             $request->deliveryDetails->deliverySecondName = $this->nullToString($order->getShippingAddress()->getLastname());
@@ -1184,6 +1188,51 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->amount = number_format($amount, 2, '.', '') * 100;
         $request->currency = $order->getOrderCurrencyCode();
         return $request;
+    }
+    public function isAddressesSimilair($invoiceAddress, $deliveryAddress, $b2b)
+    {
+        $invoiceFirstName = $this->nullToString($invoiceAddress->getFirstname());
+        $invoiceLastName = $this->nullToString($invoiceAddress->getLastname());
+        $invoiceCompany = "";
+        if ($b2b) {
+            $invoiceCompany = $this->nullToString($invoiceAddress->getCompany());
+        }
+
+        $invoiceStreet = $invoiceAddress->getStreet();
+        $invoiceStreet = implode("", $invoiceStreet);
+
+        $invoiceFirstLine = trim((string)$invoiceStreet);
+        $invoicePostalCode = $this->nullToString($invoiceAddress->getPostcode());
+        $invoiceTown = $this->nullToString($invoiceAddress->getCity());
+        $invoiceCountry = strtoupper($invoiceAddress->getCountryId() ?? "");
+
+        $deliveryFirstName = $this->nullToString($deliveryAddress->getFirstname());
+        $deliveryLastName = $this->nullToString($deliveryAddress->getLastname());
+        $deliveryCompany = "";
+        if ($b2b) {
+            $deliveryCompany = $this->nullToString($deliveryAddress->getCompany());
+        }
+
+        $deliveryStreet = $deliveryAddress->getStreet();
+        $deliveryStreet = implode("", $deliveryStreet);
+
+        $deliveryFirstLine = trim((string)$deliveryStreet);
+        $deliveryPostalCode = $this->nullToString($deliveryAddress->getPostcode());
+        $deliveryTown = $this->nullToString($deliveryAddress->getCity());
+        $deliveryCountry = strtoupper($deliveryAddress->getCountryId() ?? "");
+        if ($invoiceFirstName == $deliveryFirstName &&
+            $invoiceLastName == $deliveryLastName &&
+            $invoiceCompany == $deliveryCompany &&
+            $invoiceFirstLine == $deliveryFirstLine &&
+            $invoicePostalCode == $deliveryPostalCode &&
+            $invoiceTown == $deliveryTown &&
+            $invoiceCountry == $deliveryCountry) {
+            return true;
+        }
+        return false;
+
+
+
     }
 
 }
