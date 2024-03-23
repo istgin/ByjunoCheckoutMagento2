@@ -35,11 +35,11 @@
                 <fieldset class="fieldset address">
                     <!-- ko if: (isGenderEnabled())-->
                     <div class="field required">
-                        <label for="customer_gender_invoice" class="label">
+                        <label for="checkout_customer_gender_invoice" class="label">
                             <span><!-- ko i18n: 'Gender'--><!-- /ko --></span>
                         </label>
                         <div class="control">
-                            <select name="payment[invoice_customer_gender]" id="customer_gender_invoice"
+                            <select name="payment[invoice_customer_gender]" id="checkout_customer_gender_invoice"
                                     class="select"
                                     style="width: 150px"
                                     data-bind="
@@ -53,11 +53,11 @@
                     <!-- /ko -->
                     <!-- ko if: (isBirthdayEnabled())-->
                     <div class="field required">
-                        <label for="customer_dob_invoice" class="label">
+                        <label for="checkout_customer_dob_invoice" class="label">
                             <span><!-- ko i18n: 'Date of birth'--><!-- /ko --></span>
                         </label>
                         <div class="control">
-                            <input name="payment[invoice_customer_dob]" id="customer_dob_invoice"
+                            <input name="payment[invoice_customer_dob]" id="checkout_customer_dob_invoice"
                                    style="width: 150px"
                                    placeholder=""
                                    type="text" class="input-text"
@@ -82,11 +82,11 @@
                     <!-- /ko -->
                     <!-- ko if: (isB2bUid())-->
                     <div class="field required">
-                        <label for="customer_b2b_uid_invoice" class="label">
+                        <label for="checkout_customer_b2b_uid_invoice" class="label">
                             <span><!-- ko i18n: 'Company registration number'--><!-- /ko --></span>
                         </label>
                         <div class="control">
-                            <input name="payment[invoice_customer_b2b_uid]" id="customer_b2b_uid_invoice" style="width: 150px" type="text" class="input-text">
+                            <input name="payment[invoice_customer_b2b_uid]" id="checkout_customer_b2b_uid_invoice" style="width: 150px" type="text" class="input-text">
                         </div>
                     </div>
                     <!-- /ko -->

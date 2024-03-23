@@ -133,7 +133,7 @@ define(
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'installment_customer_gender': this.customGender(),
-                            'installment_customer_dob': jquery("#customer_dob_installment").val()
+                            'installment_customer_dob': jquery("#checkout_customer_dob_installment").val()
                         }
                     };
                 } else if (this.isB2bAllFieldsEnabled()) {
@@ -144,7 +144,7 @@ define(
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'installment_customer_gender': this.customGender(),
-                            'installment_customer_b2b_uid': jquery("#customer_b2b_uid_installment").val()
+                            'installment_customer_b2b_uid': jquery("#checkout_customer_b2b_uid_installment").val()
                         }
                     };
                 }  else if (this.isGenderEnabled()) {
@@ -164,7 +164,7 @@ define(
                             'installment_payment_plan': this.paymentPlan(),
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
-                            'installment_customer_dob': jquery("#customer_dob_installment").val()
+                            'installment_customer_dob': jquery("#checkout_customer_dob_installment").val()
                         }
                     };
                 } else if (this.isB2bUid()) {
@@ -174,7 +174,7 @@ define(
                             'installment_payment_plan': this.paymentPlan(),
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
-                            'installment_customer_b2b_uid': jquery("#customer_b2b_uid_installment").val()
+                            'installment_customer_b2b_uid': jquery("#checkout_customer_b2b_uid_installment").val()
                         }
                     };
                 }  else {

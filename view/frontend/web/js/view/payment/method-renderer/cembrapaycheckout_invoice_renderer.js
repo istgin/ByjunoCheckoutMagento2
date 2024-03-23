@@ -132,7 +132,7 @@ define(
                             'invoice_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'invoice_customer_gender': this.customGender(),
-                            'invoice_customer_dob': jquery("#customer_dob_invoice").val()
+                            'invoice_customer_dob': jquery("#checkout_customer_dob_invoice").val()
                         }
                     };
                 } else if (this.isB2bAllFieldsEnabled()) {
@@ -143,7 +143,7 @@ define(
                             'invoice_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'invoice_customer_gender': this.customGender(),
-                            'invoice_customer_b2b_uid': jquery("#customer_b2b_uid_invoice").val()
+                            'invoice_customer_b2b_uid': jquery("#checkout_customer_b2b_uid_invoice").val()
                         }
                     };
                 } else if (this.isGenderEnabled()) {
@@ -163,7 +163,7 @@ define(
                             'invoice_payment_plan': this.paymentPlan(),
                             'invoice_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
-                            'invoice_customer_dob': jquery("#customer_dob_invoice").val()
+                            'invoice_customer_dob': jquery("#checkout_customer_dob_invoice").val()
                         }
                     };
                 } else if (this.isB2bUid()) {
@@ -173,7 +173,7 @@ define(
                             'invoice_payment_plan': this.paymentPlan(),
                             'invoice_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
-                            'invoice_customer_b2b_uid': jquery("#customer_b2b_uid_invoice").val()
+                            'invoice_customer_b2b_uid': jquery("#checkout_customer_b2b_uid_invoice").val()
                         }
                     };
                 } else {
