@@ -374,7 +374,7 @@
     </stores>
     <default>
         <payment>
-            <cembrapaycheckout_invoice>
+            <byjuno_invoice>
                 <model>InvoiceCembraPayCheckoutCoreFacade</model>
                 <order_status>pending_cembrapay</order_status>
                 <title>CembraPay Checkout invoice</title>
@@ -389,8 +389,8 @@
                 <sort_order>1</sort_order>
                 <can_use_internal>1</can_use_internal>
                 <active>1</active>
-            </cembrapaycheckout_invoice>
-            <cembrapaycheckout_installment>
+            </byjuno_invoice>
+            <byjuno_installment>
                 <model>InstallmentCembraPayCheckoutCoreFacade</model>
                 <order_status>pending_cembrapay</order_status>
                 <title>CembraPay Checkout installment</title>
@@ -405,7 +405,7 @@
                 <sort_order>2</sort_order>
                 <can_use_internal>1</can_use_internal>
                 <active>1</active>
-            </cembrapaycheckout_installment>
+            </byjuno_installment>
         </payment>
         <cembrapaycheckoutsettings>
             <cembrapaycheckout_setup>
