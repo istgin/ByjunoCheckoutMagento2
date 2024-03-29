@@ -1,5 +1,5 @@
 <?php
-namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
+namespace Byjuno\ByjunoCore\Helper;
 
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Sales\Model\Order\Email\Container\IdentityInterface;
@@ -12,8 +12,8 @@ class CembraPaySenderBuilder extends SenderBuilder
     public function send()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        /* @var $transportBuilder \CembraPayCheckout\CembraPayCheckoutCore\Mail\Template\CembraPayTransportBuilder */
-        $transportBuilder = $objectManager->get('\CembraPayCheckout\CembraPayCheckoutCore\Mail\Template\CembraPayTransportBuilder');
+        /* @var $transportBuilder \Byjuno\ByjunoCore\Mail\Template\CembraPayTransportBuilder */
+        $transportBuilder = $objectManager->get('\Byjuno\ByjunoCore\Mail\Template\CembraPayTransportBuilder');
         $this->transportBuilder = $transportBuilder;
         $this->configureEmailTemplate();
         $this->transportBuilder->addTo(

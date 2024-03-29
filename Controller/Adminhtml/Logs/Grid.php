@@ -1,6 +1,6 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Controller\Adminhtml\Logs;
+namespace Byjuno\ByjunoCore\Controller\Adminhtml\Logs;
 use Magento\Backend\App\Action;
 
 class Grid extends Action
@@ -16,7 +16,7 @@ class Grid extends Action
 
     protected function _isAllowed()
     {
-        return $this->_authorization->isAllowed('CembraPayCheckout_CembraPayCheckoutCore::manage_logs');
+        return $this->_authorization->isAllowed('Byjuno_ByjunoCore::manage_logs');
     }
 
     public function execute()

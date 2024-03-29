@@ -1,7 +1,7 @@
 <?php
-namespace CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Info;
+namespace Byjuno\ByjunoCore\Block\Adminhtml\Info;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 
 class CembraPayInvoice extends \Magento\Payment\Block\Info
 {

@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="cembrapaycheckout_main_tab" translate="label" sortOrder="1">
-            <label>CembraPay Checkout payments (0.0.1)</label>
+            <label>CembraPay Checkout payments (3.0.0)</label>
         </tab>
         <section id="payment">
             <group id="cembrapaycheckout_invoice" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -28,7 +28,7 @@
                  showInWebsite="1" showInStore="1">
             <label>CembraPay Checkout payment method general settings</label>
             <tab>cembrapaycheckout_main_tab</tab>
-            <resource>CembraPayCheckout_CembraPayCheckoutCore::system_config</resource>
+            <resource>Byjuno_ByjunoCore::system_config</resource>
             <group id="cembrapaycheckout_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
                    showInWebsite="1" showInStore="1">
                 <label>CembraPay Checkout general settings</label>
@@ -41,7 +41,7 @@
                     <comment>B2B integration allow to to do credit check if customer provide company
                         credentials
                     </comment>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\PaymentMode</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\PaymentMode</source_model>
                 </field>
                 <field id="businesstobusiness" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable B2B check</label>
@@ -52,7 +52,7 @@
                 </field>
                 <field id="currentmode" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Mode</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\TestLive</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\TestLive</source_model>
                 </field>
                 <field id="cembrapaylogin" translate="label" type="text" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Login</label>
@@ -65,7 +65,7 @@
                 </field>
                 <field id="access_token" translate="label" type="text" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Access token</label>
-                    <frontend_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AccessToken</frontend_model>
+                    <frontend_model>Byjuno\ByjunoCore\Model\Source\AccessToken</frontend_model>
                 </field>
                 <field id="minamount" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Mininmal amount for checkout</label>
@@ -86,7 +86,7 @@
                 </field>
                 <field id="screeningbeforeshow" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Screening before show payment</label>
-                    <comment><model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\ExplainScreening</model></comment>
+                    <comment><model>Byjuno\ByjunoCore\Model\Source\ExplainScreening</model></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="cembrapaysettletransacton" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -94,14 +94,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="cembrapaysettletransactonexplain" translate="label" type="label" sortOrder="135" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\ExplainS4</frontend_model>
+                    <frontend_model>Byjuno\ByjunoCore\Model\Source\ExplainS4</frontend_model>
                 </field>
                 <field id="cembrapays5transacton" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Cancel &amp; Creditnote Transaction</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="cembrapays5transactonexplain" translate="label" type="label" sortOrder="145" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\ExplainS5</frontend_model>
+                    <frontend_model>Byjuno\ByjunoCore\Model\Source\ExplainS5</frontend_model>
                 </field>
                 <field id="cembrapaycheckout_invoice_paper" translate="label" type="select" sortOrder="148" showInDefault="1" showInWebsite="1"
                        showInStore="0">
@@ -168,7 +168,7 @@
                  showInWebsite="1" showInStore="1">
             <label>CembraPay Checkout invoice settings</label>
             <tab>cembrapaycheckout_main_tab</tab>
-            <resource>CembraPayCheckout_CembraPayCheckoutCore::system_config</resource>
+            <resource>Byjuno_ByjunoCore::system_config</resource>
             <group id="cembrapaycheckout_invoice_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
                    showInWebsite="1" showInStore="1">
                 <label>CembraPay Checkout invoice settings</label>
@@ -191,7 +191,7 @@
                 </field>
                 <field id="cembrapaycheckout_invoice_partial_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_single_invoice" translate="label" type="text" sortOrder="20" showInDefault="1"
@@ -209,7 +209,7 @@
                 </field>
                 <field id="cembrapaycheckout_single_invoice_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_invoice_localization" translate="label" type="text" sortOrder="30" showInDefault="1"
@@ -234,7 +234,7 @@
                  showInWebsite="1" showInStore="1">
             <label>CembraPay Checkout installment settings</label>
             <tab>cembrapaycheckout_main_tab</tab>
-            <resource>CembraPayCheckout_CembraPayCheckoutCore::system_config</resource>
+            <resource>Byjuno_ByjunoCore::system_config</resource>
             <group id="cembrapaycheckout_installment_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
                    showInWebsite="1" showInStore="1">
                 <label>CembraPay Checkout installment settings</label>
@@ -257,7 +257,7 @@
                 </field>
                 <field id="cembrapaycheckout_installment_3installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_installment_4installment" translate="label" type="text" sortOrder="10" showInDefault="1"
@@ -275,7 +275,7 @@
                 </field>
                 <field id="cembrapaycheckout_installment_4installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_installment_6installment" translate="label" type="text" sortOrder="10" showInDefault="1"
@@ -293,7 +293,7 @@
                 </field>
                 <field id="cembrapaycheckout_installment_6installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_installment_12installment" translate="label" type="text" sortOrder="30" showInDefault="1"
@@ -311,7 +311,7 @@
                 </field>
                 <field id="cembrapaycheckout_installment_12installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_installment_24installment" translate="label" type="text" sortOrder="40" showInDefault="1"
@@ -329,7 +329,7 @@
                 </field>
                 <field id="cembrapaycheckout_installment_24installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_installment_36installment" translate="label" type="text" sortOrder="40" showInDefault="1"
@@ -347,7 +347,7 @@
                 </field>
                 <field id="cembrapaycheckout_installment_36installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_installment_48installment" translate="label" type="text" sortOrder="40" showInDefault="1"
@@ -365,7 +365,7 @@
                 </field>
                 <field id="cembrapaycheckout_installment_48installment_allow" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed when</label>
-                    <source_model>CembraPayCheckout\CembraPayCheckoutCore\Model\Source\AllowPayment</source_model>
+                    <source_model>Byjuno\ByjunoCore\Model\Source\AllowPayment</source_model>
                 </field>
             </group>
             <group id="cembrapaycheckout_installment_localization" translate="label" type="text" sortOrder="60" showInDefault="1"

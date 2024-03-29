@@ -5,8 +5,8 @@
     <update handle="cembrapaycheckoutcore_logs_grid_block"/>
     <body>
         <referenceContainer name="content">
-            <block class="CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Logs"
-                   name="cembrapaycheckout_cembrapaycheckoutcore_logs.grid.container"/>
+            <block class="Byjuno\ByjunoCore\Block\Adminhtml\Logs"
+                   name="Byjuno_ByjunoCore_logs.grid.container"/>
         </referenceContainer>
     </body>
 </page>

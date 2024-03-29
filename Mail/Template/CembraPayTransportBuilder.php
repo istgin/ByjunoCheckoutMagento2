@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Mail\Template;
+namespace Byjuno\ByjunoCore\Mail\Template;
 
 use Magento\Framework\App\TemplateTypesInterface;
 use Magento\Framework\Exception\LocalizedException;

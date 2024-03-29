@@ -8,11 +8,11 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- Payment Method Facade configuration -->
-    <virtualType name="InvoiceCembraPayCheckoutCoreFacade" type="CembraPayCheckout\CembraPayCheckoutCore\Model\Invoice">
+    <virtualType name="InvoiceCembraPayCheckoutCoreFacade" type="Byjuno\ByjunoCore\Model\Invoice">
         <arguments>
-            <argument name="code" xsi:type="const">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider::CODE_INVOICE</argument>
+            <argument name="code" xsi:type="const">Byjuno\ByjunoCore\Model\Ui\ConfigProvider::CODE_INVOICE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">CembraPayCheckout\CembraPayCheckoutCore\Block\Info</argument>
+            <argument name="infoBlockType" xsi:type="string">Byjuno\ByjunoCore\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">InvoiceCembraPayCheckoutCoreValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">InvoiceCembraPayCheckoutCoreCommandPool</argument>
         </arguments>
@@ -21,7 +21,7 @@
     <!-- Configuration reader -->
     <virtualType name="InvoiceCembraPayCheckoutCoreConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider::CODE_INVOICE</argument>
+            <argument name="methodCode" xsi:type="const">Byjuno\ByjunoCore\Model\Ui\ConfigProvider::CODE_INVOICE</argument>
         </arguments>
     </virtualType>
 
@@ -39,7 +39,7 @@
     <!-- Authorize command -->
     <virtualType name="InvoiceCembraPayCheckoutCoreAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
-    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\AuthorizationRequest">
+    <type name="Byjuno\ByjunoCore\Gateway\Request\AuthorizationRequest">
         <arguments>
             <argument name="config" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
@@ -49,7 +49,7 @@
     <virtualType name="InvoiceCembraPayCheckoutCoreCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Capture Request -->
-    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\CaptureRequest">
+    <type name="Byjuno\ByjunoCore\Gateway\Request\CaptureRequest">
         <arguments>
             <argument name="config" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
@@ -59,7 +59,7 @@
     <virtualType name="InvoiceCembraPayCheckoutCoreVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Void Request -->
-    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\VoidRequest">
+    <type name="Byjuno\ByjunoCore\Gateway\Request\VoidRequest">
         <arguments>
             <argument name="config" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
@@ -79,17 +79,17 @@
         </arguments>
     </virtualType>
 
-    <type name="CembraPayCheckout\CembraPayCheckoutCore\Block\Info">
+    <type name="Byjuno\ByjunoCore\Block\Info">
         <arguments>
             <argument name="config" xsi:type="object">InvoiceCembraPayCheckoutCoreConfig</argument>
         </arguments>
     </type>
 
-    <virtualType name="InstallmentCembraPayCheckoutCoreFacade" type="CembraPayCheckout\CembraPayCheckoutCore\Model\Installment">
+    <virtualType name="InstallmentCembraPayCheckoutCoreFacade" type="Byjuno\ByjunoCore\Model\Installment">
         <arguments>
-            <argument name="code" xsi:type="const">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider::CODE_INSTALLMENT</argument>
+            <argument name="code" xsi:type="const">Byjuno\ByjunoCore\Model\Ui\ConfigProvider::CODE_INSTALLMENT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">CembraPayCheckout\CembraPayCheckoutCore\Block\Info</argument>
+            <argument name="infoBlockType" xsi:type="string">Byjuno\ByjunoCore\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">InstallmentCembraPayCheckoutCoreValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">InstallmentCembraPayCheckoutCoreCommandPool</argument>
         </arguments>
@@ -98,7 +98,7 @@
     <!-- Configuration reader -->
     <virtualType name="InstallmentCembraPayCheckoutCoreConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">CembraPayCheckout\CembraPayCheckoutCore\Model\Ui\ConfigProvider::CODE_INSTALLMENT</argument>
+            <argument name="methodCode" xsi:type="const">Byjuno\ByjunoCore\Model\Ui\ConfigProvider::CODE_INSTALLMENT</argument>
         </arguments>
     </virtualType>
 
@@ -120,12 +120,12 @@
     <virtualType name="InstallmentCembraPayCheckoutCoreAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
-                <item name="transaction" xsi:type="string">CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\AuthorizationRequest</item>
-                <item name="mockData" xsi:type="string">CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\MockDataRequest</item>
+                <item name="transaction" xsi:type="string">Byjuno\ByjunoCore\Gateway\Request\AuthorizationRequest</item>
+                <item name="mockData" xsi:type="string">Byjuno\ByjunoCore\Gateway\Request\MockDataRequest</item>
             </argument>
         </arguments>
     </virtualType>
-    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\AuthorizationRequest">
+    <type name="Byjuno\ByjunoCore\Gateway\Request\AuthorizationRequest">
         <arguments>
             <argument name="config" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>
@@ -135,7 +135,7 @@
     <virtualType name="InstallmentCembraPayCheckoutCoreCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Capture Request -->
-    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\CaptureRequest">
+    <type name="Byjuno\ByjunoCore\Gateway\Request\CaptureRequest">
         <arguments>
             <argument name="config" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>
@@ -145,7 +145,7 @@
     <virtualType name="InstallmentCembraPayCheckoutCoreVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand"></virtualType>
 
     <!-- Void Request -->
-    <type name="CembraPayCheckout\CembraPayCheckoutCore\Gateway\Request\VoidRequest">
+    <type name="Byjuno\ByjunoCore\Gateway\Request\VoidRequest">
         <arguments>
             <argument name="config" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>
@@ -165,7 +165,7 @@
         </arguments>
     </virtualType>
 
-    <type name="CembraPayCheckout\CembraPayCheckoutCore\Block\Info">
+    <type name="Byjuno\ByjunoCore\Block\Info">
         <arguments>
             <argument name="config" xsi:type="object">InstallmentCembraPayCheckoutCoreConfig</argument>
         </arguments>

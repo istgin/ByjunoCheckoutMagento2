@@ -3,7 +3,7 @@
 /**
  *  CembraPay Checkout Pyamnet Core - Block modules grid
  */
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Grid;
+namespace Byjuno\ByjunoCore\Model\Grid;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class Modules extends \Magento\Backend\Block\Widget implements \Magento\Framework\Data\Form\Element\Renderer\RendererInterface
@@ -15,7 +15,7 @@ class Modules extends \Magento\Backend\Block\Widget implements \Magento\Framewor
 
     protected $_element = null;
 
-    protected $_template = 'CembraPayCheckout_CembraPayCheckoutCore::renderer/grid_modules.phtml';
+    protected $_template = 'Byjuno_ByjunoCore::renderer/grid_modules.phtml';
     /**
      * Core registry
      *

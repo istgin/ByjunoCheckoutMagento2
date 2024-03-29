@@ -5,9 +5,9 @@
  * Date: 15.10.2016
  * Time: 18:38
  */
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Source;
+namespace Byjuno\ByjunoCore\Model\Source;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
 class ExplainScreening implements \Magento\Config\Model\Config\CommentInterface

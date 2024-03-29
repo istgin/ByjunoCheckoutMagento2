@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!--
 /**
-* CembraPayCheckout_CembraPayCheckoutCore module dependency
+* Byjuno_ByjunoCore module dependency
 */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="CembraPayCheckout_CembraPayCheckoutCore" setup_version="0.0.1">
+    <module name="Byjuno_ByjunoCore" setup_version="3.0.0">
         <sequence>
             <module name="Magento_Sales" />
             <module name="Magento_Payment" />

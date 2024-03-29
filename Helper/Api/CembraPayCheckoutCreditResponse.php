@@ -2,7 +2,7 @@
 /**
  * Created by CembraPay.
  */
-namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
+namespace Byjuno\ByjunoCore\Helper\Api;
 
 class CembraPayCheckoutCreditResponse {
     public $processingStatus;

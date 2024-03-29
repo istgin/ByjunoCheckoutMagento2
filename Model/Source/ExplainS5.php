@@ -5,7 +5,7 @@
  * Date: 15.10.2016
  * Time: 18:38
  */
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Source;
+namespace Byjuno\ByjunoCore\Model\Source;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;

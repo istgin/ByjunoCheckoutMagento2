@@ -6,7 +6,7 @@
  * Time: 20:18
  */
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Observer;
+namespace Byjuno\ByjunoCore\Observer;
 
 
 use Magento\Framework\Event\ObserverInterface;

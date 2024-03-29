@@ -23,18 +23,18 @@
                                                         <item name="renders" xsi:type="array">
                                                             <!-- merge payment method renders here -->
                                                             <item name="children" xsi:type="array">
-                                                                <item name="cembrapaycheckout_invoice" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">CembraPayCheckout_CembraPayCheckoutCore/js/view/payment/cembrapaycheckout_invoice</item>
+                                                                <item name="byjuno_invoice" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Byjuno_ByjunoCore/js/view/payment/cembrapaycheckout_invoice</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                        <item name="cembrapaycheckout_invoice" xsi:type="array">
+                                                                        <item name="byjuno_invoice" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>
                                                                 </item>
-                                                                <item name="cembrapaycheckout_installment" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">CembraPayCheckout_CembraPayCheckoutCore/js/view/payment/cembrapaycheckout_installment</item>
+                                                                <item name="byjuno_installment" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Byjuno_ByjunoCore/js/view/payment/cembrapaycheckout_installment</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                        <item name="cembrapaycheckout_installment" xsi:type="array">
+                                                                        <item name="byjuno_installment" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>

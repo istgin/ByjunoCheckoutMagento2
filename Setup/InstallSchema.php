@@ -6,7 +6,7 @@
  * Time: 19:49
  */
 
-namespace  CembraPayCheckout\CembraPayCheckoutCore\Setup;
+namespace  Byjuno\ByjunoCore\Setup;
 
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;

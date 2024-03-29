@@ -3,9 +3,9 @@
  * Copyright � Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace CembraPayCheckout\CembraPayCheckoutCore\Block\Form;
+namespace Byjuno\ByjunoCore\Block\Form;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 
 /**
  * @api
@@ -16,7 +16,7 @@ class Invoice extends \Magento\Payment\Block\Form
     /**
      * @var string
      */
-    protected $_template = 'CembraPayCheckout_CembraPayCheckoutCore::form/invoice-child.phtml';
+    protected $_template = 'Byjuno_ByjunoCore::form/invoice-child.phtml';
 
     /**
      * Payment config model
@@ -120,9 +120,9 @@ class Invoice extends \Magento\Payment\Block\Form
         $methodsAvailableInvoice = Array();
         $availableMethods = $this->_dataHelper->getMethodsMapping();
 
-        $cembrapaycheckout_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjuno_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_invoice_partial_allow == '0' || ($cembrapaycheckout_invoice_partial_allow == '1' && !$isCompany) || ($cembrapaycheckout_invoice_partial_allow == '2' && $isCompany))) {
+            && ($byjuno_invoice_partial_allow == '0' || ($byjuno_invoice_partial_allow == '1' && !$isCompany) || ($byjuno_invoice_partial_allow == '2' && $isCompany))) {
             $methodsAvailableInvoice[] = Array(
                 "value" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["value"],
                 "name" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["name"],

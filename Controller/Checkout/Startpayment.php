@@ -1,10 +1,10 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Controller\Checkout;
+namespace Byjuno\ByjunoCore\Controller\Checkout;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 use Magento\Framework\App\Action\Action;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\ScopeInterface;

@@ -5,7 +5,7 @@
  * Date: 09.11.2016
  * Time: 15:48
  */
-namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
+namespace Byjuno\ByjunoCore\Helper;
 
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order;

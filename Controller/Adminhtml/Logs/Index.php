@@ -1,6 +1,6 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Controller\Adminhtml\Logs;
+namespace Byjuno\ByjunoCore\Controller\Adminhtml\Logs;
 use Magento\Backend\App\Action;
 
 class Index extends Action
@@ -16,7 +16,7 @@ class Index extends Action
 
     protected function _isAllowed()
     {
-        return $this->_authorization->isAllowed('CembraPayCheckout_CembraPayCheckoutCore::manage_logs');
+        return $this->_authorization->isAllowed('Byjuno_ByjunoCore::manage_logs');
     }
 
     public function execute()
@@ -28,7 +28,7 @@ class Index extends Action
 
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->setActiveMenu('CembraPayCheckout_CembraPayCheckoutCore::main_menu');
+        $resultPage->setActiveMenu('Byjuno_ByjunoCore::main_menu');
         $resultPage->getConfig()->getTitle()->prepend(__('CembraPay Checkout transaction log'));
         return $resultPage;
     }

@@ -3,7 +3,7 @@
  * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace CembraPayCheckout\CembraPayCheckoutCore\Block;
+namespace Byjuno\ByjunoCore\Block;
 
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;

@@ -1,6 +1,6 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
+namespace Byjuno\ByjunoCore\Model;
 
 use Magento\Framework\Model\AbstractModel;
 
@@ -11,6 +11,6 @@ class Logs extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('CembraPayCheckout\CembraPayCheckoutCore\Model\Resource\Logs');
+        $this->_init('Byjuno\ByjunoCore\Model\Resource\Logs');
     }
 }

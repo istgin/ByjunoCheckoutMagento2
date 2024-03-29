@@ -3,14 +3,14 @@
  * Created by CembraPay.
  */
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
+namespace Byjuno\ByjunoCore\Model;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutScreeningResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
-use CembraPayCheckout\CembraPayCheckoutCore\Observer\InvoiceObserver;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutScreeningResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutSettleResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutAutRequest;
+use Byjuno\ByjunoCore\Observer\InvoiceObserver;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
@@ -29,7 +29,7 @@ use Magento\Sales\Model\Order;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Ui\Config\Data;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
+namespace Byjuno\ByjunoCore\Helper\Api;
 
 /*
 {

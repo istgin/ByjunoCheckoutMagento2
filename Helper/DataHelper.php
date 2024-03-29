@@ -1,24 +1,24 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Helper;
+namespace Byjuno\ByjunoCore\Helper;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCancelRequest;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCancelResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutChkRequest;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutChkResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCreditRequest;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutCreditResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutScreeningResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleRequest;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutSettleResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayGetStatusRequest;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayGetStatusResponse;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayLoginDto;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CustomerConsents;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayAzure;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutAutRequest;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutCancelRequest;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutCancelResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutChkRequest;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutChkResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutCreditRequest;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutCreditResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutScreeningResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutSettleRequest;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutSettleResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayGetStatusRequest;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayGetStatusResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayLoginDto;
+use Byjuno\ByjunoCore\Helper\Api\CustomerConsents;
 use Magento\Framework\App\Config\ReinitableConfigInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Quote\Model\Quote\Address;
@@ -112,7 +112,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public $orderCollectionFactory;
 
     /**
-     * @var \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure
+     * @var \Byjuno\ByjunoCore\Helper\Api\CembraPayAzure
      */
     public $cembraPayAzure;
 
@@ -122,7 +122,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public $_loggerPsr;
 
     /**
-     * @var \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator
+     * @var \Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator
      */
     public $_communicator;
 
@@ -268,18 +268,18 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Directory\Model\Config\Source\Country $countryHelper,
         \Magento\Framework\Locale\Resolver $resolver,
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCommunicator $communicator,
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\CembraPayOrderSender $cembrapayOrderSender,
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\CembraPayCreditmemoSender $cembrapayCreditmemoSender,
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\CembraPayInvoiceSender $cembrapayInvoiceSender,
+        \Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator $communicator,
+        \Byjuno\ByjunoCore\Helper\CembraPayOrderSender $cembrapayOrderSender,
+        \Byjuno\ByjunoCore\Helper\CembraPayCreditmemoSender $cembrapayCreditmemoSender,
+        \Byjuno\ByjunoCore\Helper\CembraPayInvoiceSender $cembrapayInvoiceSender,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $originalOrderSender,
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayLogger $cembrapayLogger,
+        \Byjuno\ByjunoCore\Helper\Api\CembraPayLogger $cembrapayLogger,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\ObjectManager\ConfigLoaderInterface $configLoader,
         \Magento\Customer\Api\CustomerMetadataInterface $customerMetadata,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure $cembraPayAzure,
+        \Byjuno\ByjunoCore\Helper\Api\CembraPayAzure $cembraPayAzure,
         \Magento\Framework\App\Config\Storage\WriterInterface $writerInterface,
         ReinitableConfigInterface $reinitableConfig
     )
@@ -312,8 +312,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     function getPendingOrders()
     {
-        $methodInvoice = "cembrapaycheckout_invoice";
-        $methodInstallemnt = "cembrapaycheckout_installment";
+        $methodInvoice = "byjuno_invoice";
+        $methodInstallemnt = "byjuno_installment";
         $information = "%\"chk_executed_ok\":\"true\"%";
         $subQuery = new \Zend_Db_Expr(sprintf("(SELECT parent_id FROM sales_order_payment WHERE (method = '%s' || method = '%s') AND additional_information like '%s')",
             $methodInvoice,
@@ -701,7 +701,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->customerConsents = array($customerConsents);
 
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 0.0.1";
+        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 3.0.0";
 
         return $request;
     }
@@ -900,7 +900,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->customerConsents = array($customerConsents);
         }
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 0.0.1";
+        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 3.0.0";
 
         return $request;
     }
@@ -1045,7 +1045,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->merchantDetails->returnUrlSuccess = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/success');
 
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 0.0.1";
+        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 3.0.0";
 
         return $request;
     }

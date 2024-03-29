@@ -5,9 +5,9 @@
  * Date: 14.2.9
  * Time: 10:28
  */
-namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
+namespace Byjuno\ByjunoCore\Helper\Api;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 use Magento\Framework\Exception\LocalizedException;
 
 class CembraPayLogger

@@ -11,11 +11,11 @@ define(
         return Component.extend({
             redirectAfterPlaceOrder: false,
             defaults: {
-                template: 'CembraPayCheckout_CembraPayCheckoutCore/payment/form_invoice',
-                paymentPlan: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_payment,
-                deliveryPlan: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_delivery,
-                agreeTc: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_agreetc,
-                customGender: window.checkoutConfig.payment.cembrapaycheckout_invoice.default_customgender,
+                template: 'Byjuno_ByjunoCore/payment/form_invoice',
+                paymentPlan: window.checkoutConfig.payment.byjuno_invoice.default_payment,
+                deliveryPlan: window.checkoutConfig.payment.byjuno_invoice.default_delivery,
+                agreeTc: window.checkoutConfig.payment.byjuno_invoice.default_agreetc,
+                customGender: window.checkoutConfig.payment.byjuno_invoice.default_customgender,
                 value: ''
             },
 
@@ -32,36 +32,36 @@ define(
             },
 
             getLcloseText: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.closeText;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.closeText;
             },
             getLprevText: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.prevText;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.prevText;
             },
             getLnextText: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.nextText;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.nextText;
             },
             getLcurrentText: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.currentText;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.currentText;
             },
             getLmonthNames: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.monthNames;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.monthNames;
             },
             getLmonthNamesShort: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.monthNamesShort;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.monthNamesShort;
             },
             getLdayNamesShort: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.dayNamesShort;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.dayNamesShort;
             },
             getLdayNames: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.dayNames;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.dayNames;
             },
             getLdayNamesMin: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.calendar_config.dayNamesMin;
+                return window.checkoutConfig.payment.byjuno_invoice.calendar_config.dayNamesMin;
             },
 
             getAgreementLink: function () {
-                for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_invoice.methods.length; i++) {
-                    var method = window.checkoutConfig.payment.cembrapaycheckout_invoice.methods[i];
+                for (var i = 0; i < window.checkoutConfig.payment.byjuno_invoice.methods.length; i++) {
+                    var method = window.checkoutConfig.payment.byjuno_invoice.methods[i];
                     if (method.value === this.paymentPlan()) {
                         return method.link
                     }
@@ -70,7 +70,7 @@ define(
             },
 
             getAgreeTc: function () {
-                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.payment_mode === "authorization") ? this.agreeTc() : true;
+                return (window.checkoutConfig.payment.byjuno_invoice.payment_mode === "authorization") ? this.agreeTc() : true;
             },
 
             agreeChecked: function () {
@@ -80,12 +80,12 @@ define(
             afterPlaceOrder: function () {
                 jquery('body').loader('show');
                 this.selectPaymentMethod();
-                jquery.mage.redirect(url.build(window.checkoutConfig.payment.cembrapaycheckout_invoice.redirectUrl));
+                jquery.mage.redirect(url.build(window.checkoutConfig.payment.byjuno_invoice.redirectUrl));
                 return false;
             },
 
             getCode: function () {
-                return 'cembrapaycheckout_invoice';
+                return 'byjuno_invoice';
             },
 
             getYearRange: function () {
@@ -188,11 +188,11 @@ define(
                 }
             },
             getLogo: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.logo;
+                return window.checkoutConfig.payment.byjuno_invoice.logo;
             },
 
             getPaymentPlans: function () {
-                return _.map(window.checkoutConfig.payment.cembrapaycheckout_invoice.methods, function (value, key) {
+                return _.map(window.checkoutConfig.payment.byjuno_invoice.methods, function (value, key) {
                     return {
                         'value': value.value,
                         'link': value.link,
@@ -202,21 +202,21 @@ define(
             },
 
             isDeliveryVisibility: function() {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.paper_invoice;
+                return window.checkoutConfig.payment.byjuno_invoice.paper_invoice;
             },
 
             isAgreeVisibility: function () {
-                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.payment_mode === "authorization");
+                return (window.checkoutConfig.payment.byjuno_invoice.payment_mode === "authorization");
             },
 
             isPaymentPlanVisible: function() {
-                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.methods.length > 1);
+                return (window.checkoutConfig.payment.byjuno_invoice.methods.length > 1);
             },
 
             getDeliveryPlans: function () {
                 var list = [];
-                for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_invoice.delivery.length; i++) {
-                    var value = window.checkoutConfig.payment.cembrapaycheckout_invoice.delivery[i];
+                for (var i = 0; i < window.checkoutConfig.payment.byjuno_invoice.delivery.length; i++) {
+                    var value = window.checkoutConfig.payment.byjuno_invoice.delivery[i];
                     if (value.value === 'email') {
                         list.push(
                             {
@@ -251,20 +251,20 @@ define(
             },
 
             isGenderEnabled: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.gender_enable;
+                return window.checkoutConfig.payment.byjuno_invoice.gender_enable;
             },
 
             isBirthdayEnabled: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.birthday_enable;
+                return window.checkoutConfig.payment.byjuno_invoice.birthday_enable;
             },
             isB2bUid: function () {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.b2b_uid;
+                return window.checkoutConfig.payment.byjuno_invoice.b2b_uid;
             },
 
             getGenders: function() {
                 var list = [];
-                for (var i = 0; i < window.checkoutConfig.payment.cembrapaycheckout_invoice.custom_genders.length; i++) {
-                    var value = window.checkoutConfig.payment.cembrapaycheckout_invoice.custom_genders[i];
+                for (var i = 0; i < window.checkoutConfig.payment.byjuno_invoice.custom_genders.length; i++) {
+                    var value = window.checkoutConfig.payment.byjuno_invoice.custom_genders[i];
                     list.push(
                         {
                             'value': value.value,
@@ -276,11 +276,11 @@ define(
             },
 
             isSinglePaymentPlanVisible: function() {
-                return (window.checkoutConfig.payment.cembrapaycheckout_invoice.methods.length === 1);
+                return (window.checkoutConfig.payment.byjuno_invoice.methods.length === 1);
             },
 
             isSinglePaymentPlanVisibleTC: function() {
-                return window.checkoutConfig.payment.cembrapaycheckout_invoice.methods[0].link;
+                return window.checkoutConfig.payment.byjuno_invoice.methods[0].link;
             },
 
         });

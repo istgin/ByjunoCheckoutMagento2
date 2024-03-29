@@ -6,7 +6,7 @@
  * Time: 15:43
  */
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Source;
+namespace Byjuno\ByjunoCore\Model\Source;
 
 use Magento\Framework\Option\ArrayInterface;
 

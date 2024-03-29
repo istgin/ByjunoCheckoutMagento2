@@ -4,12 +4,12 @@
 
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="cembrapaycheckout_cembrapaycheckoutcore_logs.grid.container">
-            <block class="Magento\Backend\Block\Widget\Grid" name="cembrapaycheckout_cembrapaycheckoutcore_logs.grid"
+        <referenceBlock name="Byjuno_ByjunoCore_logs.grid.container">
+            <block class="Magento\Backend\Block\Widget\Grid" name="Byjuno_ByjunoCore_logs.grid"
                    as="grid">
                 <arguments>
                     <argument name="id" xsi:type="string">logsGrid</argument>
-                    <argument name="dataSource" xsi:type="object">CembraPayCheckout\CembraPayCheckoutCore\Model\Resource\Logs\Collection</argument>
+                    <argument name="dataSource" xsi:type="object">Byjuno\ByjunoCore\Model\Resource\Logs\Collection</argument>
                     <argument name="default_sort" xsi:type="string">id</argument>
                     <argument name="default_dir" xsi:type="string">desc</argument>
                     <argument name="save_parameters_in_session" xsi:type="boolean">true</argument>
@@ -19,7 +19,7 @@
                     </argument>
                 </arguments>
                 <block class="Magento\Backend\Block\Widget\Grid\ColumnSet"
-                       name="cembrapaycheckout_cembrapaycheckoutcore_logs.grid.columnSet" as="grid.columnSet">
+                       name="Byjuno_ByjunoCore_logs.grid.columnSet" as="grid.columnSet">
                     <arguments>
                         <argument name="rowUrl" xsi:type="array">
                             <item name="path" xsi:type="string">*/*/edit</item>
@@ -111,7 +111,7 @@
                         </arguments>
                     </block>
                     <block class="Magento\Backend\Block\Widget\Grid\Column" as="action"
-                           acl="CembraPayCheckout_CembraPayCheckoutCore::manage_logs">
+                           acl="Byjuno_ByjunoCore::manage_logs">
                         <arguments>
                             <argument name="id" xsi:type="string">action</argument>
                             <argument name="header" xsi:type="string" translate="true">

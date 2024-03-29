@@ -6,7 +6,7 @@
  * Time: 20:09
  */
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model\Resource;
+namespace Byjuno\ByjunoCore\Model\Resource;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 

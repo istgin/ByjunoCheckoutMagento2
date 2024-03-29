@@ -1,5 +1,5 @@
 <?php
-namespace CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Info;
+namespace Byjuno\ByjunoCore\Block\Adminhtml\Info;
 
 class CembraPayInstallment extends \Magento\Payment\Block\Info
 {

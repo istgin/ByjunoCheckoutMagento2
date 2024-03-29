@@ -1,10 +1,10 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
+namespace Byjuno\ByjunoCore\Helper\Api;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayCheckoutAutRequest;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\DeliveryDetails;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\SettlementDetails;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutAutRequest;
+use Byjuno\ByjunoCore\Helper\Api\DeliveryDetails;
+use Byjuno\ByjunoCore\Helper\Api\SettlementDetails;
 
 class CembraPayCheckoutCreditRequest extends CembraPayCheckoutAutRequest
 {

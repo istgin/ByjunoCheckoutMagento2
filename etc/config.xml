@@ -181,7 +181,7 @@
                     <cembrapaycheckout_installment_toc_string>CGV</cembrapaycheckout_installment_toc_string>
                     <cembrapaycheckout_installment_payment_message>Veuillez choisir le type de paiement et accepter les conditions générales</cembrapaycheckout_installment_payment_message>
                     <cembrapaycheckout_installment_postal_text>Expédition facture sous forme papier (au prix de CHF 3.95 par tranche) à</cembrapaycheckout_installment_postal_text>
-                    <cembrapaycheckout_installment_email_text>cembrapaycheckout_installment_email_text</cembrapaycheckout_installment_email_text>
+                    <cembrapaycheckout_installment_email_text>byjuno_installment_email_text</cembrapaycheckout_installment_email_text>
                 </cembrapaycheckout_installment_localization>
             </cembrapayinstallmentsettings>
         </french>

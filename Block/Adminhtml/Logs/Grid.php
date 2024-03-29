@@ -1,6 +1,6 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Logs;
+namespace Byjuno\ByjunoCore\Block\Adminhtml\Logs;
 
 use Magento\Backend\Block\Widget\Grid as WidgetGrid;
 

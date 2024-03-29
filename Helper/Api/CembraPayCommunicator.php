@@ -1,17 +1,17 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Helper\Api;
+namespace Byjuno\ByjunoCore\Helper\Api;
 
 class CembraPayCommunicator
 {
 
     /**
-     * @var \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure
+     * @var \Byjuno\ByjunoCore\Helper\Api\CembraPayAzure
      */
     public $cembraPayAzure;
 
     public function __construct(
-        \CembraPayCheckout\CembraPayCheckoutCore\Helper\Api\CembraPayAzure $cembraPayAzure
+        \Byjuno\ByjunoCore\Helper\Api\CembraPayAzure $cembraPayAzure
     )
     {
         $this->cembraPayAzure = $cembraPayAzure;

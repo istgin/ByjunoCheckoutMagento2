@@ -1,9 +1,9 @@
 <?php
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Block;
+namespace Byjuno\ByjunoCore\Block;
 
 
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;

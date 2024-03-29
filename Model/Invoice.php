@@ -7,11 +7,11 @@
  * Time: 15:44
  */
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
+namespace Byjuno\ByjunoCore\Model;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Info\CembraPayInvoice;
-use CembraPayCheckout\CembraPayCheckoutCore\Controller\Checkout\Startpayment;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Block\Adminhtml\Info\CembraPayInvoice;
+use Byjuno\ByjunoCore\Controller\Checkout\Startpayment;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface;
@@ -90,7 +90,7 @@ class Invoice extends CembraPaypayment
         }
         $this->_state = $state;
         $this->_eavConfig = $objectManager->get('\Magento\Eav\Model\Config');
-        $this->_dataHelper = $objectManager->get('\CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper');
+        $this->_dataHelper = $objectManager->get('\Byjuno\ByjunoCore\Helper\DataHelper');
         $this->_executed = false;
     }
 
@@ -118,12 +118,12 @@ class Invoice extends CembraPaypayment
         if (!$isAvaliable) {
             return false;
         }
-        $cembrapaycheckout_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", ScopeInterface::SCOPE_STORE);
+        $byjuno_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_single_invoice_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/cembrapaycheckout_single_invoice_allow", ScopeInterface::SCOPE_STORE);
 
         $methodsAvailable =
             ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)
-                && ($cembrapaycheckout_invoice_partial_allow == '0' || $cembrapaycheckout_invoice_partial_allow == '1'))
+                && ($byjuno_invoice_partial_allow == '0' || $byjuno_invoice_partial_allow == '1'))
             ||
             ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)
                 && ($cembrapaycheckout_single_invoice_allow == '0' || $cembrapaycheckout_single_invoice_allow == '1'));

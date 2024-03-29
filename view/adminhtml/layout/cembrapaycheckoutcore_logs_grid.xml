@@ -5,7 +5,7 @@
     <update handle="cembrapaycheckoutcore_logs_grid_block"/>
     <container name="root">
         <block class="Magento\Backend\Block\Widget\Grid\Container"
-               name="cembrapaycheckout_cembrapaycheckoutcore_logs.grid.container"
+               name="Byjuno_ByjunoCore_logs.grid.container"
                template="Magento_Backend::widget/grid/container/empty.phtml"/>
     </container>
 </layout>

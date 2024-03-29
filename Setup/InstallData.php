@@ -6,7 +6,7 @@
  * Time: 19:59
 */
 
-namespace  CembraPayCheckout\CembraPayCheckoutCore\Setup;
+namespace  Byjuno\ByjunoCore\Setup;
 
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;

@@ -6,9 +6,9 @@
  * Time: 15:44
  */
 
-namespace CembraPayCheckout\CembraPayCheckoutCore\Model;
+namespace Byjuno\ByjunoCore\Model;
 
-use CembraPayCheckout\CembraPayCheckoutCore\Controller\Checkout\Startpayment;
+use Byjuno\ByjunoCore\Controller\Checkout\Startpayment;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
@@ -21,7 +21,7 @@ use Magento\Payment\Gateway\Command\CommandPoolInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
-use CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper;
+use Byjuno\ByjunoCore\Helper\DataHelper;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
@@ -31,7 +31,7 @@ use Magento\Store\Model\ScopeInterface;
 /**
  * Pay In Store payment method model
  */
-class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraPaypayment
+class Installment extends \Byjuno\ByjunoCore\Model\CembraPaypayment
 {
     protected $_executed;
     protected $_dataHelper;
@@ -86,13 +86,13 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
         }
         $this->_state = $state;
         $this->_eavConfig = $objectManager->get('\Magento\Eav\Model\Config');
-        $this->_dataHelper =  $objectManager->get('\CembraPayCheckout\CembraPayCheckoutCore\Helper\DataHelper');
+        $this->_dataHelper =  $objectManager->get('\Byjuno\ByjunoCore\Helper\DataHelper');
         $this->_executed = false;
     }
 
     public function getInfoBlockType()
     {
-        return \CembraPayCheckout\CembraPayCheckoutCore\Block\Adminhtml\Info\CembraPayInstallment::class;
+        return \Byjuno\ByjunoCore\Block\Adminhtml\Info\CembraPayInstallment::class;
     }
 
     public function assignData(\Magento\Framework\DataObject $data)
@@ -221,35 +221,35 @@ class Installment extends \CembraPayCheckout\CembraPayCheckoutCore\Model\CembraP
         {
             $isCompany = true;
         }
-        $cembrapaycheckout_installment_3installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_3installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $cembrapaycheckout_installment_4installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_4installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $cembrapaycheckout_installment_6installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_6installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $cembrapaycheckout_installment_12installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/cembrapaycheckout_installment_12installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $cembrapaycheckout_installment_24installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_24installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $cembrapaycheckout_installment_36installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_36installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $cembrapaycheckout_installment_48installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_48installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjuno_installment_3installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_3installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjuno_installment_4installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_4installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjuno_installment_6installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_6installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjuno_installment_12installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/cembrapaycheckout_installment_12installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjuno_installment_24installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_24installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjuno_installment_36installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_36installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $byjuno_installment_48installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_48installment_allow", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
         $methodsAvailable =
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_installment_3installment_allow == '0' || ($cembrapaycheckout_installment_3installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_3installment_allow == '2' && $isCompany)))
+            && ($byjuno_installment_3installment_allow == '0' || ($byjuno_installment_3installment_allow == '1' && !$isCompany) || ($byjuno_installment_3installment_allow == '2' && $isCompany)))
             ||
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_installment_4installment_allow == '0' || ($cembrapaycheckout_installment_4installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_4installment_allow == '2' && $isCompany)))
+            && ($byjuno_installment_4installment_allow == '0' || ($byjuno_installment_4installment_allow == '1' && !$isCompany) || ($byjuno_installment_4installment_allow == '2' && $isCompany)))
             ||
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_installment_6installment_allow == '0' || ($cembrapaycheckout_installment_6installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_6installment_allow == '2' && $isCompany)))
+            && ($byjuno_installment_6installment_allow == '0' || ($byjuno_installment_6installment_allow == '1' && !$isCompany) || ($byjuno_installment_6installment_allow == '2' && $isCompany)))
             ||
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_installment_12installment_allow == '0' || ($cembrapaycheckout_installment_12installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_12installment_allow == '2' && $isCompany)))
+            && ($byjuno_installment_12installment_allow == '0' || ($byjuno_installment_12installment_allow == '1' && !$isCompany) || ($byjuno_installment_12installment_allow == '2' && $isCompany)))
             ||
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_installment_24installment_allow == '0' || ($cembrapaycheckout_installment_24installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_24installment_allow == '2' && $isCompany)))
+            && ($byjuno_installment_24installment_allow == '0' || ($byjuno_installment_24installment_allow == '1' && !$isCompany) || ($byjuno_installment_24installment_allow == '2' && $isCompany)))
             ||
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-            && ($cembrapaycheckout_installment_36installment_allow == '0' || ($cembrapaycheckout_installment_36installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_36installment_allow == '2' && $isCompany)))
+            && ($byjuno_installment_36installment_allow == '0' || ($byjuno_installment_36installment_allow == '1' && !$isCompany) || ($byjuno_installment_36installment_allow == '2' && $isCompany)))
             ||
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/active", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
-                && ($cembrapaycheckout_installment_48installment_allow == '0' || ($cembrapaycheckout_installment_48installment_allow == '1' && !$isCompany) || ($cembrapaycheckout_installment_48installment_allow == '2' && $isCompany)));
+                && ($byjuno_installment_48installment_allow == '0' || ($byjuno_installment_48installment_allow == '1' && !$isCompany) || ($byjuno_installment_48installment_allow == '2' && $isCompany)));
 
         if (!$isAvaliable || !$methodsAvailable) {
             return false;
