@@ -53,6 +53,7 @@ class StartCheckout implements ActionInterface
         $order = $this->_dataHelper->_checkoutSession->getLastRealOrder();
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($order != null) {
+            /* @var $payment \Magento\Sales\Model\Order\Payment */
             $payment = $order->getPayment();
             $payment->setAdditionalInformation("webshop_profile_id", 1);
             $payment->setAdditionalInformation("chk_executed_ok", 'false');
