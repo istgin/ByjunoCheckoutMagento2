@@ -32,7 +32,7 @@ class CembraPayOrderSender extends OrderSender
         $this->identityContainer->setCustomerEmail($this->email);
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $objectManagerInterface = $objectManager->get('\Magento\Framework\ObjectManagerInterface');
-        $this->senderBuilderFactory = new \Magento\Sales\Model\Order\Email\SenderBuilderFactory($objectManagerInterface, '\\CembraPayCheckout\\CembraPayCheckoutCore\\Helper\\CembraPaySenderBuilder');
+        $this->senderBuilderFactory = new \Magento\Sales\Model\Order\Email\SenderBuilderFactory($objectManagerInterface, '\\Byjuno\\ByjunoCore\\Helper\\CembraPaySenderBuilder');
         $sender = $this->getSender();
         try {
             $sender->send();

@@ -55,7 +55,6 @@ class StartCheckout implements ActionInterface
         if ($order != null) {
             /* @var $payment \Magento\Sales\Model\Order\Payment */
             $payment = $order->getPayment();
-            $payment->setAdditionalInformation("webshop_profile_id", 1);
             $payment->setAdditionalInformation("chk_executed_ok", 'false');
             $payment->save();
             $request = $this->_dataHelper->createMagentoShopRequestCheckout(
@@ -71,11 +70,12 @@ class StartCheckout implements ActionInterface
             } else {
                 $cembrapayCommunicator->setServer('test');
             }
-            $response = $cembrapayCommunicator->sendCheckoutRequest($json, $this->_dataHelper->getAccessData(),
-                function ($object, $token) {
-                    $object->saveToken($token);
+            $response = $cembrapayCommunicator->sendCheckoutRequest($json, $this->_dataHelper->getAccessDataWebshop($payment->getAdditionalInformation('webshop_profile_id'), $mode),
+                function ($object, $token, $accessData) {
+                    $object->saveToken($token, $accessData);
                 });
-
+            var_dump($response);
+            exit();
             $status = "";
             $responseRes = null;
             if ($response) {

@@ -67,9 +67,9 @@ class Success implements ActionInterface
         } else {
             $cembrapayCommunicator->setServer('test');
         }
-        $response = $cembrapayCommunicator->sendGetTransactionRequest($json, $this->_dataHelper->getAccessData(),
-            function ($object, $token) {
-                $object->saveToken($token);
+        $response = $cembrapayCommunicator->sendGetTransactionRequest($json, $this->_dataHelper->getAccessData($payment->getAdditionalInformation('webshop_profile_id'), $mode),
+            function ($object, $token, $accessData) {
+                $object->saveToken($token, $accessData);
             });
 
         $transactionStatus = "";
@@ -93,13 +93,13 @@ class Success implements ActionInterface
             $order->setStatus("processing");
 
             $this->_dataHelper->saveStatusToOrder($order);
+            $mode = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
+            if ($mode == 'live') {
+                $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_prod_email', ScopeInterface::SCOPE_STORE);
+            } else {
+                $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', ScopeInterface::SCOPE_STORE);
+            }
             try {
-                $mode = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
-                if ($mode == 'live') {
-                    $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_prod_email', ScopeInterface::SCOPE_STORE);
-                } else {
-                    $email = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaycheckout_test_email', ScopeInterface::SCOPE_STORE);
-                }
                 if ($this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/force_send_email', ScopeInterface::SCOPE_STORE) == '1') {
                     $this->_dataHelper->_originalOrderSender->send($order);
                 }

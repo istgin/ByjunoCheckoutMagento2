@@ -29,7 +29,7 @@ use Magento\Store\Model\ScopeInterface;
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     public static $SINGLEINVOICE = 'SINGLE-INVOICE';
-    public static $CEMBRAPAYINVOICE = 'BYJUNO-INVOICE';
+    public static $CEMBRAPAYINVOICE = 'CEMBRAPAY-INVOICE';
 
     public static $INSTALLMENT_3 = 'INSTALLMENT_3';
     public static $INSTALLMENT_4 = 'INSTALLMENT_4';
@@ -72,6 +72,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $REQUEST_ERROR = 'REQUEST_ERROR';
 
     public static $allowedByjunoPaymentMethods;
+
+    public static $tokenSeparator = "||||";
 
     /**
      * @var \Magento\Quote\Api\CartRepositoryInterface
@@ -443,8 +445,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     } else {
                         $cembrapayCommunicator->setServer('test');
                     }
-                    $response = $cembrapayCommunicator->sendScreeningRequest($json, $this->getAccessData(), function ($object, $token) {
-                        $object->saveToken($token);
+                    $response = $cembrapayCommunicator->sendScreeningRequest($json, $this->getAccessData($mode), function ($object, $token, $accessData) {
+                        $object->saveToken($token, $accessData);
                     });
                     $screeningStatus = "";
                     if ($response) {
@@ -503,30 +505,65 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return true;
     }
 
-    public function saveToken($token) {
-        $this->_writerInterface->save('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token', $token);
+    public function saveToken($token, $accessData) {
+        /* @var $accessData CembraPayLoginDto */
+        $hash = $accessData->username.$accessData->password.$accessData->audience.DataHelper::$tokenSeparator;
+        if ($accessData->mode == 'test') {
+            $this->_writerInterface->save('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_test', $hash.$token);
+        } else {
+            $this->_writerInterface->save('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_live', $hash.$token);
+        }
         $this->_reinitableConfig->reinit();
     }
 
-    public function getAccessData() {
+    public function getAccessData($mode) {
         $accessData = new CembraPayLoginDto();
         $accessData->helperObject = $this;
         $accessData->timeout = (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout', ScopeInterface::SCOPE_STORE);
-        $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE);
-        $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE);
-        $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE);
-        $accessData->accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token');
+        if ($mode == 'test') {
+            $accessData->mode = 'test';
+            $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin_test', ScopeInterface::SCOPE_STORE);
+            $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword_test', ScopeInterface::SCOPE_STORE);
+            $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience_test', ScopeInterface::SCOPE_STORE);
+            $accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_test') ?? "";
+        } else {
+            $accessData->mode = 'live';
+            $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin_live', ScopeInterface::SCOPE_STORE);
+            $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword_live', ScopeInterface::SCOPE_STORE);
+            $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience_live', ScopeInterface::SCOPE_STORE);
+            $accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_live') ?? "";
+        }
+        $tkn = explode(DataHelper::$tokenSeparator, $accessToken);
+        $hash = $accessData->username.$accessData->password.$accessData->audience;
+        if ($hash == $tkn[0] && !empty($tkn[1])) {
+            $accessData->accessToken = $tkn[1];
+        }
         return $accessData;
     }
 
-    public function getAccessDataWebshop($webShopId) {
+    public function getAccessDataWebshop($webShopId, $mode) {
         $accessData = new CembraPayLoginDto();
         $accessData->helperObject = $this;
         $accessData->timeout = (int)$this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/timeout', ScopeInterface::SCOPE_STORE, $webShopId);
-        $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin', ScopeInterface::SCOPE_STORE, $webShopId);
-        $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword', ScopeInterface::SCOPE_STORE, $webShopId);
-        $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience', ScopeInterface::SCOPE_STORE, $webShopId);
-        $accessData->accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token');
+
+        if ($mode == 'test') {
+            $accessData->mode = 'test';
+            $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin_test', ScopeInterface::SCOPE_STORE, $webShopId);
+            $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword_test', ScopeInterface::SCOPE_STORE, $webShopId);
+            $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience_test', ScopeInterface::SCOPE_STORE, $webShopId);
+            $accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_test') ?? "";
+        } else {
+            $accessData->mode = 'live';
+            $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin_live', ScopeInterface::SCOPE_STORE, $webShopId);
+            $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword_live', ScopeInterface::SCOPE_STORE, $webShopId);
+            $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience_live', ScopeInterface::SCOPE_STORE, $webShopId);
+            $accessToken= $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_live') ?? "";
+        }
+        $tkn = explode(DataHelper::$tokenSeparator, $accessToken);
+        $hash = $accessData->username.$accessData->password.$accessData->audience;
+        if ($hash == $tkn[0] && !empty($tkn[1])) {
+            $accessData->accessToken = $tkn[1];
+        }
         return $accessData;
     }
 
@@ -694,7 +731,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         $customerConsents = new CustomerConsents();
-        $customerConsents->consentType = "BYJUNO-TC";
+        $customerConsents->consentType = "CEMBRAPAY-TC";
         $customerConsents->consentProvidedAt = "MERCHANT";
         $customerConsents->consentDate = CembraPayCheckoutAutRequest::Date();
         $customerConsents->consentReference = "MERCHANT DATA PRIVACY";
@@ -878,15 +915,15 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->sessionInfo->fingerPrint = $sedId;
         }
 
-        $request->byjunoDetails->byjunoPaymentMethod = $paymentMethod->getAdditionalInformation('payment_plan');
+        $request->cembraPayDetails->cembraPayPaymentMethod = $paymentMethod->getAdditionalInformation('payment_plan');
         if ($paymentMethod->getAdditionalInformation('payment_send') == 'postal') {
-            $request->byjunoDetails->invoiceDeliveryType = "POSTAL";
+            $request->cembraPayDetails->invoiceDeliveryType = "POSTAL";
         } else {
-            $request->byjunoDetails->invoiceDeliveryType = "EMAIL";
+            $request->cembraPayDetails->invoiceDeliveryType = "EMAIL";
         }
         if ($agree_tc) {
             $customerConsents = new CustomerConsents();
-            $customerConsents->consentType = "BYJUNO-TC";
+            $customerConsents->consentType = "CEMBRAPAY-TC";
             $customerConsents->consentProvidedAt = "MERCHANT";
             $customerConsents->consentDate = CembraPayCheckoutAutRequest::Date();
             $methods = $this->getMethodsMapping();
@@ -1024,15 +1061,15 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->sessionInfo->fingerPrint = $sedId;
         }
 
-        $request->byjunoDetails->byjunoPaymentMethod = $paymentMethod->getAdditionalInformation('payment_plan');
+        $request->cembraPayDetails->cembraPayPaymentMethod = $paymentMethod->getAdditionalInformation('payment_plan');
         if ($paymentMethod->getAdditionalInformation('payment_send') == 'postal') {
-            $request->byjunoDetails->invoiceDeliveryType = "POSTAL";
+            $request->cembraPayDetails->invoiceDeliveryType = "POSTAL";
         } else {
-            $request->byjunoDetails->invoiceDeliveryType = "EMAIL";
+            $request->cembraPayDetails->invoiceDeliveryType = "EMAIL";
         }
 
         $customerConsents = new CustomerConsents();
-        $customerConsents->consentType = "BYJUNO-TC";
+        $customerConsents->consentType = "CEMBRAPAY-TC";
         $customerConsents->consentProvidedAt = "MERCHANT";
         $customerConsents->consentDate = CembraPayCheckoutChkRequest::Date();
         $methods = $this->getMethodsMapping();
@@ -1040,9 +1077,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         $request->customerConsents = array($customerConsents);
 
-        $request->merchantDetails->returnUrlError = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel');
-        $request->merchantDetails->ReturnUrlCancel = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel');
-        $request->merchantDetails->returnUrlSuccess = $this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/success');
+        $request->merchantDetails->returnUrlError = base64_encode($this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel'));
+        $request->merchantDetails->returnUrlCancel = base64_encode($this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel'));
+        $request->merchantDetails->returnUrlSuccess = base64_encode($this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/success'));
 
         $request->merchantDetails->transactionChannel = "WEB";
         $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 3.0.0";

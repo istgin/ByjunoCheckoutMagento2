@@ -108,14 +108,21 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if ($payment->getAdditionalInformation("auth_executed_ok") == 'true') {
             $txType = "AUT";
         }
+        $oldOrder = true;
+        if ($payment->getAdditionalInformation("auth_executed_ok") != null || $payment->getAdditionalInformation("chk_executed_ok") != null) {
+            $oldOrder = false;
+        }
         $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId(), $txType);
-        if ($tx == null || !$tx || empty($tx["transaction_id"])) {
+        if (!$oldOrder && ($tx == null || !$tx || empty($tx["transaction_id"]))) {
             throw new LocalizedException (
                 __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: ".$txType." NOT FOUND)")
             );
         }
-
-        $request = $this->_dataHelper->CreateMagentoShopRequestCancel($order, $order->getTotalDue(), $webshopProfileId, $tx["transaction_id"]);
+        $txId = null;
+        if (!empty($tx["transaction_id"])) {
+            $txId = $tx["transaction_id"];
+        }
+        $request = $this->_dataHelper->CreateMagentoShopRequestCancel($order, $order->getTotalDue(), $webshopProfileId, $txId);
         $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
         $cembrapayCommunicator = new CembraPayCommunicator($this->_dataHelper->cembraPayAzure);
@@ -128,9 +135,9 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         }
         $status = "";
         $response = $cembrapayCommunicator->sendCancelRequest($json,
-            $this->_dataHelper->getAccessDataWebshop($webshopProfileId),
-            function ($object, $token) {
-                $object->saveToken($token);
+            $this->_dataHelper->getAccessDataWebshop($webshopProfileId, $mode),
+            function ($object, $token, $accessData) {
+                $object->saveToken($token, $accessData);
             });
         if ($response) { /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
             $responseRes = $this->_dataHelper->cancelResponse($response);
@@ -243,13 +250,21 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if ($payment->getAdditionalInformation("auth_executed_ok") == 'true') {
             $txType = "AUT";
         }
+        $oldOrder = true;
+        if ($payment->getAdditionalInformation("auth_executed_ok") != null || $payment->getAdditionalInformation("chk_executed_ok") != null) {
+            $oldOrder = false;
+        }
         $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
-        if ($tx == null || !$tx || empty($tx["transaction_id"])) {
+        if (!$oldOrder && ($tx == null || !$tx || empty($tx["transaction_id"]))) {
             throw new LocalizedException (
                 __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: ".$txType." NOT FOUND)")
             );
         }
-        $request = $this->_dataHelper->CreateMagentoShopRequestCredit($order, $amount, $incoiceId, $webshopProfileId, $tx["transaction_id"]);
+        $txId = null;
+        if (!empty($tx["transaction_id"])) {
+            $txId = $tx["transaction_id"];
+        }
+        $request = $this->_dataHelper->CreateMagentoShopRequestCredit($order, $amount, $incoiceId, $webshopProfileId, $txId);
         $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
         $cembrapayCommunicator = new CembraPayCommunicator($this->_dataHelper->cembraPayAzure);
@@ -265,9 +280,9 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         }
         $status = "";
         $response = $cembrapayCommunicator->sendCreditRequest($json,
-            $this->_dataHelper->getAccessDataWebshop($webshopProfileId),
-            function ($object, $token) {
-                $object->saveToken($token);
+            $this->_dataHelper->getAccessDataWebshop($webshopProfileId, $mode),
+            function ($object, $token, $accessData) {
+                $object->saveToken($token, $accessData);
             });
         if ($response) { /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
             $responseRes = $this->_dataHelper->creditResponse($response);
@@ -312,12 +327,11 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if ($this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaysettletransacton", ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
         }
-        $oldOrder = true;
         $txType = "CHK";
         if ($payment->getAdditionalInformation("auth_executed_ok") == 'true') {
             $txType = "AUT";
-            $oldOrder = false;
         }
+        $oldOrder = true;
         if ($payment->getAdditionalInformation("auth_executed_ok") != null || $payment->getAdditionalInformation("chk_executed_ok") != null) {
             $oldOrder = false;
         }
@@ -327,7 +341,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
                 __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: ".$txType." NOT FOUND)")
             );
         }
-        $txId = "";
+        $txId = null;
         if (!empty($tx["transaction_id"])) {
             $txId = $tx["transaction_id"];
         }
@@ -351,9 +365,9 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
 
         }
         $response = $cembrapayCommunicator->sendSettleRequest($json,
-            $this->_dataHelper->getAccessDataWebshop($webshopProfileId),
-            function ($object, $token) {
-                $object->saveToken($token);
+            $this->_dataHelper->getAccessDataWebshop($webshopProfileId, $mode),
+            function ($object, $token, $accessData) {
+                $object->saveToken($token, $accessData);
             });
         $status = "";
         $responseRes = null;
@@ -370,9 +384,6 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
                 "-", "-", "-","-", "-", "-");
         }
         if ($status == DataHelper::$SETTLE_OK) {
-            throw new LocalizedException(
-                __("OK")
-            );
             $this->_dataHelper->_cembrapayInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
             $authTransaction = $payment->getAuthorizationTransaction();
             if ($authTransaction && !$authTransaction->getIsClosed()) {

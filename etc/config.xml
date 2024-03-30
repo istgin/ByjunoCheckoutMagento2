@@ -417,8 +417,14 @@
                 <timeout>30</timeout>
                 <tmxenabled>0</tmxenabled>
                 <tmxkey>lq866c5i</tmxkey>
-                <audience>api://fb6abffc-f90d-4c10-aca5-6c59533c76c2/.default</audience>
-                <access_token/>
+                <cembrapaylogin_test/>
+                <cembrapaylogin_live/>
+                <audience_test>api://fb6abffc-f90d-4c10-aca5-6c59533c76c2/.default</audience_test>
+                <audience_live>api://80d0ac9d-9d5c-499c-876e-71dd57e436f2/.default</audience_live>
+                <access_token_test/>
+                <access_token_live/>
+                <cembrapaypassword_test/>
+                <cembrapaypassword_live/>
                 <businesstobusiness>0</businesstobusiness>
                 <cembrapaycheckout_prod_email>invoices@cembrapay.ch</cembrapaycheckout_prod_email>
                 <cembrapaycheckout_test_email>uat-invoices@cembrapay.ch</cembrapaycheckout_test_email>

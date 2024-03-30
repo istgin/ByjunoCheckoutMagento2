@@ -54,18 +54,31 @@
                     <label>Mode</label>
                     <source_model>Byjuno\ByjunoCore\Model\Source\TestLive</source_model>
                 </field>
-                <field id="cembrapaylogin" translate="label" type="text" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Login</label>
+                <field id="cembrapaylogin_live" translate="label" type="text" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Live Login</label>
                 </field>
-                <field id="cembrapaypassword" translate="label" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Password</label>
+                <field id="cembrapaypassword_live" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Live Password</label>
                 </field>
-                <field id="audience" translate="label" type="text" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Audience</label>
+                <field id="audience_live" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Live Audience</label>
                 </field>
-                <field id="access_token" translate="label" type="text" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Access token</label>
-                    <frontend_model>Byjuno\ByjunoCore\Model\Source\AccessToken</frontend_model>
+                <field id="access_token_live" translate="label" type="text" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Live Access token</label>
+                    <frontend_model>Byjuno\ByjunoCore\Model\Source\AccessTokenLive</frontend_model>
+                </field>
+                <field id="cembrapaylogin_test" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test Login</label>
+                </field>
+                <field id="cembrapaypassword_test" translate="label" type="text" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test Password</label>
+                </field>
+                <field id="audience_test" translate="label" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test Audience</label>
+                </field>
+                <field id="access_token_test" translate="label" type="text" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test Access token</label>
+                    <frontend_model>Byjuno\ByjunoCore\Model\Source\AccessTokenTest</frontend_model>
                 </field>
                 <field id="minamount" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Mininmal amount for checkout</label>

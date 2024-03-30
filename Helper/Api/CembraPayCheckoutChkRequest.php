@@ -49,8 +49,8 @@ Expand allCollapse all
 "sessionInfo": {
 "tmxSessionId": "63b5a205d9sasfdad50a079bd69dded2ad421a207b657ae1b8262a8efe___"
 },
-"byjunoDetails": {
-"byjunoPaymentMethod": "BYJUNO-INVOICE"
+"cembraPayDetails": {
+"cembraPayPaymentMethod": "BYJUNO-INVOICE"
 },
 "merchantDetails": {
 "returnUrlSuccess": "www.merchant.ch/Checkout21244/success",
@@ -65,6 +65,7 @@ class MerchantCheckoutDetails
 {
     public $returnUrlSuccess; //String
     public $returnUrlError; //String
+    public $returnUrlCancel; //String
     public $transactionChannel; //String
     public $integrationModule; //String
 
@@ -82,7 +83,7 @@ class CembraPayCheckoutChkRequest extends CembraPayCheckoutAutRequest
         $this->deliveryDetails = new DeliveryDetails();
         $this->order = new Order();
         $this->sessionInfo = new SessionInfo();
-        $this->byjunoDetails = new CembraPayDetails();
+        $this->cembraPayDetails = new CembraPayDetails();
         $this->merchantDetails = new MerchantCheckoutDetails();
     }
 

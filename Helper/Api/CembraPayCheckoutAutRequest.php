@@ -80,7 +80,7 @@ class SessionInfo
 
 class CembraPayDetails
 {
-    public $byjunoPaymentMethod; //String
+    public $cembraPayPaymentMethod; //String
     public $invoiceDeliveryType; //String
 
 }
@@ -107,7 +107,7 @@ class CembraPayCheckoutAutRequest
     public $deliveryDetails; //DeliveryDetails
     public $order; //Order
     public $sessionInfo; //SessionInfo
-    public $byjunoDetails; //CembraPayDetails
+    public $cembraPayDetails; //CembraPayDetails
     public $merchantDetails; //MerchantDetails
 
     public function __construct()
@@ -118,7 +118,7 @@ class CembraPayCheckoutAutRequest
         $this->deliveryDetails = new DeliveryDetails();
         $this->order = new Order();
         $this->sessionInfo = new SessionInfo();
-        $this->byjunoDetails = new CembraPayDetails();
+        $this->cembraPayDetails = new CembraPayDetails();
         $this->merchantDetails = new MerchantDetails();
     }
 

@@ -3,6 +3,7 @@
 namespace Byjuno\ByjunoCore\Helper\Api;
 
 class CembraPayLoginDto {
+    public $mode;
 
     public $username;
 
