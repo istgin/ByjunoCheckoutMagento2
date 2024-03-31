@@ -35,31 +35,31 @@ class CembraPayCommunicator
     }
 
     public function sendScreeningRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/screening', $accessData, $cb);
+        return $this->sendRequest($xmlRequest, 'v1.0/screening', $accessData, $cb);
     }
 
     public function sendAuthRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/transactions/authorize', $accessData, $cb);
+        return $this->sendRequest($xmlRequest, 'v1.0/transactions/authorize', $accessData, $cb);
     }
 
     public function sendCheckoutRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/checkout', $accessData, $cb);
+        return $this->sendRequest($xmlRequest, 'v1.0/checkout', $accessData, $cb);
     }
 
     public function sendSettleRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/transactions/settle', $accessData, $cb);
+        return $this->sendRequest($xmlRequest, 'v1.0/transactions/settle', $accessData, $cb);
     }
 
     public function sendCreditRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/transactions/credit', $accessData, $cb);
+        return $this->sendRequest($xmlRequest, 'v1.0/transactions/credit', $accessData, $cb);
     }
 
     public function sendCancelRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/transactions/cancel', $accessData, $cb);
+        return $this->sendRequest($xmlRequest, 'v1.0/transactions/cancel', $accessData, $cb);
     }
 
     public function sendGetTransactionRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
-        return $this->sendRequest($xmlRequest, 'api/v1.0/transactions/status', $accessData, $cb);
+        return $this->sendRequest($xmlRequest, 'v1.0/transactions/status', $accessData, $cb);
     }
 
     private function sendRequest($xmlRequest, $endpoint, CembraPayLoginDto $accessData, $cb) {
@@ -78,11 +78,12 @@ class CembraPayCommunicator
             $timeout = $accessData->timeout;
         }
         if ($this->server == 'test') {
-            $url = 'https://ext-test.cembrapay.ch/'.$endpoint;
+            $url = 'https://ext-test.api.cembrapay.ch/'.$endpoint;
         } else {
             //TODO: live server
-            $url = 'https://ext-test.cembrapay.ch/'.$endpoint;
+            $url = 'https://ext-test.api.cembrapay.ch/'.$endpoint;
         }
+        var_dump($url);
         $request_data = $xmlRequest;
 
         $headers = [
