@@ -69,6 +69,13 @@ define(
                 return this.paymentPlan()
             },
 
+            getAgreementText: function () {
+                var agreement_link = this.getAgreementLink();
+                var text = $t("Agreement");
+                var agreement = text.replace("%%agreement%%", agreement_link)
+                return agreement;
+            },
+
             getAgreeTc: function () {
                 return (window.checkoutConfig.payment.byjuno_installment.payment_mode === "authorization") ? this.agreeTc() : true;
             },

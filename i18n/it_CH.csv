@@ -18,4 +18,4 @@
 "DD.MM.YYYY", "GG.MM.AAAA"
 "Company registration number", "Numero di registrazione della società"
 "Company registration number not provided", "Numero di registrazione della società non fornito"
-"Agreement", "L'opzione di pagamento tramite fattura (pagamento rateale incluso) è gestita dalla CembraPay SA. Si applicano le CGC e l’Informativa sulla privacy di CembraPay SA."
+"Agreement", "L'opzione di pagamento tramite fattura (pagamento rateale incluso) è gestita dalla CembraPay SA. Si applicano le <a href='%%agreement%%' target='_blank'>CGC</a> e l’Informativa sulla <a href='https://cembrapay.ch/it/privacy' target='_blank'>privacy di CembraPay SA</a>."

@@ -18,4 +18,5 @@
 "Delivery method by Post", "Delivery method by Post"
 "DD.MM.YYYY", "DD.MM.YYYY"
 "Company registration number", "Company registration number"
-"Agreement", "The payment option Invoice (including payment in installments) is operated by CembraPay AG. The T&C and the Data Privacy Policy of CembraPay AG  apply."
+"Company registration number not provided", "Company registration number not provided"
+"Agreement", "The payment option Invoice (including payment in installments) is operated by CembraPay AG. The <a href='%%agreement%%' target='_blank'>T&C</a> and the <a href='https://cembrapay.ch/en/privacy' target='_blank'>Data Privacy Policy of CembraPay AG</a> apply."

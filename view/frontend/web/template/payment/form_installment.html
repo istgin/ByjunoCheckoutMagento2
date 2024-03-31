@@ -147,7 +147,7 @@
         <div class="checkout-agreements-block">
             <input type="checkbox" class="checkbox" id="cembra_agree_installment" data-bind="checked: agreeChecked()" />
             <label class="label" for="cembra_agree_installment">
-                <a data-bind="attr: {href: getAgreementLink(), target: '_blank'}, text: $t('Agreement')"></a>
+                <span data-bind="html: getAgreementText()"></span>
             </label>
         </div>
         <!-- /ko -->

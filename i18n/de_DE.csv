@@ -18,4 +18,4 @@
 "DD.MM.YYYY", "TT.MM.JJJJ"
 "Company registration number", "Handelsregisternummer"
 "Company registration number not provided", "Firmenregistrierungsnummer nicht angegeben"
-"Agreement", "Kauf auf Rechnung (inklusive Ratenzahlung) wird durch CembraPay AG abgewickelt. Es gelten die AGB und die Datenschutzerklärung der CembraPay AG."
+"Agreement", "Kauf auf Rechnung (inklusive Ratenzahlung) wird durch CembraPay AG abgewickelt. Es gelten die <a href='%%agreement%%' target='_blank'>AGB</a> und die <a href='https://cembrapay.ch/de/privacy' target='_blank'>Datenschutzerklärung der CembraPay AG</a>."
