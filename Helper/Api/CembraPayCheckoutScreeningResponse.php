@@ -5,9 +5,9 @@
 namespace Byjuno\ByjunoCore\Helper\Api;
 
 class CembraPayCheckoutScreeningDetails {
-    public $allowedByjunoPaymentMethods;  //array( String )
+    public $allowedCembraPayPaymentMethods;  //array( String )
     public function __construct() {
-        $this->allowedByjunoPaymentMethods = Array();
+        $this->allowedCembraPayPaymentMethods = Array();
     }
 
 }

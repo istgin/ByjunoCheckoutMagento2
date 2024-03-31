@@ -71,7 +71,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public static $REQUEST_ERROR = 'REQUEST_ERROR';
 
-    public static $allowedByjunoPaymentMethods;
+    public static $allowedCembraPayPaymentMethods;
 
     public static $tokenSeparator = "||||";
 
@@ -415,9 +415,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             if (!empty($theSame) && is_array($theSame)) {
                 $this->_savedUser = $theSame;
             }
-            $allowedByjunoPaymentMethods = $this->_checkoutSession->getScreeningMethods();
-            if (empty($allowedByjunoPaymentMethods)) {
-                $allowedByjunoPaymentMethods = Array();
+            $allowedCembraPayPaymentMethods = $this->_checkoutSession->getScreeningMethods();
+            if (empty($allowedCembraPayPaymentMethods)) {
+                $allowedCembraPayPaymentMethods = Array();
             }
             try {
                 $request = $this->CreateMagentoShopRequestScreening($quote);
@@ -452,13 +452,13 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     if ($response) {
                         /* @var $responseRes CembraPayCheckoutScreeningResponse */
                         $responseRes = $this->screeningResponse($response);
-                        $allowedByjunoPaymentMethods = $responseRes->screeningDetails->allowedByjunoPaymentMethods;
+                        $allowedCembraPayPaymentMethods = $responseRes->screeningDetails->allowedCembraPayPaymentMethods;
                         $screeningStatus = $responseRes->processingStatus;
                         $this->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                             $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, $responseRes->transactionId, "-");
                     } else {
-                        $allowedByjunoPaymentMethods = Array();
+                        $allowedCembraPayPaymentMethods = Array();
                         $this->saveLog($json, $response, "Query error", $CembraPayRequestName,
                             $request->custDetails->firstName, $request->custDetails->lastName, $request->requestMsgId,
                             $request->billingAddr->postalCode, $request->billingAddr->town, $request->billingAddr->country, $request->billingAddr->addrFirstLine, "-", "-");
@@ -486,12 +486,12 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                         "DELIVERY_COMPANYNAME" => $request->deliveryDetails->deliveryCompanyName
                     );
                     $this->_checkoutSession->setIsTheSame($this->_savedUser);
-                    $this->_checkoutSession->setScreeningMethods($allowedByjunoPaymentMethods);
+                    $this->_checkoutSession->setScreeningMethods($allowedCembraPayPaymentMethods);
                     $this->_checkoutSession->setScreeningStatus($screeningStatus);
                 }
-                DataHelper::$allowedByjunoPaymentMethods = $allowedByjunoPaymentMethods;
+                DataHelper::$allowedCembraPayPaymentMethods = $allowedCembraPayPaymentMethods;
                 foreach ($methods as $method) {
-                    foreach ($allowedByjunoPaymentMethods as $st) {
+                    foreach ($allowedCembraPayPaymentMethods as $st) {
                         if ($st == $method) {
                             return true;
                         }
@@ -745,7 +745,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     function screeningResponse($response)
     {
-
         $responseObject = json_decode($response);
         $result = new CembraPayCheckoutScreeningResponse();
         if (empty($responseObject->processingStatus)) {
@@ -759,8 +758,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
                 $result->requestMsgId = $responseObject->requestMsgId;
                 $result->transactionId = $responseObject->transactionId;
-                if (!empty($responseObject->screeningDetails) && !empty($responseObject->screeningDetails->allowedByjunoPaymentMethods)) {
-                    $result->screeningDetails->allowedByjunoPaymentMethods = $responseObject->screeningDetails->allowedByjunoPaymentMethods;
+                if (!empty($responseObject->screeningDetails) && !empty($responseObject->screeningDetails->allowedCembraPayPaymentMethods)) {
+                    $result->screeningDetails->allowedCembraPayPaymentMethods = $responseObject->screeningDetails->allowedCembraPayPaymentMethods;
                 }
             } else {
                 $result->processingStatus = $responseObject->processingStatus;

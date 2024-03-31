@@ -4,9 +4,10 @@ define(
         'Magento_Checkout/js/view/payment/default',
         'mage/url',
         'Magento_Checkout/js/model/quote',
-        'jquery'
+        'jquery',
+        'mage/translate'
     ],
-    function (ko, Component, url, quote, jquery) {
+    function (ko, Component, url, quote, jquery, $t) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,

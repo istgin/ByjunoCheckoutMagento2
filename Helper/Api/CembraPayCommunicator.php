@@ -6,12 +6,12 @@ class CembraPayCommunicator
 {
 
     /**
-     * @var \Byjuno\ByjunoCore\Helper\Api\CembraPayAzure
+     * @var CembraPayAzure
      */
     public $cembraPayAzure;
 
     public function __construct(
-        \Byjuno\ByjunoCore\Helper\Api\CembraPayAzure $cembraPayAzure
+        CembraPayAzure $cembraPayAzure
     )
     {
         $this->cembraPayAzure = $cembraPayAzure;
@@ -83,7 +83,6 @@ class CembraPayCommunicator
             //TODO: live server
             $url = 'https://ext-test.api.cembrapay.ch/'.$endpoint;
         }
-        var_dump($url);
         $request_data = $xmlRequest;
 
         $headers = [

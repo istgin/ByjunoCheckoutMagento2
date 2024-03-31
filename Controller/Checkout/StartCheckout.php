@@ -74,8 +74,6 @@ class StartCheckout implements ActionInterface
                 function ($object, $token, $accessData) {
                     $object->saveToken($token, $accessData);
                 });
-            var_dump($response);
-            exit();
             $status = "";
             $responseRes = null;
             if ($response) {
