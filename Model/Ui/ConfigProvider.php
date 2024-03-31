@@ -143,7 +143,6 @@ class ConfigProvider implements ConfigProviderInterface
         if ($quote == null) {
             return [];
         }
-        $this->dataHelper->GetCreditStatus($quote, $this->dataHelper->getEnabledMethods());
         $allowedCembraPayPaymentMethods = DataHelper::$allowedCembraPayPaymentMethods;
         if (empty($allowedCembraPayPaymentMethods)) {
             $allowedCembraPayPaymentMethods = null;
