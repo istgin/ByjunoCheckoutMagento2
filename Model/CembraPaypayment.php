@@ -254,7 +254,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if ($payment->getAdditionalInformation("auth_executed_ok") != null || $payment->getAdditionalInformation("chk_executed_ok") != null) {
             $oldOrder = false;
         }
-        $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId());
+        $tx = $this->_dataHelper->getTransactionForOrder($order->getRealOrderId(), $txType);
         if (!$oldOrder && ($tx == null || !$tx || empty($tx["transaction_id"]))) {
             throw new LocalizedException (
                 __($this->_scopeConfig->getValue('cembrapaycheckoutsettings/localization/cembrapaycheckout_settle_fail', ScopeInterface::SCOPE_STORE, $webshopProfileId). " (error code: ".$txType." NOT FOUND)")
