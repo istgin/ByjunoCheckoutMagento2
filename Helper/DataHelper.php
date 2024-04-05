@@ -932,7 +932,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             if (empty($consentReference) && isset($exLink[count($exLink) - 1])) {
                 $consentReference = $exLink[count($exLink) - 2];
             }
-            $customerConsents->consentReference = $consentReference;
+            $customerConsents->consentReference = base64_encode($consentReference);
             $request->customerConsents = array($customerConsents);
         }
         $request->merchantDetails->transactionChannel = "WEB";
@@ -1072,7 +1072,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $customerConsents->consentProvidedAt = "MERCHANT";
         $customerConsents->consentDate = CembraPayCheckoutChkRequest::Date();
         $methods = $this->getMethodsMapping();
-        $customerConsents->consentReference = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
+        $customerConsents->consentReference = base64_encode($methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"]);
 
         $request->customerConsents = array($customerConsents);
 
