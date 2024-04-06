@@ -15,6 +15,8 @@ use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutScreeningResponse;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutSettleRequest;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutSettleResponse;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayConfirmRequest;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayConfirmResponse;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayGetStatusRequest;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayGetStatusResponse;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayLoginDto;
@@ -134,47 +136,47 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             self::$CEMBRAPAYINVOICE => array(
                 "value" => self::$CEMBRAPAYINVOICE,
                 "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_setup/tc_invoice", ScopeInterface::SCOPE_STORE)
             ),
             self::$SINGLEINVOICE => array(
                 "value" => self::$SINGLEINVOICE,
                 "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_setup/tc_invoice", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_3 => array(
                 "value" => self::$INSTALLMENT_3,
                 "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_4 => array(
                 "value" => self::$INSTALLMENT_4,
                 "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_6 => array(
                 "value" => self::$INSTALLMENT_6,
                 "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_12 => array(
                 "value" => self::$INSTALLMENT_12,
                 "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_24 => array(
                 "value" => self::$INSTALLMENT_24,
                 "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_36 => array(
                 "value" => self::$INSTALLMENT_36,
                 "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_48 => array(
                 "value" => self::$INSTALLMENT_48,
                 "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/name", ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/link", ScopeInterface::SCOPE_STORE)
+                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
         );
         return $methods;
@@ -1097,6 +1099,16 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $request;
     }
 
+    public function createMagentoShopRequestConfirmTransaction($transactionId, $webShopProfile)
+    {
+        $request = new CembraPayConfirmRequest();
+        $request->requestMsgId = CembraPayCheckoutChkRequest::GUID();
+        $request->requestMsgDateTime = CembraPayCheckoutChkRequest::Date();
+        $request->transactionId = $transactionId;
+
+        return $request;
+    }
+
     function authorizationResponse($response)
     {
         $responseObject = json_decode($response);
@@ -1116,6 +1128,26 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $responseObject = json_decode($response);
         $result = new CembraPayGetStatusResponse();
+        if (empty($responseObject->transactionStatus->transactionStatus)) {
+            $result->transactionStatus->transactionStatus= self::$REQUEST_ERROR;
+        } else {
+            $result->requestMerchantId = $responseObject->requestMerchantId;
+            $result->requestMsgType = $responseObject->transactionId;
+            $result->requestMsgId = $responseObject->requestMsgType;
+            $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
+            $result->replyMsgId = $responseObject->replyMsgId;
+            $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
+            $result->isTokenDeleted = !empty($responseObject->isTokenDeleted) ? $responseObject->isTokenDeleted : false;
+            $result->merchantOrderRef = $responseObject->merchantOrderRef;
+            $result->transactionStatus->transactionStatus = $responseObject->transactionStatus->transactionStatus;
+        }
+        return $result;
+    }
+
+    function confirmTransactionResponse($response)
+    {
+        $responseObject = json_decode($response);
+        $result = new CembraPayConfirmResponse();
         if (empty($responseObject->transactionStatus->transactionStatus)) {
             $result->transactionStatus->transactionStatus= self::$REQUEST_ERROR;
         } else {

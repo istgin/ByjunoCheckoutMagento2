@@ -2,8 +2,6 @@
 
 namespace Byjuno\ByjunoCore\Controller\Checkout;
 
-use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
-use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutChkResponse;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator;
 use Byjuno\ByjunoCore\Helper\DataHelper;
 use Magento\Framework\App\Action\Context;
@@ -11,7 +9,6 @@ use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface as MessageManagerInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\ScopeInterface;
 
 
@@ -51,14 +48,20 @@ class Success implements ActionInterface
     public function execute()
     {
         $order = $this->_dataHelper->_checkoutSession->getLastRealOrder();
+        if ($order == null) {
+            return $this->redirectCancel();
+        }
         /* @var $payment \Magento\Sales\Model\Order\Payment */
         $payment = $order->getPayment();
+        if ($payment == null) {
+            return $this->redirectCancel();
+        }
         $transaction = $payment->getAuthorizationTransaction();
         $transactionId = $transaction->getTxnId();
-        $request = $this->_dataHelper->createMagentoShopRequestGetTransaction(
+        $request = $this->_dataHelper->createMagentoShopRequestConfirmTransaction(
             $transactionId,
             $payment->getAdditionalInformation('webshop_profile_id'));
-        $CembraPayRequestName = $request->requestMsgType;
+        $CembraPayRequestName = "CNF";
         $json = $request->createRequest();
         $cembrapayCommunicator = new CembraPayCommunicator($this->_dataHelper->cembraPayAzure);
         $mode = $this->_dataHelper->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/currentmode', ScopeInterface::SCOPE_STORE);
@@ -67,23 +70,22 @@ class Success implements ActionInterface
         } else {
             $cembrapayCommunicator->setServer('test');
         }
-        $response = $cembrapayCommunicator->sendGetTransactionRequest($json, $this->_dataHelper->getAccessData($payment->getAdditionalInformation('webshop_profile_id'), $mode),
+        $response = $cembrapayCommunicator->sendConfirmTransactionRequest($json, $this->_dataHelper->getAccessData($payment->getAdditionalInformation('webshop_profile_id'), $mode),
             function ($object, $token, $accessData) {
                 $object->saveToken($token, $accessData);
             });
-
         $transactionStatus = "";
         $responseRes = null;
         if ($response) {
-            $responseRes = $this->_dataHelper->getTransactionResponse($response);
+            $responseRes = $this->_dataHelper->confirmTransactionResponse($response);
             if (!empty($responseRes->transactionStatus)) {
                 $transactionStatus = $responseRes->transactionStatus->transactionStatus;
             }
             $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
-                "-","-","-","-","-","-","-",$transactionId, $order->getRealOrderId());
+                "-", "-", "-", "-", "-", "-", "-", $transactionId, $order->getRealOrderId());
         } else {
             $this->_dataHelper->saveLog($json, $response, "Query error", $CembraPayRequestName,
-                "-","-","-","-","-","-","-",$transactionId,"-");
+                "-", "-", "-", "-", "-", "-", "-", $transactionId, "-");
         }
         if (!empty($transactionStatus) && in_array($transactionStatus, DataHelper::$GET_OK_TRANSACTION_STATUSES)) {
             $payment->setAdditionalInformation("chk_processed_ok", 'true');
@@ -112,11 +114,15 @@ class Success implements ActionInterface
             $resultRedirect->setPath('checkout/onepage/success/');
             return $resultRedirect;
         } else {
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('cembrapaycheckoutcore/checkout/cancel');
-            return $resultRedirect;
+            return $this->redirectCancel();
         }
-
-
     }
+
+    private function redirectCancel()
+    {
+        $resultRedirect = $this->resultRedirectFactory->create();
+        $resultRedirect->setPath('cembrapaycheckoutcore/checkout/cancel');
+        return $resultRedirect;
+    }
+
 }

@@ -62,6 +62,10 @@ class CembraPayCommunicator
         return $this->sendRequest($xmlRequest, 'v1.0/transactions/status', $accessData, $cb);
     }
 
+    public function sendConfirmTransactionRequest($xmlRequest, CembraPayLoginDto $accessData, $cb) {
+        return $this->sendRequest($xmlRequest, 'v1.0/transactions/confirm', $accessData, $cb);
+    }
+
     private function sendRequest($xmlRequest, $endpoint, CembraPayLoginDto $accessData, $cb) {
         $token = $accessData->accessToken;
         if (!CembraPayAzure::validToken($token)) {
