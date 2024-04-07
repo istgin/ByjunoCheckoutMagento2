@@ -37,7 +37,7 @@
             <cembrapayinvoicesettings>
                 <cembrapaycheckout_invoice_setup>
                     <title_invoice>CembraPay Checkout Rechnung</title_invoice>
-                    <tc_invoice>https://cembrapay.ch/de/privacy</tc_invoice>
+                    <tc_invoice>https://cembrapay.ch/de/terms</tc_invoice>
                 </cembrapaycheckout_invoice_setup>
                 <cembrapaycheckout_invoice_partial>
                     <name>CembraPay Checkout Rechnung mit Teilzahlungsoption</name>
@@ -55,7 +55,7 @@
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
                     <title_installment>CembraPay Checkout Ratenzahlung</title_installment>
-                    <tc_installment>https://cembrapay.ch/de/privacy</tc_installment>
+                    <tc_installment>https://cembrapay.ch/de/terms</tc_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
                     <name>3 Raten</name>
@@ -122,7 +122,7 @@
             <cembrapayinvoicesettings>
                 <cembrapaycheckout_invoice_setup>
                     <title_invoice>Facture CembraPay</title_invoice>
-                    <tc_invoice>https://cembrapay.ch/en/privacy</tc_invoice>
+                    <tc_invoice>https://cembrapay.ch/en/terms</tc_invoice>
                 </cembrapaycheckout_invoice_setup>
                 <cembrapaycheckout_invoice_partial>
                     <name>CembraPay Facture avec option de paiement partiel</name>
@@ -140,7 +140,7 @@
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
                     <title_installment>CembraPay Checkout Paiement échelonné</title_installment>
-                    <tc_installment>https://cembrapay.ch/fr/privacy</tc_installment>
+                    <tc_installment>https://cembrapay.ch/fr/terms</tc_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
                     <name>3 tranches</name>
@@ -210,7 +210,7 @@
             <cembrapayinvoicesettings>
                 <cembrapaycheckout_invoice_setup>
                     <title_invoice>Fattura CembraPay</title_invoice>
-                    <tc_invoice>https://cembrapay.ch/it/privacy</tc_invoice>
+                    <tc_invoice>https://cembrapay.ch/it/terms</tc_invoice>
                 </cembrapaycheckout_invoice_setup>
                 <cembrapaycheckout_invoice_partial>
                     <name>CembraPay Checkout fattura con opzione di pagamento parziale</name>
@@ -228,7 +228,7 @@
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
                     <title_installment>CembraPay Checkout Pagamento rateale</title_installment>
-                    <tc_installment>https://cembrapay.ch/it/privacy</tc_installment>
+                    <tc_installment>https://cembrapay.ch/it/terms</tc_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
                     <name>3 Raten</name>
@@ -294,7 +294,7 @@
             <cembrapayinvoicesettings>
                 <cembrapaycheckout_invoice_setup>
                     <title_invoice>CembraPay Checkout invoice</title_invoice>
-                    <tc_invoice>https://cembrapay.ch/en/privacy</tc_invoice>
+                    <tc_invoice>https://cembrapay.ch/en/terms</tc_invoice>
                 </cembrapaycheckout_invoice_setup>
                 <cembrapaycheckout_invoice_partial>
                     <name>CembraPay Checkout Invoice (with partial payment option)</name>
@@ -312,7 +312,7 @@
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
                     <title_installment>CembraPay Checkout installment</title_installment>
-                    <tc_installment>https://cembrapay.ch/en/privacy</tc_installment>
+                    <tc_installment>https://cembrapay.ch/en/terms</tc_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
                     <name>3 installments</name>
@@ -438,7 +438,7 @@
         <cembrapayinvoicesettings>
             <cembrapaycheckout_invoice_setup>
                 <title_invoice>CembraPay Checkout Rechnung</title_invoice>
-                <tc_invoice>https://cembrapay.ch/de/privacy</tc_invoice>
+                <tc_invoice>https://cembrapay.ch/de/terms</tc_invoice>
             </cembrapaycheckout_invoice_setup>
             <cembrapaycheckout_invoice_partial>
                 <active>0</active>
@@ -460,7 +460,7 @@
         <cembrapayinstallmentsettings>
             <cembrapaycheckout_installment_setup>
                 <title_installment>CembraPay Checkout Ratenzahlung</title_installment>
-                <tc_installment>https://cembrapay.ch/en/privacy</tc_installment>
+                <tc_installment>https://cembrapay.ch/en/terms</tc_installment>
             </cembrapaycheckout_installment_setup>
             <cembrapaycheckout_installment_3installment>
                 <active>0</active>

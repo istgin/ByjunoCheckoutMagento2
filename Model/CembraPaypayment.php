@@ -349,7 +349,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if ($invoice->getIncrementId() == null) {
             $invoice->setIncrementId($incrementValue);
         }
-        $request = $this->_dataHelper->CreateMagentoShopRequestSettlePaid($order, $invoice, $payment, $webshopProfileId, $txId);
+        $request = $this->_dataHelper->CreateMagentoShopRequestSettlePaid($order, $amount, $invoice, $payment, $webshopProfileId, $txId);
 
         $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();

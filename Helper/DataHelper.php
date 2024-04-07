@@ -597,7 +597,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
 
-    function CreateMagentoShopRequestSettlePaid(Order $order, Invoice $invoice, Order\Payment $payment, $webshopProfile, $tx)
+    function CreateMagentoShopRequestSettlePaid(Order $order, $amount, Invoice $invoice, Order\Payment $payment, $webshopProfile, $tx)
     {
         $request = new CembraPayCheckoutSettleRequest();
         $request->requestMsgType = self::$MESSAGE_SET;
@@ -605,9 +605,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->requestMsgDateTime = CembraPayCheckoutAutRequest::Date();
         $request->transactionId = $tx;
         $request->merchantOrderRef = $order->getRealOrderId();
-        $request->amount = number_format($order->getGrandTotal(), 2, '.', '') * 100;
+        $request->amount = number_format($amount, 2, '.', '') * 100;
         $request->currency = $order->getOrderCurrencyCode();
-        $request->settlementDetails->isFinal = $payment->isCaptureFinal($order->getGrandTotal());
+        $request->settlementDetails->isFinal = $payment->isCaptureFinal($amount);
         $request->settlementDetails->merchantInvoiceRef = $invoice->getIncrementId();
         return $request;
     }
