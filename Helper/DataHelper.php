@@ -790,8 +790,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->merchantCustRef = (string)$order->getCustomerId();
             $request->custDetails->loggedIn = true;
         }
+        $isB2B = false;
         if ($order->getBillingAddress()->getCompany() && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
             $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
+            $request->custDetails->companyName = $order->getBillingAddress()->getCompany();
+            $isB2B = true;
         } else {
             $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
         }
@@ -803,7 +806,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->language = (string)substr($this->_resolver->getLocale(), 0, 2);
         }
 
-        if (!empty($b2b_uid)) {
+        if ($isB2B && !empty($b2b_uid)) {
             $request->custDetails->companyRegNum = (string)$b2b_uid;
         }
 
@@ -822,6 +825,18 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if (!empty($dob_custom)) {
             try {
                 $dobObject = new \DateTime($dob_custom);
+                if ($dobObject != null) {
+                    $request->custDetails->dateOfBirth = $dobObject->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+
+            }
+        }
+
+        $b = $order->getCustomerDob();
+        if (!empty($b)) {
+            try {
+                $dobObject = new \DateTime($b);
                 if ($dobObject != null) {
                     $request->custDetails->dateOfBirth = $dobObject->format('Y-m-d');
                 }
@@ -944,7 +959,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     public function createMagentoShopRequestCheckout(Order $order,
-                                                     Order\Payment $paymentMethod, $webShopProfile)
+                                                     Order\Payment $paymentMethod,
+                                                     $gender_custom, $dob_custom, $pref_lang, $b2b_uid, $webShopProfile)
     {
 
         $request = new CembraPayCheckoutChkRequest();
@@ -963,14 +979,48 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->custDetails->merchantCustRef = (string)$order->getCustomerId();
             $request->custDetails->loggedIn = true;
         }
+        $isB2B = false;
         if ($order->getBillingAddress()->getCompany() && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE, $webShopProfile) == '1') {
             $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
+            $request->custDetails->companyName = $order->getBillingAddress()->getCompany();
+            $isB2B = true;
         } else {
             $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
         }
         $request->custDetails->firstName = (string)$order->getBillingAddress()->getFirstname();
         $request->custDetails->lastName = (string)$order->getBillingAddress()->getLastname();
-        $request->custDetails->language = (string)substr($this->_resolver->getLocale(), 0, 2);
+        if (!empty($pref_lang)) {
+            $request->custDetails->language = (string)$pref_lang;
+        } else {
+            $request->custDetails->language = (string)substr($this->_resolver->getLocale(), 0, 2);
+        }
+
+        if ($isB2B && !empty($b2b_uid)) {
+            $request->custDetails->companyRegNum = (string)$b2b_uid;
+        }
+
+        $b = $order->getCustomerDob();
+        if (!empty($b)) {
+            try {
+                $dobObject = new \DateTime($b);
+                if ($dobObject != null) {
+                    $request->custDetails->dateOfBirth = $dobObject->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+
+            }
+        }
+
+        if (!empty($dob_custom)) {
+            try {
+                $dobObject = new \DateTime($dob_custom);
+                if ($dobObject != null) {
+                    $request->custDetails->dateOfBirth = $dobObject->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+
+            }
+        }
 
         $b = $order->getCustomerDob();
         if (!empty($b)) {
@@ -1013,6 +1063,14 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             if (in_array(strtolower($order->getBillingAddress()->getPrefix() ?? ""), $gender_male_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_MALE;
             } else if (in_array(strtolower($order->getBillingAddress()->getPrefix() ?? ""), $gender_female_possible_prefix)) {
+                $request->custDetails->salutation = self::$GENTER_FEMALE;
+            }
+        }
+
+        if (!empty($gender_custom)) {
+            if (in_array(strtolower($gender_custom ?? ""), $gender_male_possible_prefix)) {
+                $request->custDetails->salutation = self::$GENTER_MALE;
+            } else if (in_array(strtolower($gender_custom ?? ""), $gender_female_possible_prefix)) {
                 $request->custDetails->salutation = self::$GENTER_FEMALE;
             }
         }

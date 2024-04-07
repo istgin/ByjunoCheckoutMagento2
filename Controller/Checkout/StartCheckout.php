@@ -60,6 +60,10 @@ class StartCheckout implements ActionInterface
             $request = $this->_dataHelper->createMagentoShopRequestCheckout(
                 $order,
                 $payment,
+                $payment->getAdditionalInformation('customer_gender'),
+                $payment->getAdditionalInformation('customer_dob'),
+                $payment->getAdditionalInformation('pref_lang'),
+                $payment->getAdditionalInformation('customer_b2b_uid'),
                 $payment->getAdditionalInformation('webshop_profile_id'));
             $CembraPayRequestName = $request->requestMsgType;
             $json = $request->createRequest();
