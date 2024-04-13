@@ -214,13 +214,7 @@ class Installment extends \Byjuno\ByjunoCore\Model\CembraPaypayment
         if (!$isAvaliable) {
             return false;
         }
-        $isCompany = false;
-        if (!empty($this->_checkoutSession->getQuote()->getBillingAddress()->getCompany()) &&
-            $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness", ScopeInterface::SCOPE_STORE) == '1'
-        )
-        {
-            $isCompany = true;
-        }
+
         $cembrapaycheckout_installment_3installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_3installment_allow", ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_4installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_4installment_allow", ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_6installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/cembrapaycheckout_installment_6installment_allow", ScopeInterface::SCOPE_STORE);
@@ -228,6 +222,14 @@ class Installment extends \Byjuno\ByjunoCore\Model\CembraPaypayment
         $cembrapaycheckout_installment_24installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_24installment_allow", ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_36installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_36installment_allow", ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_installment_48installment_allow = $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/cembrapaycheckout_installment_48installment_allow", ScopeInterface::SCOPE_STORE);
+
+        $isCompany = false;
+        if (!empty($this->_checkoutSession->getQuote()->getBillingAddress()->getCompany()) &&
+            $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness", ScopeInterface::SCOPE_STORE) == '1'
+        )
+        {
+            $isCompany = true;
+        }
 
         $methodsAvailable =
             ($this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/active", ScopeInterface::SCOPE_STORE)
