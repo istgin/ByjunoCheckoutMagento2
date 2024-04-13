@@ -118,15 +118,23 @@ class Invoice extends CembraPaypayment
         if (!$isAvaliable) {
             return false;
         }
-        $byjuno_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", ScopeInterface::SCOPE_STORE);
+        $cembrapaycheckout_invoice_partial_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/cembrapaycheckout_invoice_partial_allow", ScopeInterface::SCOPE_STORE);
         $cembrapaycheckout_single_invoice_allow = $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/cembrapaycheckout_single_invoice_allow", ScopeInterface::SCOPE_STORE);
+
+        $isCompany = false;
+        if (!empty($this->_checkoutSession->getQuote()->getBillingAddress()->getCompany()) &&
+            $this->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness", ScopeInterface::SCOPE_STORE) == '1'
+        )
+        {
+            $isCompany = true;
+        }
 
         $methodsAvailable =
             ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/active", ScopeInterface::SCOPE_STORE)
-                && ($byjuno_invoice_partial_allow == '0' || $byjuno_invoice_partial_allow == '1'))
+                && ($cembrapaycheckout_invoice_partial_allow == '0' || ($cembrapaycheckout_invoice_partial_allow == '1' && !$isCompany) || ($cembrapaycheckout_invoice_partial_allow == '2' && $isCompany))
             ||
             ($this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/active", ScopeInterface::SCOPE_STORE)
-                && ($cembrapaycheckout_single_invoice_allow == '0' || $cembrapaycheckout_single_invoice_allow == '1'));
+                && ($cembrapaycheckout_single_invoice_allow == '0' || ($cembrapaycheckout_single_invoice_allow == '1' && !$isCompany) || ($cembrapaycheckout_single_invoice_allow == '2' && $isCompany))));
 
         if (!$isAvaliable || !$methodsAvailable) {
             return false;

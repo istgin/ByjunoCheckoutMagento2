@@ -70,7 +70,7 @@ class Success implements ActionInterface
         } else {
             $cembrapayCommunicator->setServer('test');
         }
-        $response = $cembrapayCommunicator->sendConfirmTransactionRequest($json, $this->_dataHelper->getAccessData($payment->getAdditionalInformation('webshop_profile_id'), $mode),
+        $response = $cembrapayCommunicator->sendConfirmTransactionRequest($json, $this->_dataHelper->getAccessDataWebshop($payment->getAdditionalInformation('webshop_profile_id'), $mode),
             function ($object, $token, $accessData) {
                 $object->saveToken($token, $accessData);
             });

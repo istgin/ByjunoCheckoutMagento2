@@ -1190,7 +1190,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $result->transactionStatus->transactionStatus= self::$REQUEST_ERROR;
         } else {
             $result->requestMerchantId = $responseObject->requestMerchantId;
-            $result->requestMsgType = $responseObject->transactionId;
             $result->requestMsgId = $responseObject->requestMsgType;
             $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
             $result->replyMsgId = $responseObject->replyMsgId;
@@ -1202,6 +1201,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $result;
     }
 
+
     function confirmTransactionResponse($response)
     {
         $responseObject = json_decode($response);
@@ -1210,13 +1210,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $result->transactionStatus->transactionStatus= self::$REQUEST_ERROR;
         } else {
             $result->requestMerchantId = $responseObject->requestMerchantId;
-            $result->requestMsgType = $responseObject->transactionId;
-            $result->requestMsgId = $responseObject->requestMsgType;
+            $result->requestMsgId = $responseObject->requestMsgId;
             $result->requestMsgDateTime = $responseObject->requestMsgDateTime;
             $result->replyMsgId = $responseObject->replyMsgId;
             $result->replyMsgDateTime = $responseObject->replyMsgDateTime;
             $result->isTokenDeleted = !empty($responseObject->isTokenDeleted) ? $responseObject->isTokenDeleted : false;
-            $result->merchantOrderRef = $responseObject->merchantOrderRef;
             $result->transactionStatus->transactionStatus = $responseObject->transactionStatus->transactionStatus;
         }
         return $result;

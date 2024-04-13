@@ -131,6 +131,17 @@ define(
                 return quote.billingAddress().street[0] + ", " + quote.billingAddress().city + ", " + quote.billingAddress().postcode;
             },
 
+            isCompany: function () {
+                if (quote.billingAddress() == null) {
+                    return false;
+                }
+
+                if (typeof quote.billingAddress().company === 'undefined' || typeof quote.billingAddress().street[0] === 'undefined' || quote.billingAddress().company === '' || quote.billingAddress().company === null) {
+                    return false;
+                }
+                return true;
+            },
+
             getData: function () {
                 if (this.isAllFieldsEnabled()) {
                     return {
@@ -200,7 +211,14 @@ define(
             },
 
             getPaymentPlans: function () {
-                return _.map(window.checkoutConfig.payment.byjuno_invoice.methods, function (value, key) {
+                var methods = [];
+                var isCompany = this.isCompany();
+                window.checkoutConfig.payment.byjuno_invoice.methods.forEach(function(element) {
+                    if (element.allow === "0" || (element.allow === "1" && !isCompany) || (element.allow === "2" && isCompany)) {
+                        methods.push(element);
+                    }
+                });
+                return _.map(methods, function (value, key) {
                     return {
                         'value': value.value,
                         'link': value.link,
