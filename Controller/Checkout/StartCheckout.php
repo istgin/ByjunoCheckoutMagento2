@@ -52,7 +52,7 @@ class StartCheckout implements ActionInterface
     {
         $order = $this->_dataHelper->_checkoutSession->getLastRealOrder();
         $resultRedirect = $this->resultRedirectFactory->create();
-        if ($order != null) {
+        if ($order != null && $order->getId() != null) {
             /* @var $payment \Magento\Sales\Model\Order\Payment */
             $payment = $order->getPayment();
             $payment->setAdditionalInformation("chk_executed_ok", 'false');
@@ -113,7 +113,9 @@ class StartCheckout implements ActionInterface
             }
             return $resultRedirect;
         }
-        return false;
+        $resultRedirect = $this->resultRedirectFactory->create();
+        $resultRedirect->setPath('checkout/cart');
+        return $resultRedirect;
     }
     private function restoreQuote()
     {

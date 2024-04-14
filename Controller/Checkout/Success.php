@@ -110,13 +110,12 @@ class Success implements ActionInterface
                 $this->_dataHelper->_loggerPsr->critical($e);
             }
 
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('checkout/onepage/success/');
-
             if ($this->_dataHelper->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/auto_invoice", ScopeInterface::SCOPE_STORE) == '1') {
                 $this->_dataHelper->generateInvoice($order);
             }
 
+            $resultRedirect = $this->resultRedirectFactory->create();
+            $resultRedirect->setPath('checkout/onepage/success/');
             return $resultRedirect;
         } else {
             return $this->redirectCancel();

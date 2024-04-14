@@ -52,9 +52,13 @@ class Cancel implements ActionInterface
     {
         $order = $this->_dataHelper->_checkoutSession->getLastRealOrder();
         $error = $this->_dataHelper->getCembraPayErrorMessage();
-        if ($order != null) {
-            $order->registerCancellation($error)->save();
-            $this->restoreQuote();
+        try {
+            if ($order != null && $order->getId() != null) {
+                $order->registerCancellation($error)->save();
+                $this->restoreQuote();
+            }
+        } catch (\Exception $e) {
+
         }
         $this->messageManager->addExceptionMessage(new \Exception("ex"), $error);
         $resultRedirect = $this->resultRedirectFactory->create();

@@ -7,6 +7,7 @@ use Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator;
 use Byjuno\ByjunoCore\Helper\DataHelper;
 use Magento\Framework\App\Action\Action;
 use Magento\Sales\Model\Order;
+use Magento\Setup\Exception;
 use Magento\Store\Model\ScopeInterface;
 
 class Startpayment extends Action
@@ -33,29 +34,24 @@ class Startpayment extends Action
 
     public function execute()
     {
+        $resultRedirect = $this->resultRedirectFactory->create();
         $status = self::$_dataHelper->_checkoutSession->getCembraPayCheckoutStatus();
         self::$_dataHelper->_checkoutSession->setScreeningStatus("");
-        $resultRedirect = $this->resultRedirectFactory->create();
         if ($status == DataHelper::$AUTH_OK) {
-            self::$_dataHelper->_checkoutSession->setCembraPayCheckoutStatus('');
-            $resultRedirect->setPath('checkout/onepage/success');
-        } else {
-            self::$_dataHelper->_checkoutSession->setCembraPayCheckoutStatus('');
             try {
-                $order = self::$_dataHelper->_checkoutSession->getLastRealOrder();
-                if ($order != null) {
-                    $order->registerCancellation("Payment canceled")->save();
-                    $this->restoreQuote();
-                    $this->messageManager->addExceptionMessage(new \Exception("Payment canceled"), "Payment canceled");
+                if (self::$_dataHelper->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/auto_invoice", ScopeInterface::SCOPE_STORE) == '1') {
+                    $order = self::$_dataHelper->_checkoutSession->getLastRealOrder();
+                    self::$_dataHelper->generateInvoice($order);
                 }
-            } catch (\Exception $e)
-            {
+                self::$_dataHelper->_checkoutSession->setCembraPayCheckoutStatus('');
+                $resultRedirect->setPath('checkout/onepage/success');
+                return $resultRedirect;
+            } catch (\Exception $e) {
             }
-            $resultRedirect->setPath('checkout/cart');
         }
+        $resultRedirect->setPath('cembrapaycheckoutcore/checkout/cancel');
         return $resultRedirect;
     }
-
     public static function executeAuthorizeRequestOrder(Order $order, DataHelper $_internalDataHelper)
     {
         /* @var $payment \Magento\Sales\Model\Order\Payment */
@@ -138,22 +134,5 @@ class Startpayment extends Action
             return $error;
         }
         return null;
-    }
-
-    private static function restoreQuote()
-    {
-        /** @var Order $order */
-        $order = self::$_dataHelper->_checkoutSession->getLastRealOrder();
-        if ($order->getId()) {
-            try {
-                $quote = self::$_dataHelper->quoteRepository->get($order->getQuoteId());
-                $quote->setIsActive(1)->setReservedOrderId(null);
-                self::$_dataHelper->quoteRepository->save($quote);
-                self::$_dataHelper->_checkoutSession->replaceQuote($quote)->unsLastRealOrderId();
-                return true;
-            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-            }
-        }
-        return false;
     }
 }
