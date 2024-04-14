@@ -113,7 +113,6 @@ class StartCheckout implements ActionInterface
             }
             return $resultRedirect;
         }
-        $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('checkout/cart');
         return $resultRedirect;
     }

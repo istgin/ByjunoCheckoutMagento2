@@ -47,14 +47,15 @@ class Success implements ActionInterface
 
     public function execute()
     {
+        $resultRedirect = $this->resultRedirectFactory->create();
         $order = $this->_dataHelper->_checkoutSession->getLastRealOrder();
         if ($order == null) {
-            return $this->redirectCancel();
+            return $this->redirectCancel($resultRedirect);
         }
         /* @var $payment \Magento\Sales\Model\Order\Payment */
         $payment = $order->getPayment();
         if ($payment == null) {
-            return $this->redirectCancel();
+            return $this->redirectCancel($resultRedirect);
         }
         $transaction = $payment->getAuthorizationTransaction();
         $transactionId = $transaction->getTxnId();
@@ -110,21 +111,22 @@ class Success implements ActionInterface
                 $this->_dataHelper->_loggerPsr->critical($e);
             }
 
-            if ($this->_dataHelper->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/auto_invoice", ScopeInterface::SCOPE_STORE) == '1') {
-                $this->_dataHelper->generateInvoice($order);
+            try {
+                if ($this->_dataHelper->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/auto_invoice", ScopeInterface::SCOPE_STORE) == '1') {
+                    $this->_dataHelper->generateInvoice($order);
+                }
+                $resultRedirect->setPath('checkout/onepage/success/');
+                return $resultRedirect;
+            } catch (\Exception $e) {
+                return $this->redirectCancel($resultRedirect);
             }
-
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('checkout/onepage/success/');
-            return $resultRedirect;
         } else {
-            return $this->redirectCancel();
+            return $this->redirectCancel($resultRedirect);
         }
     }
 
-    private function redirectCancel()
+    private function redirectCancel($resultRedirect)
     {
-        $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setPath('cembrapaycheckoutcore/checkout/cancel');
         return $resultRedirect;
     }
