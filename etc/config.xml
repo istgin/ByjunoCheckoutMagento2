@@ -412,6 +412,7 @@
                 <cembrapaycheckout_invoice_paper>0</cembrapaycheckout_invoice_paper>
                 <force_send_email>1</force_send_email>
                 <b2b_uid>0</b2b_uid>
+                <auto_invoice>0</auto_invoice>
             </cembrapaycheckout_setup>
             <localization>
                 <cembrapaycheckout_installment_toc_string>AGB</cembrapaycheckout_installment_toc_string>

@@ -23,9 +23,11 @@ use Byjuno\ByjunoCore\Helper\Api\CembraPayLoginDto;
 use Byjuno\ByjunoCore\Helper\Api\CustomerConsents;
 use Magento\Framework\App\Config\ReinitableConfigInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\DB\Transaction;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
+use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Store\Model\ScopeInterface;
 
 class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
@@ -69,6 +71,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $CHK_OK = 'SUCCESS';
     public static $GET_OK = 'SUCCESS';
     public static $GET_OK_TRANSACTION_STATUSES = ['AUTHORIZED', 'SETTLED', 'PARTIALLY SETTLED'];
+    public static $CNF_OK = 'SUCCESS';
+    public static $CNF_OK_TRANSACTION_STATUSES = ['AUTHORIZED', 'SETTLED', 'PARTIALLY SETTLED'];
 
 
     public static $REQUEST_ERROR = 'REQUEST_ERROR';
@@ -100,6 +104,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public $_checkoutSession;
     protected $_countryHelper;
     protected $_resolver;
+    public $_invoiceSender;
     public $_originalOrderSender;
     public $_cembrapayOrderSender;
     public $_cembrapayCreditmemoSender;
@@ -109,6 +114,15 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public $_configLoader;
     public $_customerMetadata;
 
+    /**
+     * @var InvoiceService
+     */
+    public $_invoiceService;
+
+    /**
+     * @var \Magento\Framework\DB\Transaction
+     */
+    public $_transaction;
 
     /**
      * @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory
@@ -277,6 +291,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         \Byjuno\ByjunoCore\Helper\CembraPayCreditmemoSender $cembrapayCreditmemoSender,
         \Byjuno\ByjunoCore\Helper\CembraPayInvoiceSender $cembrapayInvoiceSender,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $originalOrderSender,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
         \Byjuno\ByjunoCore\Helper\Api\CembraPayLogger $cembrapayLogger,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\ObjectManager\ConfigLoaderInterface $configLoader,
@@ -285,7 +300,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Byjuno\ByjunoCore\Helper\Api\CembraPayAzure $cembraPayAzure,
         \Magento\Framework\App\Config\Storage\WriterInterface $writerInterface,
-        ReinitableConfigInterface $reinitableConfig
+        ReinitableConfigInterface $reinitableConfig,
+        InvoiceService $invoiceService,
+        Transaction $transaction
     )
     {
 
@@ -294,6 +311,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_configLoader = $configLoader;
         $this->_objectManager = $objectManager;
         $this->_cembrapayLogger = $cembrapayLogger;
+        $this->_invoiceSender = $invoiceSender;
         $this->_cembrapayOrderSender = $cembrapayOrderSender;
         $this->_originalOrderSender = $originalOrderSender;
         $this->_cembrapayCreditmemoSender = $cembrapayCreditmemoSender;
@@ -312,6 +330,8 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->cembraPayAzure = $cembraPayAzure;
         $this->_writerInterface = $writerInterface;
         $this->_reinitableConfig = $reinitableConfig;
+        $this->_invoiceService = $invoiceService;
+        $this->_transaction = $transaction;
     }
 
     function getPendingOrders()
@@ -1357,9 +1377,33 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             return true;
         }
         return false;
+    }
 
 
 
+    /* @var $order \Magento\Sales\Model\Order */
+    public function generateInvoice($order)
+    {
+        if($order->canInvoice()) {
+            /* @var $invoice Invoice */
+            $invoice = $this->_invoiceService->prepareInvoice($order);
+            $invoice->setRequestedCaptureCase(Invoice::CAPTURE_ONLINE);
+            $invoice->register();
+            $invoice->save();
+            $transactionSave = $this->_transaction->addObject(
+                $invoice
+            )->addObject(
+                $invoice->getOrder()
+            );
+            $transactionSave->save();
+            $this->_invoiceSender->send($invoice);
+            //send notification code
+            $order->addStatusHistoryComment(
+                __('Notified customer about invoice #%1.', $invoice->getId())
+            )
+                ->setIsCustomerNotified(true)
+                ->save();
+        }
     }
 
 }

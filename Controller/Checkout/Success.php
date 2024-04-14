@@ -81,13 +81,13 @@ class Success implements ActionInterface
             if (!empty($responseRes->transactionStatus)) {
                 $transactionStatus = $responseRes->transactionStatus->transactionStatus;
             }
-            $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
-                "-", "-", "-", "-", "-", "-", "-", $transactionId, $order->getRealOrderId());
+            $this->_dataHelper->saveLog($json, $response, $transactionStatus, $CembraPayRequestName,
+                "-", "-", $request->requestMsgId, "-", "-", "-", "-", $transactionId, $order->getRealOrderId());
         } else {
             $this->_dataHelper->saveLog($json, $response, "Query error", $CembraPayRequestName,
-                "-", "-", "-", "-", "-", "-", "-", $transactionId, "-");
+                "-", "-", $request->requestMsgId, "-", "-", "-", "-", $transactionId, "-");
         }
-        if (!empty($transactionStatus) && in_array($transactionStatus, DataHelper::$GET_OK_TRANSACTION_STATUSES)) {
+        if (!empty($transactionStatus) && in_array($transactionStatus, DataHelper::$CNF_OK_TRANSACTION_STATUSES)) {
             $payment->setAdditionalInformation("chk_processed_ok", 'true');
             $payment->save();
 
@@ -112,6 +112,11 @@ class Success implements ActionInterface
 
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('checkout/onepage/success/');
+
+            if ($this->_dataHelper->_scopeConfig->getValue("cembrapaycheckoutsettings/cembrapaycheckout_setup/auto_invoice", ScopeInterface::SCOPE_STORE) == '1') {
+                $this->_dataHelper->generateInvoice($order);
+            }
+
             return $resultRedirect;
         } else {
             return $this->redirectCancel();
