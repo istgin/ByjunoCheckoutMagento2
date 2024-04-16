@@ -662,6 +662,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if ($quote->getBillingAddress()->getCompany()
             && $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/businesstobusiness', ScopeInterface::SCOPE_STORE) == '1') {
             $request->custDetails->custType = self::$CUSTOMER_BUSINESS;
+            $request->custDetails->companyName = $quote->getBillingAddress()->getCompany();
         } else {
             $request->custDetails->custType = self::$CUSTOMER_PRIVATE;
         }

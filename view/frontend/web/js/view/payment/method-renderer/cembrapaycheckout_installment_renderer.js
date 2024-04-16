@@ -13,7 +13,7 @@ define(
             redirectAfterPlaceOrder: false,
             defaults: {
                 template: 'Byjuno_ByjunoCore/payment/form_installment',
-                paymentPlan: window.checkoutConfig.payment.byjuno_installment.default_payment,
+                paymentPlan: '',
                 deliveryPlan: window.checkoutConfig.payment.byjuno_installment.default_delivery,
                 agreeTc: window.checkoutConfig.payment.byjuno_installment.default_agreetc,
                 customGender: window.checkoutConfig.payment.byjuno_installment.default_customgender,
@@ -21,6 +21,7 @@ define(
             },
 
             initObservable: function () {
+                this.setDefaultPlan();
                 this._super()
                     .observe([
                         'paymentPlan',
@@ -211,7 +212,7 @@ define(
                 return window.checkoutConfig.payment.byjuno_installment.logo;
             },
 
-            getPaymentPlans: function () {
+            getPlans: function  () {
                 var methods = [];
                 var isCompany = this.isCompany();
                 window.checkoutConfig.payment.byjuno_installment.methods.forEach(function(element) {
@@ -219,7 +220,25 @@ define(
                         methods.push(element);
                     }
                 });
-                return _.map(methods, function (value, key) {
+                return methods;
+            },
+
+            setDefaultPlan: function () {
+                var methods = this.getPlans();
+                var correct = false;
+                for (var i = 0; i < methods.length; i++) {
+                    if (this.paymentPlan === methods[0].value) {
+                        correct = true;
+                        break;
+                    }
+                }
+                if (!correct) {
+                    this.paymentPlan = methods[0].value;
+                }
+            },
+
+            getPaymentPlans: function () {
+                return _.map(this.getPlans(), function (value, key) {
                     return {
                         'value': value.value,
                         'link': value.link,
@@ -237,7 +256,8 @@ define(
             },
 
             isPaymentPlanVisible: function() {
-                return (window.checkoutConfig.payment.byjuno_installment.methods.length > 1);
+                return true;
+                //return (this.getPlans().length > 1);
             },
 
             getDeliveryPlans: function () {
@@ -274,7 +294,7 @@ define(
             },
 
             isFieldsEnabled: function () {
-                return this.isGenderEnabled() || this.isBirthdayEnabled();
+                return this.isGenderEnabled() || this.isBirthdayEnabled() || this.isB2bUid();;
             },
 
             isGenderEnabled: function () {
@@ -282,10 +302,10 @@ define(
             },
 
             isBirthdayEnabled: function () {
-                return window.checkoutConfig.payment.byjuno_installment.birthday_enable;
+                return !this.isCompany() && window.checkoutConfig.payment.byjuno_installment.birthday_enable;
             },
             isB2bUid: function () {
-                return window.checkoutConfig.payment.byjuno_installment.b2b_uid;
+                return this.isCompany() && window.checkoutConfig.payment.byjuno_installment.b2b_uid;
             },
 
             getGenders: function() {
@@ -303,11 +323,7 @@ define(
             },
 
             isSinglePaymentPlanVisible: function() {
-                return (window.checkoutConfig.payment.byjuno_installment.methods.length === 1);
-            },
-
-            isSinglePaymentPlanVisibleTC: function() {
-                return window.checkoutConfig.payment.byjuno_installment.methods[0].link;
+                return (this.getPlans().length === 1);
             },
         });
     }
