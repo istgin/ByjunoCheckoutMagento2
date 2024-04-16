@@ -102,11 +102,10 @@
             <div class="control" style="margin: 8px 0 0 0">
                 <div data-bind="foreach: getPaymentPlans()" >
                     <label>
-                        <input type="radio"
+                        <input type="radio" id="invoice_payment_plan"
                                name="payment[invoice_payment_plan]"
                                data-bind="
-                                  attr: {value: value},
-                                  checked: $parent.paymentPlan" />
+                                  attr: {value: value, checked: checked}" />
                         <span data-bind="text: label"></span>
                     </label><br />
                 </div>

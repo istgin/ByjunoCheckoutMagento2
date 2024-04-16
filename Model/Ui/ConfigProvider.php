@@ -148,7 +148,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInvoice[] = Array(
                 "value" => $availableMethods[DataHelper::$SINGLEINVOICE]["value"],
                 "name" => $availableMethods[DataHelper::$SINGLEINVOICE]["name"],
-                "link" => $availableMethods[DataHelper::$SINGLEINVOICE]["link"],
+                "checked" => false,
                 "allow" => $cembrapaycheckout_single_invoice_allow
             );
         }
@@ -158,7 +158,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInvoice[] = Array(
                 "value" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["value"],
                 "name" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["name"],
-                "link" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["link"],
+                "checked" => false,
                 "allow" => $cembrapaycheckout_invoice_partial_allow
             );
         }
@@ -175,7 +175,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInstallment[] = Array(
                 "value" => $availableMethods[DataHelper::$INSTALLMENT_3]["value"],
                 "name" => $availableMethods[DataHelper::$INSTALLMENT_3]["name"],
-                "link" => $availableMethods[DataHelper::$INSTALLMENT_3]["link"],
+                "checked" => false,
                 "allow" => $byjuno_installment_3installment_allow
             );
         }
@@ -185,7 +185,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInstallment[] = Array(
                 "value" => $availableMethods[DataHelper::$INSTALLMENT_4]["value"],
                 "name" => $availableMethods[DataHelper::$INSTALLMENT_4]["name"],
-                "link" => $availableMethods[DataHelper::$INSTALLMENT_4]["link"],
+                "checked" => false,
                 "allow" => $byjuno_installment_4installment_allow
             );
         }
@@ -195,7 +195,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInstallment[] = Array(
                 "value" => $availableMethods[DataHelper::$INSTALLMENT_6]["value"],
                 "name" => $availableMethods[DataHelper::$INSTALLMENT_6]["name"],
-                "link" => $availableMethods[DataHelper::$INSTALLMENT_6]["link"],
+                "checked" => false,
                 "allow" => $byjuno_installment_6installment_allow
             );
         }
@@ -205,7 +205,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInstallment[] = Array(
                 "value" => $availableMethods[DataHelper::$INSTALLMENT_12]["value"],
                 "name" => $availableMethods[DataHelper::$INSTALLMENT_12]["name"],
-                "link" => $availableMethods[DataHelper::$INSTALLMENT_12]["link"],
+                "checked" => false,
                 "allow" => $byjuno_installment_12installment_allow
             );
         }
@@ -215,7 +215,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInstallment[] = Array(
                 "value" => $availableMethods[DataHelper::$INSTALLMENT_24]["value"],
                 "name" => $availableMethods[DataHelper::$INSTALLMENT_24]["name"],
-                "link" => $availableMethods[DataHelper::$INSTALLMENT_24]["link"],
+                "checked" => false,
                 "allow" => $byjuno_installment_24installment_allow
             );
         }
@@ -225,7 +225,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInstallment[] = Array(
                 "value" => $availableMethods[DataHelper::$INSTALLMENT_36]["value"],
                 "name" => $availableMethods[DataHelper::$INSTALLMENT_36]["name"],
-                "link" => $availableMethods[DataHelper::$INSTALLMENT_36]["link"],
+                "checked" => false,
                 "allow" => $byjuno_installment_36installment_allow
             );
         }
@@ -235,7 +235,7 @@ class ConfigProvider implements ConfigProviderInterface
             $methodsAvailableInstallment[] = Array(
                 "value" => $availableMethods[DataHelper::$INSTALLMENT_48]["value"],
                 "name" => $availableMethods[DataHelper::$INSTALLMENT_48]["name"],
-                "link" => $availableMethods[DataHelper::$INSTALLMENT_48]["link"],
+                "checked" => false,
                 "allow" => $byjuno_installment_48installment_allow
             );
         }
@@ -336,7 +336,8 @@ class ConfigProvider implements ConfigProviderInterface
                     'birthday_enable' => $birthday_enable,
                     'b2b_uid' => $b2b_uid,
                     'calendar_config' => $calendarConfig,
-                    'payment_mode' => $paymentMode
+                    'payment_mode' => $paymentMode,
+                    'tc_link' => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_setup/tc_invoice", ScopeInterface::SCOPE_STORE)
                 ],
                 self::CODE_INSTALLMENT => [
                     'redirectUrl' => $this->methodInstanceInvoice->getConfigData('order_place_redirect_url'),
@@ -352,7 +353,8 @@ class ConfigProvider implements ConfigProviderInterface
                     'birthday_enable' => $birthday_enable,
                     'b2b_uid' => $b2b_uid,
                     'calendar_config' => $calendarConfig,
-                    'payment_mode' => $paymentMode
+                    'payment_mode' => $paymentMode,
+                    'tc_link' => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
                 ]
             ]
         ];
