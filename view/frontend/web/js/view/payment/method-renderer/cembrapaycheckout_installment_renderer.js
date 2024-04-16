@@ -13,7 +13,6 @@ define(
             redirectAfterPlaceOrder: false,
             defaults: {
                 template: 'Byjuno_ByjunoCore/payment/form_installment',
-                paymentPlan: '',
                 deliveryPlan: window.checkoutConfig.payment.byjuno_installment.default_delivery,
                 agreeTc: window.checkoutConfig.payment.byjuno_installment.default_agreetc,
                 customGender: window.checkoutConfig.payment.byjuno_installment.default_customgender,
@@ -21,10 +20,8 @@ define(
             },
 
             initObservable: function () {
-                this.setDefaultPlan();
                 this._super()
                     .observe([
-                        'paymentPlan',
                         'deliveryPlan',
                         'agreeTc',
                         'customGender',
@@ -62,13 +59,7 @@ define(
             },
 
             getAgreementLink: function () {
-                for (var i = 0; i < window.checkoutConfig.payment.byjuno_installment.methods.length; i++) {
-                    var method = window.checkoutConfig.payment.byjuno_installment.methods[i];
-                    if (method.value === this.paymentPlan()) {
-                        return method.link
-                    }
-                }
-                return this.paymentPlan()
+                return window.checkoutConfig.payment.byjuno_installment.tc_link;
             },
 
             getAgreementText: function () {
@@ -149,18 +140,18 @@ define(
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
+                            'installment_payment_plan': jquery("#installment_payment_plan:checked").val(),
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'installment_customer_gender': this.customGender(),
-                            'installment_customer_dob': jquery("#checkout_customer_dob_installment").val()
+                            'installment_customer_dob': jquery("#installment_payment_plan").val()
                         }
                     };
                 } else if (this.isB2bAllFieldsEnabled()) {
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
+                            'installment_payment_plan': jquery("#installment_payment_plan:checked").val(),
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'installment_customer_gender': this.customGender(),
@@ -171,7 +162,7 @@ define(
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
+                            'installment_payment_plan': jquery("#installment_payment_plan:checked").val(),
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'installment_customer_gender': this.customGender()
@@ -181,7 +172,7 @@ define(
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
+                            'installment_payment_plan': jquery("#installment_payment_plan:checked").val(),
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'installment_customer_dob': jquery("#checkout_customer_dob_installment").val()
@@ -191,7 +182,7 @@ define(
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
+                            'installment_payment_plan': jquery("#installment_payment_plan:checked").val(),
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc(),
                             'installment_customer_b2b_uid': jquery("#checkout_customer_b2b_uid_installment").val()
@@ -201,7 +192,7 @@ define(
                     return {
                         'method': this.item.method,
                         'additional_data': {
-                            'installment_payment_plan': this.paymentPlan(),
+                            'installment_payment_plan': jquery("#installment_payment_plan:checked").val(),
                             'installment_send': this.deliveryPlan(),
                             'agree_tc': this.agreeTc()
                         }
@@ -220,29 +211,18 @@ define(
                         methods.push(element);
                     }
                 });
+                if (methods.length > 0) {
+                    methods[0].checked = true;
+                }
                 return methods;
-            },
-
-            setDefaultPlan: function () {
-                var methods = this.getPlans();
-                var correct = false;
-                for (var i = 0; i < methods.length; i++) {
-                    if (this.paymentPlan === methods[0].value) {
-                        correct = true;
-                        break;
-                    }
-                }
-                if (!correct) {
-                    this.paymentPlan = methods[0].value;
-                }
             },
 
             getPaymentPlans: function () {
                 return _.map(this.getPlans(), function (value, key) {
                     return {
                         'value': value.value,
-                        'link': value.link,
-                        'label': value.name
+                        'label': value.name,
+                        'checked': value.checked
                     }
                 });
             },
