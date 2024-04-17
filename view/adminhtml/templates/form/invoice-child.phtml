@@ -75,7 +75,6 @@ $b2bUid = $block->getB2bUidEnable();
                            name="payment[invoice_payment_plan]"
                            value="<?= $val["value"] ?>" <?php if ($i == 0) echo ' checked="checked"'; ?> />
                     <span><?= $val["name"] ?></span>
-                    <a href="<?= $val["link"] ?>" target="_blank"><?= $block->escapeHtml(__('T&C')) ?></a>
                 </label><br />
                 <?php $i++; ?>
             <?php endforeach ?>

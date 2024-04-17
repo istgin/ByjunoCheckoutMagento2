@@ -26,6 +26,7 @@ use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use Magento\Quote\Model\Quote\Payment;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Ui\Config\Data;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -162,7 +163,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
             $authTransaction->save();
         }
         $payment->setTransactionId($payment->getParentTransactionId().'-void');
-        $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_VOID, null, true);
+        $transaction = $payment->addTransaction(Transaction::TYPE_VOID, null, true);
         $transaction->setIsClosed(true);
         $payment->save();
         $transaction->save();
@@ -302,8 +303,8 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
             $this->_dataHelper->_cembrapayCreditmemoSender->sendCreditMemo($memo, $email);
         }
 
-        $payment->setTransactionId($payment->getParentTransactionId().'-refund');
-        $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND, null, true);
+        $payment->setTransactionId($payment->getParentTransactionId().'-'.microtime(true).'-r');
+        $transaction = $payment->addTransaction(Transaction::TYPE_REFUND, null, true);
         $transaction->setIsClosed(true);
         $payment->save();
         $transaction->save();
@@ -381,7 +382,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
                 "-","-", $request->requestMsgId,
                 "-", "-", "-","-", "-", "-");
         }
-        if ($status == DataHelper::$SETTLE_OK) {
+        if (!empty($status) && in_array($status, DataHelper::$SETTLE_STATUSES)) {
             $this->_dataHelper->_cembrapayInvoiceSender->sendInvoice($invoice, $email, $this->_dataHelper);
             $authTransaction = $payment->getAuthorizationTransaction();
             if ($authTransaction && !$authTransaction->getIsClosed()) {
@@ -389,12 +390,12 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
                 $authTransaction->save();
             }
 
-            $payment->setTransactionId($responseRes->transactionId);
-            $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE, null, true);
+            $payment->setTransactionId($responseRes->settlementId);
+            $transaction = $payment->addTransaction(Transaction::TYPE_CAPTURE, null, true);
             $transaction->setIsClosed(true);
             $payment->save();
-
             $transaction->save();
+
             return $this;
 
         } else {

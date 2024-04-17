@@ -120,8 +120,7 @@ class Installment extends \Magento\Payment\Block\Form
             && ($byjuno_installment_3installment_allow == '0' || ($byjuno_installment_3installment_allow == '1' && !$isCompany) || ($byjuno_installment_3installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_3installment_enable',
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -130,8 +129,7 @@ class Installment extends \Magento\Payment\Block\Form
             && ($byjuno_installment_4installment_allow == '0' || ($byjuno_installment_4installment_allow == '1' && !$isCompany) || ($byjuno_installment_4installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_4installment_enable',
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -140,8 +138,7 @@ class Installment extends \Magento\Payment\Block\Form
             && ($byjuno_installment_6installment_allow == '0' || ($byjuno_installment_6installment_allow == '1' && !$isCompany) || ($byjuno_installment_6installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_6installment_enable',
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -150,8 +147,7 @@ class Installment extends \Magento\Payment\Block\Form
             && ($byjuno_installment_12installment_allow == '0' || ($byjuno_installment_12installment_allow == '1' && !$isCompany) || ($byjuno_installment_12installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_12installment_enable',
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -160,8 +156,7 @@ class Installment extends \Magento\Payment\Block\Form
             && ($byjuno_installment_24installment_allow == '0' || ($byjuno_installment_24installment_allow == '1' && !$isCompany) || ($byjuno_installment_24installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_24installment_enable',
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -170,8 +165,7 @@ class Installment extends \Magento\Payment\Block\Form
             && ($byjuno_installment_36installment_allow == '0' || ($byjuno_installment_36installment_allow == '1' && !$isCompany) || ($byjuno_installment_36installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_36installment_enable',
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 
@@ -180,8 +174,7 @@ class Installment extends \Magento\Payment\Block\Form
             && ($byjuno_installment_48installment_allow == '0' || ($byjuno_installment_48installment_allow == '1' && !$isCompany) || ($byjuno_installment_48installment_allow == '2' && $isCompany))) {
             $methodsAvailableInstallment[] = Array(
                 "value" => 'installment_48installment_enable',
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-                "link" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/link", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/name", \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
             );
         }
 

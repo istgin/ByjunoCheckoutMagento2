@@ -64,7 +64,10 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static $DELIVERY_VIRTUAL = 'DIGITAL';
 
     public static $SCREENING_OK = 'SCREENING-APPROVED';
+
     public static $SETTLE_OK = 'SETTLED';
+    public static $SETTLE_STATUSES = ['SETTLED', 'PARTIALLY-SETTLED'];
+
     public static $AUTH_OK = 'AUTHORIZED';
     public static $CREDIT_OK = 'SUCCESS';
     public static $CANCEL_OK = 'SUCCESS';
@@ -149,39 +152,48 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $methods = array(
             self::$CEMBRAPAYINVOICE => array(
                 "value" => self::$CEMBRAPAYINVOICE,
-                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_partial/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_setup/tc_invoice", ScopeInterface::SCOPE_STORE)
             ),
             self::$SINGLEINVOICE => array(
                 "value" => self::$SINGLEINVOICE,
-                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_single_invoice/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinvoicesettings/cembrapaycheckout_invoice_setup/tc_invoice", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_3 => array(
                 "value" => self::$INSTALLMENT_3,
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_3installment/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_4 => array(
                 "value" => self::$INSTALLMENT_4,
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_4installment/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_6 => array(
                 "value" => self::$INSTALLMENT_6,
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_6installment/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_12 => array(
                 "value" => self::$INSTALLMENT_12,
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_12installment/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_24 => array(
                 "value" => self::$INSTALLMENT_24,
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_24installment/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_36 => array(
                 "value" => self::$INSTALLMENT_36,
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_36installment/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
             self::$INSTALLMENT_48 => array(
                 "value" => self::$INSTALLMENT_48,
-                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/name", ScopeInterface::SCOPE_STORE)
+                "name" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_48installment/name", ScopeInterface::SCOPE_STORE),
+                "tc_url" => $this->_scopeConfig->getValue("cembrapayinstallmentsettings/cembrapaycheckout_installment_setup/tc_installment", ScopeInterface::SCOPE_STORE)
             ),
         );
         return $methods;
@@ -955,7 +967,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $customerConsents->consentProvidedAt = "MERCHANT";
             $customerConsents->consentDate = CembraPayCheckoutAutRequest::Date();
             $methods = $this->getMethodsMapping();
-            $link = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"];
+            $link = $methods[$paymentMethod->getAdditionalInformation('payment_plan')]["tc_url"];
             $exLink = explode("/", $link);
             $consentReference = end($exLink);
             if (empty($consentReference) && isset($exLink[count($exLink) - 1])) {
@@ -1144,7 +1156,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $customerConsents->consentProvidedAt = "MERCHANT";
         $customerConsents->consentDate = CembraPayCheckoutChkRequest::Date();
         $methods = $this->getMethodsMapping();
-        $customerConsents->consentReference = base64_encode($methods[$paymentMethod->getAdditionalInformation('payment_plan')]["link"]);
+        $customerConsents->consentReference = base64_encode($methods[$paymentMethod->getAdditionalInformation('payment_plan')]["tc_url"]);
 
         $request->customerConsents = array($customerConsents);
 
@@ -1255,10 +1267,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if (empty($responseObject->processingStatus)) {
             $result->processingStatus = self::$REQUEST_ERROR;
         } else {
-            if ($responseObject->processingStatus == self::$SETTLE_OK) {
-                // TODO if need
+            if (!empty($responseObject->processingStatus) && in_array($responseObject->processingStatus , DataHelper::$SETTLE_STATUSES)) {
                 $result->processingStatus = $responseObject->processingStatus;
                 $result->transactionId = $responseObject->transactionId;
+                $result->settlementId = $responseObject->settlement->settlementId;
+
             } else {
                 $result->processingStatus = $responseObject->processingStatus;
             }

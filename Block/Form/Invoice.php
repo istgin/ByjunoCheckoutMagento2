@@ -125,8 +125,7 @@ class Invoice extends \Magento\Payment\Block\Form
             && ($byjuno_invoice_partial_allow == '0' || ($byjuno_invoice_partial_allow == '1' && !$isCompany) || ($byjuno_invoice_partial_allow == '2' && $isCompany))) {
             $methodsAvailableInvoice[] = Array(
                 "value" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["value"],
-                "name" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["name"],
-                "link" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["link"]
+                "name" => $availableMethods[DataHelper::$CEMBRAPAYINVOICE]["name"]
             );
         }
 
@@ -136,8 +135,7 @@ class Invoice extends \Magento\Payment\Block\Form
         ) {
             $methodsAvailableInvoice[] = Array(
                 "value" => $availableMethods[DataHelper::$SINGLEINVOICE]["value"],
-                "name" => $availableMethods[DataHelper::$SINGLEINVOICE]["name"],
-                "link" => $availableMethods[DataHelper::$SINGLEINVOICE]["link"]
+                "name" => $availableMethods[DataHelper::$SINGLEINVOICE]["name"]
             );
         }
 
