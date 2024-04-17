@@ -75,6 +75,7 @@ class Order
 class SessionInfo
 {
     public $fingerPrint; //String
+    public $sessionIp;
 
 }
 

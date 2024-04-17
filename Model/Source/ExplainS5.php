@@ -22,10 +22,10 @@ class ExplainS5 extends Field
     protected function _getElementHtml(AbstractElement $element)
     {
         $cembrapaycheckout_s5_explain = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapays5transacton', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $message = 'S5 Transactions (Cancel and/or Refund) must be delivered to CembraPay Checkout manually or from ERP System';
+        $message = 'Reduction Transactions will not be sent to CembraPay';
         $color = 'FFE5E6';
         if ($cembrapaycheckout_s5_explain == 1) {
-            $message = 'S5 Transactions will be sent to CembraPay:<br/>
+            $message = 'Reduction Transactions will be sent to CembraPay:<br/>
 Cancel - for not invoiced amount<br/>
 Refund - per Credit Memo';
             $color = 'ddffdf';

@@ -755,6 +755,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $request->sessionInfo->fingerPrint = $sedId;
         }
+        $request->sessionInfo->sessionIp = $this->getClientIp();
 
         $customerConsents = new CustomerConsents();
         $customerConsents->consentType = "CEMBRAPAY-TC";
@@ -954,6 +955,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $request->sessionInfo->fingerPrint = $sedId;
         }
+        $request->sessionInfo->sessionIp = $this->getClientIp();
 
         $request->cembraPayDetails->cembraPayPaymentMethod = $paymentMethod->getAdditionalInformation('payment_plan');
         if ($paymentMethod->getAdditionalInformation('payment_send') == 'postal') {
@@ -1110,7 +1112,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->custContacts->phoneMobile = (string)trim($order->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phonePrivate = (string)trim($order->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phoneBusiness = (string)trim($order->getBillingAddress()->getTelephone(), '-');
-        $request->custContacts->email = (string)$order->getBillingAddress()->getEmail();
+        $email = (string)$order->getBillingAddress()->getEmail();
+        if (empty($email) && !empty((string)$order->getCustomerEmail())) {
+            $email = (string)$order->getCustomerEmail();
+        }
+        $request->custContacts->email = (string)$email;
 
         if (!$order->getIsVirtual()) {
             $request->deliveryDetails->deliveryDetailsDifferent = !$this->isAddressesSimilair($order->getBillingAddress(), $order->getShippingAddress(),
@@ -1143,6 +1149,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/tmxenabled', ScopeInterface::SCOPE_STORE) == '1' && !empty($sedId)) {
             $request->sessionInfo->fingerPrint = $sedId;
         }
+        $request->sessionInfo->sessionIp = $this->getClientIp();
 
         $request->cembraPayDetails->cembraPayPaymentMethod = $paymentMethod->getAdditionalInformation('payment_plan');
         if ($paymentMethod->getAdditionalInformation('payment_send') == 'postal') {
