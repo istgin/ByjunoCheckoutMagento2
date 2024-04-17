@@ -2,11 +2,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="cembrapaycheckout_main_tab" translate="label" sortOrder="1">
-            <label>CembraPay Checkout payments (3.0.0)</label>
+            <label>CembraPay payments (3.0.0)</label>
         </tab>
         <section id="payment">
             <group id="cembrapaycheckout_invoice" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout invoice settings</label>
+                <label>CembraPay invoice settings</label>
                 <field id="sort_order" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sort Order</label>
                     <comment><![CDATA[Sort order of CembraPay Invoice in the list of payment methods during the final step of checkout.]]></comment>
@@ -15,7 +15,7 @@
                 </field>
             </group>
             <group id="cembrapaycheckout_installment" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout installment settings</label>
+                <label>CembraPay installment settings</label>
                 <field id="sort_order" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sort Order</label>
                     <comment><![CDATA[Sort order of CembraPay Installment in the list of payment methods during the final step of checkout.]]></comment>
@@ -26,12 +26,12 @@
         </section>
         <section id="cembrapaycheckoutsettings" translate="label" sortOrder="1" showInDefault="1"
                  showInWebsite="1" showInStore="1">
-            <label>CembraPay Checkout payment method general settings</label>
+            <label>CembraPay payment method general settings</label>
             <tab>cembrapaycheckout_main_tab</tab>
             <resource>Byjuno_ByjunoCore::system_config</resource>
             <group id="cembrapaycheckout_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout general settings</label>
+                <label>CembraPay general settings</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -81,7 +81,7 @@
                     <label>Maximal amount for checkout</label>
                 </field>
                 <field id="timeout" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Connection timeout to CembraPay Checkout server in seconds</label>
+                    <label>Connection timeout to CembraPay server in seconds</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
                 <field id="tmxenabled" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -162,14 +162,14 @@
             </group>
             <group id="localization" translate="label" type="text" sortOrder="20" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout localizations</label>
+                <label>CembraPay localizations</label>
                 <field id="cembrapaycheckout_fail_message" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Fail message of CembraPay Checkout order</label>
+                    <label>Fail message of CembraPay order</label>
                 </field>
             </group>
             <group id="advanced" translate="label" type="text" sortOrder="30" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout advanced settings (for developers only)</label>
+                <label>CembraPay advanced settings (for developers only)</label>
                 <field id="ip_detect_string" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Real IP detection method</label>
                     <comment>In some cases this is required to detect valid IP. example: REMOTE_ADDR, HTTP_CLIENT_IP, HTTP_CF_CONNECTING_IP for CloudFlare etc. Keep empty for default</comment>
@@ -178,12 +178,12 @@
         </section>
         <section id="cembrapayinvoicesettings" translate="label" sortOrder="2" showInDefault="1"
                  showInWebsite="1" showInStore="1">
-            <label>CembraPay Checkout invoice settings</label>
+            <label>CembraPay invoice settings</label>
             <tab>cembrapaycheckout_main_tab</tab>
             <resource>Byjuno_ByjunoCore::system_config</resource>
             <group id="cembrapaycheckout_invoice_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout invoice settings</label>
+                <label>CembraPay invoice settings</label>
                 <field id="title_invoice" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Title</label>
                 </field>
@@ -193,7 +193,7 @@
             </group>
             <group id="cembrapaycheckout_invoice_partial" translate="label" type="text" sortOrder="10" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout Invoice (with partial payment option)</label>
+                <label>CembraPay Invoice (with partial payment option)</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -208,7 +208,7 @@
             </group>
             <group id="cembrapaycheckout_single_invoice" translate="label" type="text" sortOrder="20" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout Single Invoice</label>
+                <label>CembraPay Single Invoice</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -241,12 +241,12 @@
 
         <section id="cembrapayinstallmentsettings" translate="label" sortOrder="3" showInDefault="1"
                  showInWebsite="1" showInStore="1">
-            <label>CembraPay Checkout installment settings</label>
+            <label>CembraPay installment settings</label>
             <tab>cembrapaycheckout_main_tab</tab>
             <resource>Byjuno_ByjunoCore::system_config</resource>
             <group id="cembrapaycheckout_installment_setup" translate="label" type="text" sortOrder="1" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>CembraPay Checkout installment settings</label>
+                <label>CembraPay installment settings</label>
                 <field id="title_installment" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Title</label>
                 </field>

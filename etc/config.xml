@@ -24,10 +24,10 @@
                     </cembrapaycheckout_installment_postal_text>
                     <cembrapaycheckout_installment_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an
                     </cembrapaycheckout_installment_email_text>
-                    <cembrapaycheckout_settle_fail>Das Senden der Rechnung an CembraPay Checkout ist fehlgeschlagen. Die Rechnung wurde nicht
+                    <cembrapaycheckout_settle_fail>Das Senden der Rechnung an CembraPay ist fehlgeschlagen. Die Rechnung wurde nicht
                         generiert. Bitte versuchen Sie es erneut.
                     </cembrapaycheckout_settle_fail>
-                    <cembrapaycheckout_s5_fail>Das Senden der Bestelländerung an CembraPay Checkout ist fehlgeschlagen. Storno/Rückerstattung
+                    <cembrapaycheckout_s5_fail>Das Senden der Bestelländerung an CembraPay ist fehlgeschlagen. Storno/Rückerstattung
                         konnte nicht durchgeführt werden. Bitte versuchen Sie es erneut.
                     </cembrapaycheckout_s5_fail>
                     <postal_code_wrong>Die PLZ der Rechnungsadresse ist fehlerhaft</postal_code_wrong>
@@ -36,14 +36,14 @@
             </cembrapaycheckoutsettings>
             <cembrapayinvoicesettings>
                 <cembrapaycheckout_invoice_setup>
-                    <title_invoice>CembraPay Checkout Rechnung</title_invoice>
+                    <title_invoice>CembraPay Rechnung</title_invoice>
                     <tc_invoice>https://cembrapay.ch/de/terms</tc_invoice>
                 </cembrapaycheckout_invoice_setup>
                 <cembrapaycheckout_invoice_partial>
-                    <name>CembraPay Checkout Rechnung mit Teilzahlungsoption</name>
+                    <name>CembraPay Rechnung mit Teilzahlungsoption</name>
                 </cembrapaycheckout_invoice_partial>
                 <cembrapaycheckout_single_invoice>
-                    <name>CembraPay Checkout Einmalrechnung</name>
+                    <name>CembraPay Einmalrechnung</name>
                 </cembrapaycheckout_single_invoice>
                 <cembrapaycheckout_invoice_localization>
                     <cembrapaycheckout_invoice_toc_string>AGB</cembrapaycheckout_invoice_toc_string>
@@ -54,7 +54,7 @@
             </cembrapayinvoicesettings>
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
-                    <title_installment>CembraPay Checkout Ratenzahlung</title_installment>
+                    <title_installment>CembraPay Ratenzahlung</title_installment>
                     <tc_installment>https://cembrapay.ch/de/terms</tc_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
@@ -108,7 +108,7 @@
                     </cembrapaycheckout_installment_postal_text>
                     <cembrapaycheckout_installment_email_text>Expédition facture via e-mail (sans frais) à
                     </cembrapaycheckout_installment_email_text>
-                    <cembrapaycheckout_settle_fail>La transmission de la facture à CembraPay Checkout a échoué. La facture n’a pas été produite,
+                    <cembrapaycheckout_settle_fail>La transmission de la facture à CembraPay a échoué. La facture n’a pas été produite,
                         veuillez essayer à nouveau.
                     </cembrapaycheckout_settle_fail>
                     <cembrapaycheckout_s5_fail>La transmission de la commande modifiée a échoué. L’annulation/le remboursement n’a pas
@@ -128,7 +128,7 @@
                     <name>CembraPay Facture avec option de paiement partiel</name>
                 </cembrapaycheckout_invoice_partial>
                 <cembrapaycheckout_single_invoice>
-                    <name>CembraPay Checkout facture unique</name>
+                    <name>CembraPay facture unique</name>
                 </cembrapaycheckout_single_invoice>
                 <cembrapaycheckout_invoice_localization>
                     <cembrapaycheckout_invoice_toc_string>CGV</cembrapaycheckout_invoice_toc_string>
@@ -139,7 +139,7 @@
             </cembrapayinvoicesettings>
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
-                    <title_installment>CembraPay Checkout Paiement échelonné</title_installment>
+                    <title_installment>CembraPay Paiement échelonné</title_installment>
                     <tc_installment>https://cembrapay.ch/fr/terms</tc_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
@@ -174,7 +174,7 @@
         <italian>
             <cembrapaycheckoutsettings>
                 <localization>
-                    <title_installment>CembraPay Checkout Pagamento rateale</title_installment>
+                    <title_installment>CembraPay Pagamento rateale</title_installment>
                     <cembrapaycheckout_installment_toc_string>CGC</cembrapaycheckout_installment_toc_string>
                     <cembrapaycheckout_installment_payment_message>La preghiamo di scegliere la modalità di pagamento e di accettare le
                         condizioni generali di contratto
@@ -196,7 +196,7 @@
                     </cembrapaycheckout_installment_postal_text>
                     <cembrapaycheckout_installment_email_text>Invio fattura tramite e-mail (senza spese aggiuntive) all’indirizzo
                     </cembrapaycheckout_installment_email_text>
-                    <cembrapaycheckout_settle_fail>La trasmissione della fattura a CembraPay Checkout non é riuscita. La fattura non é stata generata.
+                    <cembrapaycheckout_settle_fail>La trasmissione della fattura a CembraPay non é riuscita. La fattura non é stata generata.
                         La preghiamo di riprovare.
                     </cembrapaycheckout_settle_fail>
                     <cembrapaycheckout_s5_fail>La trasmissione della modifica dell’ordine non é riuscita. Storno/Rimborso non é stato
@@ -213,10 +213,10 @@
                     <tc_invoice>https://cembrapay.ch/it/terms</tc_invoice>
                 </cembrapaycheckout_invoice_setup>
                 <cembrapaycheckout_invoice_partial>
-                    <name>CembraPay Checkout fattura con opzione di pagamento parziale</name>
+                    <name>CembraPay fattura con opzione di pagamento parziale</name>
                 </cembrapaycheckout_invoice_partial>
                 <cembrapaycheckout_single_invoice>
-                    <name>CembraPay Checkout fattura singola</name>
+                    <name>CembraPay fattura singola</name>
                 </cembrapaycheckout_single_invoice>
                 <cembrapaycheckout_invoice_localization>
                     <cembrapaycheckout_invoice_toc_string>CGC</cembrapaycheckout_invoice_toc_string>
@@ -227,7 +227,7 @@
             </cembrapayinvoicesettings>
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
-                    <title_installment>CembraPay Checkout Pagamento rateale</title_installment>
+                    <title_installment>CembraPay Pagamento rateale</title_installment>
                     <tc_installment>https://cembrapay.ch/it/terms</tc_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
@@ -262,8 +262,8 @@
         <english>
             <cembrapaycheckoutsettings>
                 <localization>
-                    <title_invoice>CembraPay Checkout INVOICE</title_invoice>
-                    <title_installment>CembraPay Checkout INSTALLMENT</title_installment>
+                    <title_invoice>CembraPay INVOICE</title_invoice>
+                    <title_installment>CembraPay INSTALLMENT</title_installment>
                     <cembrapaycheckout_installment_toc_string>T&amp;C</cembrapaycheckout_installment_toc_string>
                     <cembrapaycheckout_installment_payment_message>Please select payment option and agree to Terms and Conditions
                     </cembrapaycheckout_installment_payment_message>
@@ -281,10 +281,10 @@
                     </cembrapaycheckout_installment_postal_text>
                     <cembrapaycheckout_installment_email_text>Installments Delivery method by E-Mail (no fees) to
                     </cembrapaycheckout_installment_email_text>
-                    <cembrapaycheckout_settle_fail>The invoice transfer to CembraPay Checkout failed; the invoice could not be generated, please
+                    <cembrapaycheckout_settle_fail>The invoice transfer to CembraPay failed; the invoice could not be generated, please
                         retry.
                     </cembrapaycheckout_settle_fail>
-                    <cembrapaycheckout_s5_fail>The transfer of the updated order to CembraPay Checkout failed; Cancel/Refund could not be
+                    <cembrapaycheckout_s5_fail>The transfer of the updated order to CembraPay failed; Cancel/Refund could not be
                         completed, please retry.
                     </cembrapaycheckout_s5_fail>
                     <postal_code_wrong>Postal code of billing address is incorrect</postal_code_wrong>
@@ -293,14 +293,14 @@
             </cembrapaycheckoutsettings>
             <cembrapayinvoicesettings>
                 <cembrapaycheckout_invoice_setup>
-                    <title_invoice>CembraPay Checkout invoice</title_invoice>
+                    <title_invoice>CembraPay invoice</title_invoice>
                     <tc_invoice>https://cembrapay.ch/en/terms</tc_invoice>
                 </cembrapaycheckout_invoice_setup>
                 <cembrapaycheckout_invoice_partial>
-                    <name>CembraPay Checkout Invoice (with partial payment option)</name>
+                    <name>CembraPay Invoice (with partial payment option)</name>
                 </cembrapaycheckout_invoice_partial>
                 <cembrapaycheckout_single_invoice>
-                    <name>CembraPay Checkout Single Invoice</name>
+                    <name>CembraPay Single Invoice</name>
                 </cembrapaycheckout_single_invoice>
                 <cembrapaycheckout_invoice_localization>
                     <cembrapaycheckout_invoice_toc_string>T&amp;C</cembrapaycheckout_invoice_toc_string>
@@ -311,7 +311,7 @@
             </cembrapayinvoicesettings>
             <cembrapayinstallmentsettings>
                 <cembrapaycheckout_installment_setup>
-                    <title_installment>CembraPay Checkout installment</title_installment>
+                    <title_installment>CembraPay installment</title_installment>
                     <tc_installment>https://cembrapay.ch/en/terms</tc_installment>
                 </cembrapaycheckout_installment_setup>
                 <cembrapaycheckout_installment_3installment>
@@ -349,7 +349,7 @@
             <byjuno_invoice>
                 <model>InvoiceCembraPayCheckoutCoreFacade</model>
                 <order_status>pending_cembrapay</order_status>
-                <title>CembraPay Checkout invoice</title>
+                <title>CembraPay invoice</title>
                 <can_use_checkout>1</can_use_checkout>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -365,7 +365,7 @@
             <byjuno_installment>
                 <model>InstallmentCembraPayCheckoutCoreFacade</model>
                 <order_status>pending_cembrapay</order_status>
-                <title>CembraPay Checkout installment</title>
+                <title>CembraPay installment</title>
                 <can_use_checkout>1</can_use_checkout>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -426,10 +426,10 @@
                     an
                 </cembrapaycheckout_installment_postal_text>
                 <cembrapaycheckout_installment_email_text>Rechnungsversand via E-Mail (ohne Gebühr) an</cembrapaycheckout_installment_email_text>
-                <cembrapaycheckout_settle_fail>Das Senden der Rechnung an CembraPay Checkout ist fehlgeschlagen. Die Rechnung wurde nicht generiert.
+                <cembrapaycheckout_settle_fail>Das Senden der Rechnung an CembraPay ist fehlgeschlagen. Die Rechnung wurde nicht generiert.
                     Bitte versuchen Sie es erneut.
                 </cembrapaycheckout_settle_fail>
-                <cembrapaycheckout_s5_fail>Das Senden der Bestelländerung an CembraPay Checkout ist fehlgeschlagen. Storno/Rückerstattung konnte
+                <cembrapaycheckout_s5_fail>Das Senden der Bestelländerung an CembraPay ist fehlgeschlagen. Storno/Rückerstattung konnte
                     nicht durchgeführt werden. Bitte versuchen Sie es erneut.
                 </cembrapaycheckout_s5_fail>
                 <postal_code_wrong>Die PLZ der Rechnungsadresse ist fehlerhaft</postal_code_wrong>
@@ -438,17 +438,17 @@
         </cembrapaycheckoutsettings>
         <cembrapayinvoicesettings>
             <cembrapaycheckout_invoice_setup>
-                <title_invoice>CembraPay Checkout Rechnung</title_invoice>
+                <title_invoice>CembraPay Rechnung</title_invoice>
                 <tc_invoice>https://cembrapay.ch/de/terms</tc_invoice>
             </cembrapaycheckout_invoice_setup>
             <cembrapaycheckout_invoice_partial>
                 <active>0</active>
-                <name>CembraPay Checkout Rechnung mit Teilzahlungsoption</name>
+                <name>CembraPay Rechnung mit Teilzahlungsoption</name>
                 <cembrapaycheckout_invoice_partial_allow>0</cembrapaycheckout_invoice_partial_allow>
             </cembrapaycheckout_invoice_partial>
             <cembrapaycheckout_single_invoice>
                 <active>0</active>
-                <name>CembraPay Checkout Einmalrechnung</name>
+                <name>CembraPay Einmalrechnung</name>
                 <cembrapaycheckout_single_invoice_allow>0</cembrapaycheckout_single_invoice_allow>
             </cembrapaycheckout_single_invoice>
             <cembrapaycheckout_invoice_localization>
@@ -460,7 +460,7 @@
         </cembrapayinvoicesettings>
         <cembrapayinstallmentsettings>
             <cembrapaycheckout_installment_setup>
-                <title_installment>CembraPay Checkout Ratenzahlung</title_installment>
+                <title_installment>CembraPay Ratenzahlung</title_installment>
                 <tc_installment>https://cembrapay.ch/en/terms</tc_installment>
             </cembrapaycheckout_installment_setup>
             <cembrapaycheckout_installment_3installment>

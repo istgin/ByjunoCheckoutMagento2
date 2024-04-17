@@ -24,7 +24,7 @@ class Edit extends Action
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
         $resultPage->setActiveMenu('Byjuno_ByjunoCore::main_menu');
-        $resultPage->getConfig()->getTitle()->prepend(__('CembraPay Checkout request view'));
+        $resultPage->getConfig()->getTitle()->prepend(__('CembraPay request view'));
         return $resultPage;
     }
 

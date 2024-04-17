@@ -51,7 +51,7 @@ class PaymentMode implements ArrayInterface
     {
         $catagoryList = array();
         $catagoryList["0"] = 'CembraPay api with no redirect';
-        $catagoryList["1"] = 'CembraPay checkout redirect';
+        $catagoryList["1"] = 'CembraPay redirect';
         return $catagoryList;
     }
 

@@ -276,7 +276,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function saveStatusToOrder(Order $order)
     {
-        $order->addStatusHistoryComment('<b>CembraPay Checkout status: OK</b>');
+        $order->addStatusHistoryComment('<b>CembraPay status: OK</b>');
         $order->save();
     }
 
@@ -765,7 +765,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->customerConsents = array($customerConsents);
 
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 3.0.0";
+        $request->merchantDetails->integrationModule = "CembraPay Magento 2 module 3.0.0";
 
         return $request;
     }
@@ -979,7 +979,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $request->customerConsents = array($customerConsents);
         }
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 3.0.0";
+        $request->merchantDetails->integrationModule = "CembraPay Magento 2 module 3.0.0";
 
         return $request;
     }
@@ -1172,7 +1172,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->merchantDetails->returnUrlSuccess = base64_encode($this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/success'));
 
         $request->merchantDetails->transactionChannel = "WEB";
-        $request->merchantDetails->integrationModule = "CembraPay Checkout Magento 2 module 3.0.0";
+        $request->merchantDetails->integrationModule = "CembraPay Magento 2 module 3.0.0";
 
         return $request;
     }

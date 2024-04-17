@@ -29,7 +29,7 @@ class Index extends Action
         /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
         $resultPage->setActiveMenu('Byjuno_ByjunoCore::main_menu');
-        $resultPage->getConfig()->getTitle()->prepend(__('CembraPay Checkout transaction log'));
+        $resultPage->getConfig()->getTitle()->prepend(__('CembraPay transaction log'));
         return $resultPage;
     }
 

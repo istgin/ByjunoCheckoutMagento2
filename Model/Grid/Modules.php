@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  CembraPay Checkout Pyamnet Core - Block modules grid
+ *  CembraPay Paymnet Core - Block modules grid
  */
 namespace Byjuno\ByjunoCore\Model\Grid;
 use Magento\Framework\Data\Form\Element\AbstractElement;

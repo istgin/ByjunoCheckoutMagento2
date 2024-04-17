@@ -1,6 +1,6 @@
 {
     "name": "byjuno/byjunocore",
-    "description": "CembraPay Checkout integration for Magento 2",
+    "description": "CembraPay integration for Magento 2",
     "type": "magento2-module",
     "version": "3.0.0",
     "license": [

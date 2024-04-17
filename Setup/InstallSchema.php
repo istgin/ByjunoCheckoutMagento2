@@ -152,7 +152,7 @@ class InstallSchema implements InstallSchemaInterface
                     ['nullable' => false],
                     'Created At'
                 )
-                ->setComment('CembraPay Checkout request table')
+                ->setComment('CembraPay request table')
                 ->setOption('type', 'InnoDB')
                 ->setOption('charset', 'utf8');
             $installer->getConnection()->createTable($table);
