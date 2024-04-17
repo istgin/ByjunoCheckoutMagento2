@@ -725,7 +725,11 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->custContacts->phoneMobile = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phoneBusiness = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phonePrivate = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
-        $request->custContacts->email = (string)$quote->getBillingAddress()->getEmail();
+        $email = (string)$quote->getBillingAddress()->getEmail();
+        if (empty($email) && !empty((string)$quote->getCustomer()->getEmail())) {
+            $email = (string)$quote->getCustomer()->getEmail();
+        }
+        $request->custContacts->email = (string)$email;
 
         if (!$quote->isVirtual()) {
             $request->deliveryDetails->deliveryDetailsDifferent = !$this->isAddressesSimilair($quote->getBillingAddress(), $quote->getShippingAddress(),
