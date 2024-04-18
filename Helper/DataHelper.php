@@ -558,7 +558,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience_live', ScopeInterface::SCOPE_STORE);
             $accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_live') ?? "";
         }
-        $tkn = explode(DataHelper::$tokenSeparator, $accessToken);
+        $tkn = explode(DataHelper::$tokenSeparator, $accessToken);;
         $hash = $accessData->username.$accessData->password.$accessData->audience;
         if ($hash == $tkn[0] && !empty($tkn[1])) {
             $accessData->accessToken = $tkn[1];
@@ -582,7 +582,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $accessData->username = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaylogin_live', ScopeInterface::SCOPE_STORE, $webShopId);
             $accessData->password = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapaypassword_live', ScopeInterface::SCOPE_STORE, $webShopId);
             $accessData->audience = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/audience_live', ScopeInterface::SCOPE_STORE, $webShopId);
-            $accessToken= $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_live') ?? "";
+            $accessToken = $this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/access_token_live') ?? "";
         }
         $tkn = explode(DataHelper::$tokenSeparator, $accessToken);
         $hash = $accessData->username.$accessData->password.$accessData->audience;

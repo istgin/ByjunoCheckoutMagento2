@@ -391,8 +391,8 @@
                 <tmxkey>lq866c5i</tmxkey>
                 <cembrapaylogin_test/>
                 <cembrapaylogin_live/>
-                <audience_test>api://fb6abffc-f90d-4c10-aca5-6c59533c76c2/.default</audience_test>
-                <audience_live>api://80d0ac9d-9d5c-499c-876e-71dd57e436f2/.default</audience_live>
+                <audience_test>59ff4c0b-7ce8-42f0-983b-306706936fa1/.default</audience_test>
+                <audience_live>80d0ac9d-9d5c-499c-876e-71dd57e436f2/.default</audience_live>
                 <access_token_test/>
                 <access_token_live/>
                 <cembrapaypassword_test/>
