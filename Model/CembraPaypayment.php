@@ -6,6 +6,8 @@
 namespace Byjuno\ByjunoCore\Model;
 
 use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutAuthorizationResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutCancelResponse;
+use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutCreditResponse;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutScreeningResponse;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayCheckoutSettleResponse;
 use Byjuno\ByjunoCore\Helper\Api\CembraPayCommunicator;
@@ -140,7 +142,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
             function ($object, $token, $accessData) {
                 $object->saveToken($token, $accessData);
             });
-        if ($response) { /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
+        if ($response) { /* @var $responseRes CembraPayCheckoutCancelResponse */
             $responseRes = $this->_dataHelper->cancelResponse($response);
             $status = $responseRes->processingStatus;
             $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,
@@ -284,7 +286,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
             function ($object, $token, $accessData) {
                 $object->saveToken($token, $accessData);
             });
-        if ($response) { /* @var $responseRes CembraPayCheckoutAuthorizationResponse */
+        if ($response) { /* @var $responseRes CembraPayCheckoutCreditResponse */
             $responseRes = $this->_dataHelper->creditResponse($response);
             $status = $responseRes->processingStatus;
             $this->_dataHelper->saveLog($json, $response, $responseRes->processingStatus, $CembraPayRequestName,

@@ -1280,7 +1280,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             if (!empty($responseObject->processingStatus) && in_array($responseObject->processingStatus , DataHelper::$SETTLE_STATUSES)) {
                 $result->processingStatus = $responseObject->processingStatus;
-                $result->transactionId = $responseObject->transactionId;
+                $result->transactionId = !empty($responseObject->transactionId) ? $responseObject->transactionId : "";
                 $result->settlementId = $responseObject->settlement->settlementId;
 
             } else {
@@ -1300,7 +1300,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             if ($responseObject->processingStatus == self::$CREDIT_OK) {
                 // TODO if need
                 $result->processingStatus = $responseObject->processingStatus;
-                $result->transactionId = $responseObject->transactionId;
+                $result->transactionId = !empty($responseObject->transactionId) ? $responseObject->transactionId : "";
             } else {
                 $result->processingStatus = $responseObject->processingStatus;
             }
@@ -1318,7 +1318,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             if ($responseObject->processingStatus == self::$CANCEL_OK) {
                 // TODO if need
                 $result->processingStatus = $responseObject->processingStatus;
-                $result->transactionId = $responseObject->transactionId;
+                $result->transactionId = !empty($responseObject->transactionId) ? $responseObject->transactionId : "";
             } else {
                 $result->processingStatus = $responseObject->processingStatus;
             }
