@@ -105,6 +105,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
     private $_reinitableConfig;
 
     public $_checkoutSession;
+    public $_customerSession;
     protected $_countryHelper;
     protected $_resolver;
     public $_invoiceSender;
@@ -725,11 +726,15 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->custContacts->phoneMobile = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phoneBusiness = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
         $request->custContacts->phonePrivate = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
-        $email = (string)$quote->getBillingAddress()->getEmail();
-        if (empty($email) && !empty((string)$quote->getCustomer()->getEmail())) {
-            $email = (string)$quote->getCustomer()->getEmail();
+        if (!$quote->getCustomerIsGuest()) {
+            $email = (string)$quote->getBillingAddress()->getEmail();
+            if (empty($email) && !empty((string)$quote->getCustomer()->getEmail())) {
+                $email = (string)$quote->getCustomer()->getEmail();
+            }
+            $request->custContacts->email = (string)$email;
+        } else {
+            $request->custContacts->email = "";
         }
-        $request->custContacts->email = (string)$email;
 
         if (!$quote->isVirtual()) {
             $request->deliveryDetails->deliveryDetailsDifferent = !$this->isAddressesSimilair($quote->getBillingAddress(), $quote->getShippingAddress(),
@@ -762,7 +767,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->sessionInfo->sessionIp = $this->getClientIp();
 
         $customerConsents = new CustomerConsents();
-        $customerConsents->consentType = "CEMBRAPAY-TC";
+        $customerConsents->consentType = "SCREENING";
         $customerConsents->consentProvidedAt = "MERCHANT";
         $customerConsents->consentDate = CembraPayCheckoutAutRequest::Date();
         $customerConsents->consentReference = "MERCHANT DATA PRIVACY";
@@ -1161,15 +1166,6 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $request->cembraPayDetails->invoiceDeliveryType = "EMAIL";
         }
-
-        $customerConsents = new CustomerConsents();
-        $customerConsents->consentType = "CEMBRAPAY-TC";
-        $customerConsents->consentProvidedAt = "MERCHANT";
-        $customerConsents->consentDate = CembraPayCheckoutChkRequest::Date();
-        $methods = $this->getMethodsMapping();
-        $customerConsents->consentReference = base64_encode($methods[$paymentMethod->getAdditionalInformation('payment_plan')]["tc_url"]);
-
-        $request->customerConsents = array($customerConsents);
 
         $request->merchantDetails->returnUrlError = base64_encode($this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel'));
         $request->merchantDetails->returnUrlCancel = base64_encode($this->_urlBuilder->getUrl('cembrapaycheckoutcore/checkout/cancel'));
