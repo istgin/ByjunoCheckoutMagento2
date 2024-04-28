@@ -20,7 +20,7 @@ class CembraPayCheckoutCreditRequest extends CembraPayCheckoutAutRequest
     public function __construct()
     {
         $this->deliveryDetails = new DeliveryDetails();
-        $this->settlementDetails = new SettlementDetails();
+        $this->settlementDetails = new SettlementDetailsMemo();
     }
 
     public function createRequest() {

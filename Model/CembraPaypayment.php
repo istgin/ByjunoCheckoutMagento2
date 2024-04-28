@@ -243,6 +243,7 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         /* @var $memo \Magento\Sales\Model\Order\Creditmemo */
         $memo = $payment->getCreditmemo();
         $incoiceId = $memo->getInvoice()->getIncrementId();
+        $invoiceSettlementId = $memo->getInvoice()->getTransactionId();
         $webshopProfileId = $payment->getAdditionalInformation("webshop_profile_id");
         if ($this->_scopeConfig->getValue('cembrapaycheckoutsettings/cembrapaycheckout_setup/cembrapays5transacton', ScopeInterface::SCOPE_STORE, $webshopProfileId) == '0') {
             return $this;
@@ -266,7 +267,10 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if (!empty($tx["transaction_id"])) {
             $txId = $tx["transaction_id"];
         }
-        $request = $this->_dataHelper->CreateMagentoShopRequestCredit($order, $amount, $incoiceId, $webshopProfileId, $txId);
+        if ($oldOrder) {
+            $invoiceSettlementId = "";
+        }
+        $request = $this->_dataHelper->CreateMagentoShopRequestCredit($order, $amount, $incoiceId, $txId, $invoiceSettlementId);
         $CembraPayRequestName = $request->requestMsgType;
         $json = $request->createRequest();
         $cembrapayCommunicator = new CembraPayCommunicator($this->_dataHelper->cembraPayAzure);

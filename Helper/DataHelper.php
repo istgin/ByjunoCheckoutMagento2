@@ -1322,7 +1322,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $result;
     }
 
-    function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId, $webshopProfile, $tx)
+    function CreateMagentoShopRequestCredit(Order $order, $amount, $invoiceId, $tx, $settlementId)
     {
         $request = new CembraPayCheckoutCreditRequest();
         $request->requestMsgType = self::$MESSAGE_CNL;
@@ -1333,6 +1333,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->amount = number_format($amount, 2, '.', '') * 100;
         $request->currency = $order->getOrderCurrencyCode();
         $request->settlementDetails->merchantInvoiceRef = $invoiceId;
+        $request->settlementDetails->settlementId = $settlementId;
         return $request;
     }
 

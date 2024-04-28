@@ -65,6 +65,13 @@ class SettlementDetails
     public $isFinal; //boolean
 }
 
+class SettlementDetailsMemo
+{
+    public $merchantInvoiceRef; //boolean
+    public $settlementId; //String
+}
+
+
 class Order
 {
     public $basketItemsGoogleTaxonomies;  //array( String )
