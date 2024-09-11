@@ -17,8 +17,9 @@ class CembraPayLogger
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $connection = $objectManager->create('\Magento\Framework\App\ResourceConnection');
 
+        $tableName = $connection->getTableName("cembrapaycheckout_log");
         $conn = $connection->getConnection();
-        $conn->insert('cembrapaycheckout_log',
+        $conn->insert($tableName,
             array(
                 'firstname' => $array['firstname'],
                 'lastname' => $array['lastname'],
