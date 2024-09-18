@@ -84,8 +84,7 @@ class CembraPayCommunicator
         if ($this->server == 'test') {
             $url = 'https://ext-test.api.cembrapay.ch/'.$endpoint;
         } else {
-            //TODO: live server
-            $url = 'https://ext-test.api.cembrapay.ch/'.$endpoint;
+            $url = 'https://api.cembrapay.ch/'.$endpoint;
         }
         $request_data = $xmlRequest;
 
