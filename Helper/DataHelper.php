@@ -715,7 +715,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
 
-        $billingStreet = $quote->getBillingAddress()->getStreet();
+        $billingStreet = $quote->getBillingAddress()->getStreet() ?? "";
         $billingStreet = implode("", $billingStreet);
 
         $request->billingAddr->addrFirstLine = (string)$billingStreet;
@@ -723,9 +723,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->town = (string)$quote->getBillingAddress()->getCity();
         $request->billingAddr->country = strtoupper($quote->getBillingAddress()->getCountryId() ?? "");
 
-        $request->custContacts->phoneMobile = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
-        $request->custContacts->phoneBusiness = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
-        $request->custContacts->phonePrivate = (string)trim($quote->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phoneMobile = (string)trim($quote->getBillingAddress()->getTelephone() ?? "", '-');
+        $request->custContacts->phoneBusiness = (string)trim($quote->getBillingAddress()->getTelephone() ?? "", '-');
+        $request->custContacts->phonePrivate = (string)trim($quote->getBillingAddress()->getTelephone() ?? "", '-');
         if (!$quote->getCustomerIsGuest()) {
             $email = (string)$quote->getBillingAddress()->getEmail();
             if (empty($email) && !empty((string)$quote->getCustomer()->getEmail())) {
@@ -747,7 +747,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
             $request->deliveryDetails->deliverySalutation = null;
 
-            $shippingStreet = $quote->getShippingAddress()->getStreet();
+            $shippingStreet = $quote->getShippingAddress()->getStreet() ?? "";
             $shippingStreet = implode("", $shippingStreet);
 
             $request->deliveryDetails->deliveryAddrFirstLine = trim((string)$shippingStreet);
@@ -928,9 +928,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->town = (string)$order->getBillingAddress()->getCity();
         $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId() ?? "");
 
-        $request->custContacts->phoneMobile = (string)trim($order->getBillingAddress()->getTelephone(), '-');
-        $request->custContacts->phonePrivate = (string)trim($order->getBillingAddress()->getTelephone(), '-');
-        $request->custContacts->phoneBusiness = (string)trim($order->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phoneMobile = (string)trim($order->getBillingAddress()->getTelephone() ?? "", '-');
+        $request->custContacts->phonePrivate = (string)trim($order->getBillingAddress()->getTelephone() ?? "", '-');
+        $request->custContacts->phoneBusiness = (string)trim($order->getBillingAddress()->getTelephone() ?? "", '-');
         $request->custContacts->email = (string)$order->getBillingAddress()->getEmail();
 
         if (!$order->getIsVirtual()) {
@@ -944,7 +944,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
             $request->deliveryDetails->deliverySalutation = null;
 
-            $shippingStreet = $order->getShippingAddress()->getStreet();
+            $shippingStreet = $order->getShippingAddress()->getStreet() ?? "";
             $shippingStreet = implode("", $shippingStreet);
 
             $request->deliveryDetails->deliveryAddrFirstLine = trim((string)$shippingStreet);
@@ -1110,7 +1110,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
 
-        $billingStreet = $order->getBillingAddress()->getStreet();
+        $billingStreet = $order->getBillingAddress()->getStreet() ?? "";
         $billingStreet = implode("", $billingStreet);
 
         $request->billingAddr->addrFirstLine = (string)$billingStreet;
@@ -1118,9 +1118,9 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $request->billingAddr->town = (string)$order->getBillingAddress()->getCity();
         $request->billingAddr->country = strtoupper($order->getBillingAddress()->getCountryId() ?? "");
 
-        $request->custContacts->phoneMobile = (string)trim($order->getBillingAddress()->getTelephone(), '-');
-        $request->custContacts->phonePrivate = (string)trim($order->getBillingAddress()->getTelephone(), '-');
-        $request->custContacts->phoneBusiness = (string)trim($order->getBillingAddress()->getTelephone(), '-');
+        $request->custContacts->phoneMobile = (string)trim($order->getBillingAddress()->getTelephone() ?? "", '-');
+        $request->custContacts->phonePrivate = (string)trim($order->getBillingAddress()->getTelephone() ?? "", '-');
+        $request->custContacts->phoneBusiness = (string)trim($order->getBillingAddress()->getTelephone() ?? "", '-');
         $email = (string)$order->getBillingAddress()->getEmail();
         if (empty($email) && !empty((string)$order->getCustomerEmail())) {
             $email = (string)$order->getCustomerEmail();
@@ -1138,7 +1138,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
             $request->deliveryDetails->deliverySalutation = null;
 
-            $shippingStreet = $order->getShippingAddress()->getStreet();
+            $shippingStreet = $order->getShippingAddress()->getStreet() ?? "";
             $shippingStreet = implode("", $shippingStreet);
 
             $request->deliveryDetails->deliveryAddrFirstLine = trim((string)$shippingStreet);
@@ -1358,7 +1358,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $invoiceCompany = $this->nullToString($invoiceAddress->getCompany());
         }
 
-        $invoiceStreet = $invoiceAddress->getStreet();
+        $invoiceStreet = $invoiceAddress->getStreet() ?? "";
         $invoiceStreet = implode("", $invoiceStreet);
 
         $invoiceFirstLine = trim((string)$invoiceStreet);
@@ -1373,7 +1373,7 @@ class DataHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $deliveryCompany = $this->nullToString($deliveryAddress->getCompany());
         }
 
-        $deliveryStreet = $deliveryAddress->getStreet();
+        $deliveryStreet = $deliveryAddress->getStreet() ?? "";
         $deliveryStreet = implode("", $deliveryStreet);
 
         $deliveryFirstLine = trim((string)$deliveryStreet);
