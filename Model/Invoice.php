@@ -91,6 +91,7 @@ class Invoice extends CembraPaypayment
         $this->_state = $state;
         $this->_eavConfig = $objectManager->get('\Magento\Eav\Model\Config');
         $this->_dataHelper = $objectManager->get('\Byjuno\ByjunoCore\Helper\DataHelper');
+        $this->_sequenceManager =  $objectManager->get('\Magento\SalesSequence\Model\Manager');
         $this->_executed = false;
     }
 

@@ -29,6 +29,7 @@ use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use Magento\Quote\Model\Quote\Payment;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\SalesSequence\Model\Manager;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Ui\Config\Data;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -50,6 +51,11 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
 
     /* @var $_scopeConfig \Magento\Checkout\Model\Session */
     protected $_checkoutSession;
+
+    /**
+     * @var Manager
+     */
+    protected $_sequenceManager;
 
     public function void(InfoInterface $payment)
     {
@@ -350,8 +356,12 @@ class CembraPaypayment extends \Magento\Payment\Model\Method\Adapter
         if (!empty($tx["transaction_id"])) {
             $txId = $tx["transaction_id"];
         }
-        $incrementValue =  $this->_eavConfig->getEntityType($invoice->getEntityType())->fetchNewIncrementId($invoice->getStoreId());
-        if ($invoice->getIncrementId() == null) {
+        $incrementValue = $invoice->getIncrementId();
+        if ($incrementValue == null) {
+            $incrementValue = $this->_sequenceManager->getSequence(
+                $invoice->getEntityType(),
+                $invoice->getStoreId()
+            )->getNextValue();
             $invoice->setIncrementId($incrementValue);
         }
         $request = $this->_dataHelper->CreateMagentoShopRequestSettlePaid($order, $amount, $invoice, $payment, $webshopProfileId, $txId);
